@@ -27,16 +27,22 @@ class Boat implements Touchable {
   /* is this boat being touched now? */
   bool _dragging = false;
   
+  var boatmenu = new Menu();
+  
+  num menunum;
 
 /**
  * Default constructor
  */
   Boat(this.x, this.y, int boatnum){
+    boatmenu.initPopovers();
     if (boatnum == 0) {
       img.src = "images/boat.png";
+      menunum = 1;
     }
     else {
       img.src = "images/boat.png";
+      menunum = 2;
     }
   }
   
@@ -108,7 +114,7 @@ class Boat implements Touchable {
   
   void touchUp(Contact c) {
     _dragging = false;
-    showPopover("fishing-menu", x, y);
+    boatmenu.showPopover("fishing-menu${menunum}", x, y);
   }
   
   

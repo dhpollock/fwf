@@ -21,9 +21,7 @@ Game game;
 
 void main() {
   
-  // initialize all popover menus
-  initPopovers();
-  
+
   // load sounds that your game will use (these are in the sounds directory)
   Sounds.loadSound("drum");
   Sounds.loadSound("tick");
