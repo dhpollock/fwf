@@ -93,6 +93,10 @@ class Boat implements Touchable {
     ctx.restore();
   }
   
+  void hide(){
+    boatmenu.hidePopover("fishing-menu${menunum}");
+  }
+  
   
   bool containsTouch(Contact c) {
     num tx = c.touchX;
@@ -127,4 +131,6 @@ class Boat implements Touchable {
   
     
   void touchSlide(Contact c) { }  
+ 
+  
 }

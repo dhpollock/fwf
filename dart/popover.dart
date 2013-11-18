@@ -73,7 +73,7 @@ class Menu{
    * an item in a popover menu
    */
   void popoverAction(String popover, String action) {
-    window.alert("$popover, $action");
+    //window.alert("$popover, $action");
   }
   
 }

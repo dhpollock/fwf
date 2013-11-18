@@ -114,7 +114,9 @@ class Game extends TouchLayer {
         ctx.clearRect(0, 0, width, height);
         ctx.fillStyle = 'black';
         ctx.fillText("SELL STUFF: ", 100, 50);
-        
+        for (Boat boat in boats) {
+          boat.hide();
+        }
         break;
       case 'REGROW':
         ctx.clearRect(0, 0, width, height);
