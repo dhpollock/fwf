@@ -13,21 +13,10 @@
  */
 part of fwf;
 
-<<<<<<< HEAD
-
 /**
  * Call this one time in your main() function to initialize all popover menus
  */
-void initPopovers() {
-  var popovers = querySelectorAll(".popover");
-  for (Element popover in popovers) {
-    var items = querySelectorAll("#${popover.id} li");
-    for (Element item in items) {
-      item.onClick.listen((event) {
-        hidePopover(popover.id);
-        popoverAction(popover.id, item.id);
-      });
-=======
+
 class Menu{
   
   /**
@@ -43,7 +32,7 @@ class Menu{
           popoverAction(popover.id, item.id);
         });
       }
->>>>>>> pr/2
+
     }
   }
   
