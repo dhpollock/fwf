@@ -1,7 +1,7 @@
 /*
  * Dart Game Sample
  */
-part of DartSample;
+part of fwf;
 
 
 class TouchManager {

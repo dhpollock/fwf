@@ -1,7 +1,7 @@
 /*
  * Dart Game Sample Code
  */
-library DartSample;   // change the library name if you want
+library fwf;   // change the library name if you want
 
 import 'dart:html';
 import 'dart:math';

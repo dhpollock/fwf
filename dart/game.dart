@@ -1,7 +1,7 @@
 /*
  * Dart Game Sample Code
  */
-part of DartSample;
+part of fwf;
 
 
 class Game extends TouchLayer {

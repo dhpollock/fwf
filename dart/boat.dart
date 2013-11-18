@@ -1,7 +1,7 @@
 /*
  * Dart Sample Game
  */
-part of DartSample;
+part of fwf;
 
 
 class Boat implements Touchable {
