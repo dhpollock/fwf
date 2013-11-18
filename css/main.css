@@ -1,0 +1,29 @@
+@charset "utf-8";
+
+* { 
+   -webkit-user-select: none;
+   -webkit-tap-highlight-color: rgba(0,0,0,0);    
+}
+
+body {
+   margin: 0;
+   padding: 0;
+   color: #ccc;
+   font: 15px "Helvetica Neue", Helvetica, Arial, sans-serif;
+   background-color: #333;
+}
+
+canvas {
+   position: absolute;
+   top: 0px;
+   left: 0px;
+   padding: 0px;
+   margin: 0px;
+}
+
+#game {
+   z-index: 0;
+   background-image: url('../images/background.png');
+   background-repeat: repeat;
+   background-position: 0 0;
+}

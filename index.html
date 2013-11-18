@@ -1,0 +1,52 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+   <title>Dart Sample</title>
+   <meta name="apple-mobile-web-app-capable" content="yes">
+   <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">   
+   <link rel="stylesheet" href="css/main.css">
+   <link rel="stylesheet" href="css/popover.css">
+   <link rel="stylesheet" href="css/button.css">
+</head>
+<body>
+  
+  <!-- This is where you draw all the visual elements of the game -->
+  <canvas id="game" width="1000" height="800"></canvas>
+  
+  
+  <!-- Simple popup style menu -->
+  <div class="popover left" id="fishing-menu">
+    <ul>
+      <li id="fish-driftnet">Drift Net</li>
+      <li id="fish-line" class="selected">Line and Hook</li>
+      <li id="fish-trawl">Bottom Trawler</li>
+      <li id="fish-purse">Purse Selines</li>
+      <li id="fish-traps">Lobster Traps</li>
+    </ul>
+  </div>
+  
+  <div id = "phaseButton" class = "button">
+    <button>NEXT PHASE!</button>
+  </div>
+  
+  
+  <!-- This is your main dart script --> 
+  <script src="dart/main.dart" type="application/dart"></script>
+  
+  
+  <!-- This is necessary for dart to run in a browser -->
+  <script src="dart.js"></script>
+   
+   
+   
+   <!-- This prevents touch input from triggering a rightclick event -->
+   <script type="text/javascript">
+      window.oncontextmenu = function(event) {
+         event.preventDefault();
+         event.stopPropagation();
+         return false;
+      };
+   </script>
+</body>
+</html>
