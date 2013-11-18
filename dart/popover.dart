@@ -13,7 +13,6 @@
  */
 part of DartSample;
 
-/*hiiiiiii HARMON */
 
 /**
  * Call this one time in your main() function to initialize all popover menus
