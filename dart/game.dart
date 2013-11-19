@@ -19,7 +19,6 @@ class Game extends TouchLayer {
   int width, height;
   
   // list of the boats that people can touch
-  //List<Boat> boats = new List<Boat>();
   List<Fleet> fleets = new List<Fleet>();
   var phase;
   var myButton = new Button();
@@ -42,8 +41,8 @@ class Game extends TouchLayer {
     
     // create a few boats
     
-    fleetA = new Fleet(1, 0, 0, 100);
-    fleetB = new Fleet(1, 0, 0, 100);
+    fleetA = new Fleet(1, 0, 0, 100, 'A');
+    fleetB = new Fleet(1, 0, 0, 100, 'B');
 
 
     // redraw the canvas every 40 milliseconds

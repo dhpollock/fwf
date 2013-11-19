@@ -28,28 +28,12 @@ class Button{
   void showButton(String id, [ num x, num y ]) {
     DivElement button = querySelector("#$id");
     if (button != null) {
-//      if (x != null && y != null) {
-//        button.style.left = "${x.toInt() + 50}px";
-//        button.style.top = "${y.toInt() - 55}px";
-//      }
+
       button.style.visibility = "visible";
       button.style.opacity = "1.0";
     }
   }
   
-  
-  /**
-   * Call this function to hide a popover menu
-   */
-//  void hidePopover(String id) {
-//    DivElement popover = querySelector("#$id");
-//    if (popover != null) {
-//      popover.style.opacity = "0.0";
-//      new Timer(const Duration(milliseconds : 300), () {
-//        popover.style.visibility = "hidden";
-//      });
-//    }
-//  }
   
   
   /**
