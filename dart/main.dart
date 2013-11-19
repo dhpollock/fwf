@@ -14,6 +14,7 @@ part 'popover.dart';
 part 'sounds.dart';
 part 'touch.dart';
 part 'button.dart';
+part 'fleet.dart';
 
 
 // global game object
