@@ -154,6 +154,7 @@ class Boat implements Touchable {
     _targetX = c.touchX;
     _targetY = c.touchY;
     _dragging = true;
+    boatPath.clear();
     Sounds.playSound("tick");
     return true;
   }
