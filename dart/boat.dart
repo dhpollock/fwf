@@ -39,12 +39,15 @@ class Boat implements Touchable {
 /**
  * Default constructor
  */
-  Boat(this.x, this.y, var newBoatType, var myfleetType){
+  Boat(this.x, this.y, var newBoatType, [var myfleetType]){
     boatmenu.initPopovers();
     fleetType = myfleetType;
     if(newBoatType == 'sardine' || newBoatType == 'tuna' || newBoatType == 'shark'){
       boatType = newBoatType;
-      if (boatType == 'sardine') {
+      if(fleetType == 0){
+        img.src = "images/boat${boatType}.png";
+      }
+      else{
         img.src = "images/boat${boatType}${fleetType}.png";
         menunum = 1;
       }

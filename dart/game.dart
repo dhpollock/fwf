@@ -25,7 +25,6 @@ class Game extends TouchLayer {
   Fleet fleetA;
   Fleet fleetB;
   
-  
   Buy buy;
   Fish fish;
   Sell sell;
@@ -49,6 +48,7 @@ class Game extends TouchLayer {
     
     fleetA = new Fleet(1, 0, 0, 100, 'A');
     fleetB = new Fleet(1, 0, 0, 100, 'B');
+    
     
     buy = new Buy(fleetA, fleetB);
     fish = new Fish(fleetA, fleetB);
