@@ -37,9 +37,11 @@ class Boat implements Touchable {
   var boatmenu = new Menu();
   
   num menunum;
-  
+  var speed = 3.0;
   var boatType;
   var fleetType;
+  
+  var initPos;
   
   List<Point> boatPath;
 
@@ -51,12 +53,11 @@ class Boat implements Touchable {
     fleetType = myfleetType;
     boatPath = new List<Point>();
     boatPath.add(new Point(x, y));
+    initPos = new Point(x,y);
     if(newBoatType == 'sardine' || newBoatType == 'tuna' || newBoatType == 'shark'){
       boatType = newBoatType;
-      if (boatType == 'sardine') {
-        img.src = "images/boat${boatType}${fleetType}.png";
-        menunum = 1;
-      }
+      img.src = "images/boat${boatType}${fleetType}.png";
+      menunum = 1;
     }
     else{
       print("error, wrong type of boat");
@@ -71,8 +72,8 @@ class Boat implements Touchable {
 
   
   void forward(num distance) {
-    x += sin(heading) * distance;
-    y -= cos(heading) * distance;
+    x += cos(heading) * distance;
+    y += sin(heading) * distance;
   }
   
      
@@ -92,6 +93,20 @@ class Boat implements Touchable {
   
   
   void animate() {
+    if(boatPath.length > 1){
+      var dist = sqrt(pow((boatPath[1].x - boatPath[0].x), 2) + pow((boatPath[1].y - boatPath[0].y), 2));
+      if(dist > speed){
+        heading = atan2((boatPath[1].y - boatPath[0].y), (boatPath[1].x - boatPath[0].x));
+        forward(speed);
+        boatPath[0].x = x;
+        boatPath[0].y = y;
+      }
+      else{
+        heading = atan2((boatPath[1].y - boatPath[0].y) , (boatPath[1].x - boatPath[0].x));
+        forward(dist);
+        boatPath.removeAt(0);
+      }
+    }
   }
 
   
@@ -104,20 +119,18 @@ class Boat implements Touchable {
     ctx.save();
     {
       ctx.translate(x, y);
-      ctx.rotate(heading);
+      ctx.rotate(heading + 3.1415/2);
       ctx.drawImage(img, -iwidth/2, -iheight/2);
       ctx.lineWidth = 5;
       ctx. strokeStyle = 000;
-      ctx.beginPath();
       ctx.translate(0,0);
+      ctx.rotate(-(heading + 3.1415/2));
+      ctx.beginPath();
       for(int i = 0; i < boatPath.length; i++){
-        ctx.lineTo(boatPath[i].x, boatPath[i].y);
-        if(fleetType == 'B'){
-          print('boatPath ${boatPath[i].x}, ${boatPath[i].y}');
-        }
+        ctx.lineTo(boatPath[i].x - boatPath.first.x, boatPath[i].y - boatPath.first.y);
       }
       ctx.stroke();
-      ctx.closePath();
+      //ctx.closePath();
      
     }    
     ctx.restore();
@@ -148,14 +161,13 @@ class Boat implements Touchable {
   
   void touchUp(Contact c) {
     _dragging = false;
-    boatmenu.showPopover("fishing-menu${menunum}", x, y);
+   // boatmenu.showPopover("fishing-menu${menunum}", x, y);
   }
   
   
   void touchDrag(Contact c) {
     //move(c.touchX - _targetX, c.touchY - _targetY);
     boatPath.add(new Point(c.touchX,c.touchY));
-    print('touch ${c.touchX} , ${c.touchY}');
     _targetX = c.touchX;
     _targetY = c.touchY;
     

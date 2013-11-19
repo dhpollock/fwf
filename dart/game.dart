@@ -47,8 +47,8 @@ class Game extends TouchLayer {
     
     // create a few boats
     
-    fleetA = new Fleet(1, 0, 0, 100, 'A');
-    fleetB = new Fleet(1, 0, 0, 100, 'B');
+    fleetA = new Fleet(1, 1, 1, 100, 'A');
+    fleetB = new Fleet(1, 1, 1, 100, 'B');
     
     buy = new Buy(fleetA, fleetB);
     fish = new Fish(fleetA, fleetB);

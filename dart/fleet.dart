@@ -36,17 +36,17 @@ class Fleet  extends TouchLayer{
       print("error, not valid fleet type");
     }
     for(var i = 0; i < sardineBoatsNum; i++){
-      Boat boat = new Boat(tempStartX , 500+ random.nextInt(10) * 30, 'sardine', myfleetAB );
+      Boat boat = new Boat(tempStartX , 100+ random.nextInt(10) * 30, 'sardine', myfleetAB );
       sardineBoats.add(boat);
       touchables.add(boat);
     }
     for(var i = 0; i < tunaBoatsNum; i++){
-      Boat boat = new Boat(tempStartX , 500 + random.nextInt(10) * 5, 'tuna', myfleetAB);
+      Boat boat = new Boat(tempStartX , 100 + random.nextInt(10) * 5, 'tuna', myfleetAB);
       tunaBoats.add(boat);
       touchables.add(boat);
     }
     for(var i = 0; i < sharkBoatsNum; i++){
-      Boat boat = new Boat(tempStartX, 500 + random.nextInt(10) * 15, 'shark', myfleetAB);
+      Boat boat = new Boat(tempStartX, 100 + random.nextInt(10) * 15, 'shark', myfleetAB);
       sharkBoats.add(boat);
       touchables.add(boat);
     }
