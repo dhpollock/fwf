@@ -15,7 +15,10 @@ part 'sounds.dart';
 part 'touch.dart';
 part 'button.dart';
 part 'fleet.dart';
-part 'buy.dart';
+part 'phaseBuy.dart';
+part 'phaseFish.dart';
+part 'phaseSell.dart';
+part 'phaseRegrow.dart';
 
 
 // global game object

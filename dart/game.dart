@@ -24,6 +24,12 @@ class Game extends TouchLayer {
   var myButton = new Button();
   Fleet fleetA;
   Fleet fleetB;
+  
+  
+  Buy buy;
+  Fish fish;
+  Sell sell;
+  Regrow regrow;
    
   Game() {
     canvas = document.query("#game");
@@ -36,14 +42,18 @@ class Game extends TouchLayer {
     myButton.initButton(transition);
     myButton.showButton("phaseButton", 50, 50);
     
-    tmanager.registerEvents(document.documentElement);
-    tmanager.addTouchLayer(this);
+//    tmanager.registerEvents(document.documentElement);
+//    tmanager.addTouchLayer(this);
     
     // create a few boats
     
     fleetA = new Fleet(1, 0, 0, 100, 'A');
     fleetB = new Fleet(1, 0, 0, 100, 'B');
-
+    
+    buy = new Buy(fleetA, fleetB);
+    fish = new Fish(fleetA, fleetB);
+    sell = new Sell(fleetA, fleetB);
+    regrow = new Regrow(fleetA, fleetB);
 
     // redraw the canvas every 40 milliseconds
     new Timer.periodic(const Duration(milliseconds : 40), (timer) => animate());
@@ -73,43 +83,17 @@ class Game extends TouchLayer {
     
     switch(phase){
       case 'BUY':
-        ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = 'black';
-        //ctx.fillRect(0, 0, width, height);
-        ctx.fillText("BUY STUFF: ", 100, 50);
+        buy.draw(ctx, width, height);
         break;
       case 'FISH':
         // erase the screen
-        ctx.clearRect(0, 0, width, height);
-        
-        // draw some text
-        ctx.fillStyle = 'black';
-        ctx.font = '30px sans-serif';
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'center';
-        ctx.fillText("Player 1: ", 100, 50);
-        
-        ctx.fillStyle = 'black';
-        ctx.font = '30px sans-serif';
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'center';
-        ctx.fillText("Player 2: ", 700, 50);
-        
-        // draw the boats
-        fleetA.draw(ctx);
-        fleetB.draw(ctx);
+        fish.draw(ctx, width, height);
         break;
       case 'SELL':
-        ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = 'black';
-        ctx.fillText("SELL STUFF: ", 100, 50);
-        fleetA.hide();
-        fleetB.hide();
+        sell.draw(ctx, width, height);
         break;
       case 'REGROW':
-        ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = 'black';
-        ctx.fillText("REGROW ALL THE FISHES ", 100, 50);
+        regrow.draw(ctx, width, height);
         break;
       default:
        break;       
