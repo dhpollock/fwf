@@ -28,7 +28,7 @@ class Fish{
     ctx.fillText("Player 2: ", 700, 50);
     
     // draw the boats
-    fleetA.draw(ctx);
-    fleetB.draw(ctx);
+    fleetA.draw(ctx, height, width);
+    fleetB.draw(ctx, height, width);
   }
 }

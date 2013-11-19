@@ -5,6 +5,11 @@
 
 part of fwf;
 
+class Point {
+  num x, y;
+  Point(this.x, this.y);
+  Point.zero() : x = 0, y = 0;
+}
 
 class Boat implements Touchable {
 
@@ -35,6 +40,8 @@ class Boat implements Touchable {
   
   var boatType;
   var fleetType;
+  
+  List<Point> boatPath;
 
 /**
  * Default constructor
@@ -42,6 +49,8 @@ class Boat implements Touchable {
   Boat(this.x, this.y, var newBoatType, var myfleetType){
     boatmenu.initPopovers();
     fleetType = myfleetType;
+    boatPath = new List<Point>();
+    boatPath.add(new Point(x, y));
     if(newBoatType == 'sardine' || newBoatType == 'tuna' || newBoatType == 'shark'){
       boatType = newBoatType;
       if (boatType == 'sardine') {
@@ -86,17 +95,30 @@ class Boat implements Touchable {
   }
 
   
-  num get width => img.width;
+  num get iwidth => img.width;
   
-  num get height => img.height;
+  num get iheight => img.height;
   
   
-  void draw(CanvasRenderingContext2D ctx) {
+  void draw(CanvasRenderingContext2D ctx, height, width) {
     ctx.save();
     {
       ctx.translate(x, y);
       ctx.rotate(heading);
-      ctx.drawImage(img, -width/2, -height/2);
+      ctx.drawImage(img, -iwidth/2, -iheight/2);
+      ctx.lineWidth = 5;
+      ctx. strokeStyle = 000;
+      ctx.beginPath();
+      ctx.translate(0,0);
+      for(int i = 0; i < boatPath.length; i++){
+        ctx.lineTo(boatPath[i].x, boatPath[i].y);
+        if(fleetType == 'B'){
+          print('boatPath ${boatPath[i].x}, ${boatPath[i].y}');
+        }
+      }
+      ctx.stroke();
+      ctx.closePath();
+     
     }    
     ctx.restore();
   }
@@ -109,9 +131,9 @@ class Boat implements Touchable {
   bool containsTouch(Contact c) {
     num tx = c.touchX;
     num ty = c.touchY;
-    num bx = x - width/2;
-    num by = y - height/2;
-    return (tx >= bx && ty >= by && tx <= bx + width && ty <= by + height);
+    num bx = x - iwidth/2;
+    num by = y - iheight/2;
+    return (tx >= bx && ty >= by && tx <= bx + iwidth && ty <= by + iheight);
   }
   
   
@@ -131,9 +153,12 @@ class Boat implements Touchable {
   
   
   void touchDrag(Contact c) {
-    move(c.touchX - _targetX, c.touchY - _targetY);
+    //move(c.touchX - _targetX, c.touchY - _targetY);
+    boatPath.add(new Point(c.touchX,c.touchY));
+    print('touch ${c.touchX} , ${c.touchY}');
     _targetX = c.touchX;
     _targetY = c.touchY;
+    
     repaint();
   }
   
