@@ -55,6 +55,8 @@ class Fleet  extends TouchLayer{
     
     tmanager.registerEvents(document.documentElement);
     tmanager.addTouchLayer(this);
+    tmanager.disable();
+    
   }
   
   void draw(CanvasRenderingContext2D ctx,num height,num width){
@@ -69,7 +71,12 @@ class Fleet  extends TouchLayer{
     }
   }
   
+  void show(){
+    tmanager.enable();
+  }
+  
   void hide(){
+    tmanager.disable();
     for(Boat boat in sardineBoats){
       boat.hide();
     }

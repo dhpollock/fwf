@@ -1,13 +1,20 @@
 part of fwf;
 
 
-class Buy{
+class Buy extends TouchLayer{
   Fleet fleetA;
   Fleet fleetB;
+  
+  TouchManager tmanager = new TouchManager();
   
   Buy(Fleet A, Fleet B){
     fleetA = A;
     fleetB = B;
+    
+    
+    tmanager.registerEvents(document.documentElement);
+    tmanager.addTouchLayer(this);
+    tmanager.disable();
   }
   
   
@@ -16,5 +23,13 @@ class Buy{
     ctx.fillStyle = 'black';
     //ctx.fillRect(0, 0, width, height);
     ctx.fillText("BUY STUFF: ", 100, 50);
+  }
+  
+  void show(){
+    tmanager.enable();
+  }
+  
+  void hide(){
+    tmanager.disable();
   }
 }

@@ -4,7 +4,8 @@
 part of fwf;
 
 
-class Game extends TouchLayer {
+//class Game extends TouchLayer {
+class Game {
    
   // this is the HTML canvas element
   CanvasElement canvas;
@@ -13,7 +14,7 @@ class Game extends TouchLayer {
   CanvasRenderingContext2D ctx;
 
   // this is for multi-touch or mouse event handling  
-  TouchManager tmanager = new TouchManager();
+  //TouchManager tmanager = new TouchManager();
 
   // width and height of the canvas
   int width, height;
@@ -104,21 +105,56 @@ class Game extends TouchLayer {
     switch(phase){
       case 'BUY':
         phase = 'FISH';
+        
+        fleetA.show();
+        fleetB.show();
+        
+        buy.hide();
+        fish.show();
+        sell.hide();
+        regrow.hide();
+        
         repaint();
         print(phase);
         break;
       case 'FISH':
         phase = 'SELL';
+        fleetA.hide();
+        fleetB.hide();
+        
+        buy.hide();
+        fish.hide();
+        sell.show();
+        regrow.hide();
+        
         repaint();
         print(phase);
         break;
       case 'SELL':
         phase = 'REGROW';
+        
+        fleetA.hide();
+        fleetB.hide();
+        
+        buy.hide();
+        fish.hide();
+        sell.hide();
+        regrow.show();
+
         repaint();
         print(phase);
         break;
       case 'REGROW':
         phase = 'BUY';
+        
+        fleetA.hide();
+        fleetB.hide();
+        
+        buy.show();
+        fish.hide();
+        sell.hide();
+        regrow.hide();
+
         repaint();
         print(phase);
         break;

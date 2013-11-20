@@ -18,8 +18,10 @@ class TouchManager {
   /* Bindings from event IDs to touchable objects */
   Map<int, TouchBinding> touch_bindings = new Map<int, TouchBinding>();
    
+ 
   
-  TouchManager();
+  TouchManager(){ 
+  }
   
 /*
  * Add a touch layer to the list
@@ -41,10 +43,10 @@ class TouchManager {
  * See which layer wants to handle this touch
  */
   TouchBinding findTouchTarget(Contact tp) {
-    for (int i=layers.length - 1; i >= 0; i--) {
-      Touchable t = layers[i].findTouchTarget(tp);
-      if (t != null) return new TouchBinding(layers[i], t);
-    }
+      for (int i=layers.length - 1; i >= 0; i--) {
+        Touchable t = layers[i].findTouchTarget(tp);
+        if (t != null) return new TouchBinding(layers[i], t);
+      }
     return null;
   }
   
@@ -53,18 +55,18 @@ class TouchManager {
  * The main class must call this method to enable mouse and touch input
  */ 
   void registerEvents(Element element) {
-    parent = element;
-   
-    element.onMouseDown.listen((e) => _mouseDown(e));
-    element.onMouseUp.listen((e) => _mouseUp(e));
-    element.onMouseMove.listen((e) => _mouseMove(e));
-
-    element.onTouchStart.listen((e) => _touchDown(e));
-    element.onTouchMove.listen((e) => _touchDrag(e));
-    element.onTouchEnd.listen((e) => _touchUp(e));
-      
-    // Prevent screen from dragging on ipad
-    document.onTouchMove.listen((e) => e.preventDefault());
+      parent = element;
+     
+      element.onMouseDown.listen((e) => _mouseDown(e));
+      element.onMouseUp.listen((e) => _mouseUp(e));
+      element.onMouseMove.listen((e) => _mouseMove(e));
+  
+      element.onTouchStart.listen((e) => _touchDown(e));
+      element.onTouchMove.listen((e) => _touchDrag(e));
+      element.onTouchEnd.listen((e) => _touchUp(e));
+        
+      // Prevent screen from dragging on ipad
+      document.onTouchMove.listen((e) => e.preventDefault());
   }
 
   
@@ -158,6 +160,20 @@ class TouchManager {
       }
     }
   }
+  
+  /* toggle commands for enable listening*/
+  void enable(){
+    for (int i=layers.length - 1; i >= 0; i--) {
+      layers[i].enable();
+    }
+  }
+  
+  void disable(){
+    for (int i=layers.length - 1; i >= 0; i--) {
+      layers[i].disable();
+    }
+  }
+  
 }
 
 
@@ -166,10 +182,11 @@ class TouchLayer {
   /* A list of touchable objects on this layer */
   List<Touchable> touchables = new List<Touchable>();
    
-  /* Bindings from event IDs to touchable objects */
   Map<int, Touchable> touch_bindings = new Map<int, Touchable>();
-   
-  TouchLayer();
+  bool enabled; 
+  TouchLayer(){
+    enabled = true;
+  }
    
 
 /*
@@ -191,14 +208,24 @@ class TouchLayer {
 /*
  * Find a touchable object that intersects with the given touch event
  */
-  Touchable findTouchTarget(Contact tp) {
-    Contact c = new Contact.copy(tp);
-    for (int i=touchables.length - 1; i >= 0; i--) {
-      if (touchables[i].containsTouch(c)) {
-        return touchables[i];
+  Touchable findTouchTarget(Contact tp) { 
+      Contact c = new Contact.copy(tp);
+      if(enabled){
+        for (int i=touchables.length - 1; i >= 0; i--) {
+          if (touchables[i].containsTouch(c)) {
+            return touchables[i];
+          }
+        }
       }
-    }
-    return null;
+      return null;
+  }
+  
+  void enable(){
+    enabled = true;
+  }
+  
+  void disable(){
+    enabled = false;
   }
 }
 

@@ -1,13 +1,17 @@
 part of fwf;
 
 
-class Fish{
+class Fish extends TouchLayer{
   Fleet fleetA;
   Fleet fleetB;
-  
+  TouchManager tmanager = new TouchManager();
   Fish(Fleet A, Fleet B){
     fleetA = A;
     fleetB = B;
+    
+    tmanager.registerEvents(document.documentElement);
+    tmanager.addTouchLayer(this);
+    tmanager.disable();
   }
   
   
@@ -31,4 +35,14 @@ class Fish{
     fleetA.draw(ctx, height, width);
     fleetB.draw(ctx, height, width);
   }
+  
+  void show(){
+    tmanager.enable();
+  }
+  
+  void hide(){
+    tmanager.disable();
+  }
+  
+  
 }
