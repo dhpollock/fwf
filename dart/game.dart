@@ -26,7 +26,6 @@ class Game {
   Fleet fleetA;
   Fleet fleetB;
   
-  
   Buy buy;
   Fish fish;
   Sell sell;
@@ -50,6 +49,7 @@ class Game {
     
     fleetA = new Fleet(1, 1, 1, 100, 'A');
     fleetB = new Fleet(1, 1, 1, 100, 'B');
+    
     
     buy = new Buy(fleetA, fleetB);
     fish = new Fish(fleetA, fleetB);
