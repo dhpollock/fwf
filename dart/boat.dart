@@ -48,7 +48,7 @@ class Boat implements Touchable {
 /**
  * Default constructor
  */
-  Boat(this.x, this.y, var newBoatType, var myfleetType){
+  Boat(this.x, this.y, var newBoatType, [var myfleetType]){
     boatmenu.initPopovers();
     fleetType = myfleetType;
     boatPath = new List<Point>();
@@ -56,8 +56,18 @@ class Boat implements Touchable {
     initPos = new Point(x,y);
     if(newBoatType == 'sardine' || newBoatType == 'tuna' || newBoatType == 'shark'){
       boatType = newBoatType;
+<<<<<<< HEAD
       img.src = "images/boat${boatType}${fleetType}.png";
       menunum = 1;
+=======
+      if(fleetType == 0){
+        img.src = "images/boat${boatType}.png";
+      }
+      else{
+        img.src = "images/boat${boatType}${fleetType}.png";
+        menunum = 1;
+      }
+>>>>>>> buyPhase
     }
     else{
       print("error, wrong type of boat");
