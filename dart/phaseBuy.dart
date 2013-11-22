@@ -5,16 +5,24 @@ class Buy extends TouchLayer{
   Fleet fleetA;
   Fleet fleetB;
   
+  Boat buySardine;
+  Boat buyTuna;
+  Boat buyShark;
+  
   TouchManager tmanager = new TouchManager();
   
   Buy(Fleet A, Fleet B){
     fleetA = A;
     fleetB = B;
     
+    buySardine = new Boat()
     
     tmanager.registerEvents(document.documentElement);
     tmanager.addTouchLayer(this);
     tmanager.disable();
+    
+    
+    
   }
   
   
