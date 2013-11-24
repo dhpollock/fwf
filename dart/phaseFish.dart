@@ -15,7 +15,7 @@ class Fish extends TouchLayer{
   }
   
   
-  void draw(CanvasRenderingContext2D ctx, width, height){
+  void draw(CanvasRenderingContext2D ctx, num width, num height){
     ctx.clearRect(0, 0, width, height);
     
     // draw some text
@@ -32,8 +32,8 @@ class Fish extends TouchLayer{
     ctx.fillText("Player 2: ", 700, 50);
     
     // draw the boats
-    fleetA.draw(ctx, height, width);
-    fleetB.draw(ctx, height, width);
+    fleetA.draw(ctx, width, height);
+    fleetB.draw(ctx, width, height);
   }
   
   void show(){

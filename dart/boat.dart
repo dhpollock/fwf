@@ -11,6 +11,7 @@ class Point {
   Point.zero() : x = 0, y = 0;
 }
 
+
 class Boat implements Touchable {
 
   /* coordinates in world space */
@@ -56,18 +57,14 @@ class Boat implements Touchable {
     initPos = new Point(x,y);
     if(newBoatType == 'sardine' || newBoatType == 'tuna' || newBoatType == 'shark'){
       boatType = newBoatType;
-<<<<<<< HEAD
-      img.src = "images/boat${boatType}${fleetType}.png";
-      menunum = 1;
-=======
-      if(fleetType == 0){
+
+      if(fleetType == null){
         img.src = "images/boat${boatType}.png";
       }
       else{
         img.src = "images/boat${boatType}${fleetType}.png";
         menunum = 1;
       }
->>>>>>> buyPhase
     }
     else{
       print("error, wrong type of boat");
@@ -103,19 +100,24 @@ class Boat implements Touchable {
   
   
   void animate() {
-    if(boatPath.length > 1){
-      var dist = sqrt(pow((boatPath[1].x - boatPath[0].x), 2) + pow((boatPath[1].y - boatPath[0].y), 2));
-      if(dist > speed){
-        heading = atan2((boatPath[1].y - boatPath[0].y), (boatPath[1].x - boatPath[0].x));
-        forward(speed);
-        boatPath[0].x = x;
-        boatPath[0].y = y;
+    if(fleetType == 'A' || fleetType =='B'){
+      if(boatPath.length > 1){
+        var dist = sqrt(pow((boatPath[1].x - boatPath[0].x), 2) + pow((boatPath[1].y - boatPath[0].y), 2));
+        if(dist > speed){
+          heading = atan2((boatPath[1].y - boatPath[0].y), (boatPath[1].x - boatPath[0].x));
+          forward(speed);
+          boatPath[0].x = x;
+          boatPath[0].y = y;
+        }
+        else{
+          heading = atan2((boatPath[1].y - boatPath[0].y) , (boatPath[1].x - boatPath[0].x));
+          forward(dist);
+          boatPath.removeAt(0);
+        }
       }
-      else{
-        heading = atan2((boatPath[1].y - boatPath[0].y) , (boatPath[1].x - boatPath[0].x));
-        forward(dist);
-        boatPath.removeAt(0);
-      }
+    }
+    else{
+
     }
   }
 
@@ -125,22 +127,24 @@ class Boat implements Touchable {
   num get iheight => img.height;
   
   
-  void draw(CanvasRenderingContext2D ctx, height, width) {
+  void draw(CanvasRenderingContext2D ctx, num width, num height) {
     ctx.save();
     {
       ctx.translate(x, y);
       ctx.rotate(heading + 3.1415/2);
-      ctx.drawImage(img, -iwidth/2, -iheight/2);
-      ctx.lineWidth = 5;
-      ctx. strokeStyle = 000;
-      ctx.translate(0,0);
-      ctx.rotate(-(heading + 3.1415/2));
-      ctx.beginPath();
-      for(int i = 0; i < boatPath.length; i++){
-        ctx.lineTo(boatPath[i].x - boatPath.first.x, boatPath[i].y - boatPath.first.y);
+      ctx.drawImage(img, -img.width/2, -img.height/2);
+      if(fleetType == 'A' || fleetType == 'B'){
+        ctx.lineWidth = 5;
+        ctx. strokeStyle = 000;
+        ctx.translate(0,0);
+        ctx.rotate(-(heading + 3.1415/2));
+        ctx.beginPath();
+        for(int i = 0; i < boatPath.length; i++){
+          ctx.lineTo(boatPath[i].x - boatPath.first.x, boatPath[i].y - boatPath.first.y);
+        }
+        ctx.stroke();
+        ctx.closePath();
       }
-      ctx.stroke();
-      //ctx.closePath();
      
     }    
     ctx.restore();
@@ -177,8 +181,12 @@ class Boat implements Touchable {
   
   
   void touchDrag(Contact c) {
-    //move(c.touchX - _targetX, c.touchY - _targetY);
-    boatPath.add(new Point(c.touchX,c.touchY));
+    if(fleetType == 'A' || fleetType =='B'){
+      boatPath.add(new Point(c.touchX,c.touchY));
+    }
+//    else{
+//      move(c.touchX - _targetX, c.touchY - _targetY);
+//    }
     _targetX = c.touchX;
     _targetY = c.touchY;
     
@@ -189,4 +197,40 @@ class Boat implements Touchable {
   void touchSlide(Contact c) { }  
  
   
+}
+
+
+
+class ForSaleBoat extends Boat {
+  
+  Buy buyPhase;
+  num x = 0.0;
+  num y = 0.0;
+  
+  ForSaleBoat(Buy phase, num newX, num newY, var newBoatType) : super(newX, newY, newBoatType) {
+    x = newX;
+    y = newY;
+    buyPhase = phase;
+  }
+  
+  bool touchDown(Contact c) {
+    print("clicked on!");
+    buyPhase.boatTouched(this);
+    _dragging = true;
+    return true;
+  }
+  
+  void touchDrag(Contact c) {
+    move(c.touchX - _targetX, c.touchY - _targetY);
+    _targetX = c.touchX;
+    _targetY = c.touchY;    
+    repaint();
+  }
+  
+  void touchUp(Contact c) {
+    _dragging = false;
+  }
+  
+    
+  void touchSlide(Contact c) { }  
 }

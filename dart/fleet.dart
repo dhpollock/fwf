@@ -59,15 +59,15 @@ class Fleet  extends TouchLayer{
     
   }
   
-  void draw(CanvasRenderingContext2D ctx,num height,num width){
+  void draw(CanvasRenderingContext2D ctx, num width, num height){
     for(Boat boat in sardineBoats){
-      boat.draw(ctx, height, width);
+      boat.draw(ctx, width, height);
     }
     for(Boat boat in tunaBoats){
-      boat.draw(ctx, height, width);
+      boat.draw(ctx, width, height);
     }
     for(Boat boat in sharkBoats){
-      boat.draw(ctx, height, width);
+      boat.draw(ctx, width, height);
     }
   }
   
