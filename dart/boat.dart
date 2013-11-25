@@ -206,11 +206,34 @@ class ForSaleBoat extends Boat {
   Buy buyPhase;
   num x = 0.0;
   num y = 0.0;
+  num returnVel = 2;
+  
+  
   
   ForSaleBoat(Buy phase, num newX, num newY, var newBoatType) : super(newX, newY, newBoatType) {
     x = newX;
     y = newY;
     buyPhase = phase;
+  }
+  
+  void animate(){
+    if(_dragging == false){
+      if(inBuySpace()){
+        num dist = sqrt(pow(x - buyPhase.tunaWellX, 2) + pow(y - buyPhase.tunaWellY, 2));
+        move((-x + buyPhase.tunaWellX)/dist*returnVel, (-y + buyPhase.tunaWellY)/dist*returnVel);
+      }
+    }
+  }
+  
+  bool inBuySpace(){
+    num bx = buyPhase.buySquareX;
+    num by = buyPhase.buySquareY;
+    if(x >= bx && y >= by && x <= bx + buyPhase.buySquareWidth && y <= by + buyPhase.buySquareHeight){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
   
   bool touchDown(Contact c) {
@@ -221,7 +244,7 @@ class ForSaleBoat extends Boat {
   }
   
   void touchDrag(Contact c) {
-    move(c.touchX - _targetX, c.touchY - _targetY);
+    move(c.touchX - x, c.touchY - y);
     _targetX = c.touchX;
     _targetY = c.touchY;    
     repaint();
@@ -229,6 +252,10 @@ class ForSaleBoat extends Boat {
   
   void touchUp(Contact c) {
     _dragging = false;
+    if(!inBuySpace()){
+      buyPhase.deleteBoat(this);
+    }
+    
   }
   
     

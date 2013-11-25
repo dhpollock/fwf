@@ -74,6 +74,11 @@ class Game {
       fleetB.animate();
       draw();
     }
+    if(phase == 'BUY'){
+      //fleetA.animate();
+      buy.animate();
+      draw();
+    }
   }
   
 

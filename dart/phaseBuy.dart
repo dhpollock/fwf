@@ -9,11 +9,24 @@ class Buy extends TouchLayer{
   Boat buyTuna;
   Boat buyShark;
   
+  num buySquareWidth = 700;
+  num buySquareHeight = 500;
+  num buySquareX = 200;
+  num buySquareY = 200;
+  
+  
+  num tunaWellX, tunaWellY;
+  
   TouchManager tmanager = new TouchManager();
+  
+  List<Boat> buyingTuna = new List<Boat>();
   
   Buy(Fleet A, Fleet B){
     fleetA = A;
     fleetB = B;
+    
+    tunaWellX = 550.0;
+    tunaWellY = 450.0;
     
     
     tmanager.registerEvents(document.documentElement);
@@ -21,13 +34,17 @@ class Buy extends TouchLayer{
     tmanager.disable();
     
     //buySardine = new buyObject(450, 450, 'sardine', touchables);
-    buyTuna = new ForSaleBoat(this, 550, 450, 'tuna');
+    Boat newTuna = new ForSaleBoat(this, tunaWellX, tunaWellY, 'tuna');
+    buyingTuna.add(newTuna);
     //buyShark = new Boat(650, 450, 'shark', 0);
     
-    touchables.add(buyTuna);
+    touchables.add(newTuna);
   }
   
   void boatTouched(ForSaleBoat boat) {
+    Boat newTuna = new ForSaleBoat(this, tunaWellX, tunaWellY, 'tuna');
+    buyingTuna.add(newTuna);
+    touchables.add(newTuna);
     print("One of my boats was purchased!");
   }
 
@@ -42,20 +59,20 @@ class Buy extends TouchLayer{
     ctx.fillText("BUY STUFF: ", 100, 50);
     //buy box?
     ctx.fillStyle = 'grey';
-    ctx.fillRect(200, 200, 700, 500);
+    ctx.fillRect(buySquareX, buySquareY, buySquareWidth, buySquareHeight);
     ctx.fillStyle = 'white';
     ctx.fillText("Select Boats: ", 450, 250);
     
     //draw boats
     //buySardine.draw(ctx, width, height);
-    /*
-    if(buySardine.dragBoats.length > -1){
-      for(Boat boat in buySardine.dragBoats){
+    
+    if(buyingTuna.length > -1){
+      for(Boat boat in buyingTuna){
        boat.draw(ctx, width, height);
       }
     }
-    */
-    buyTuna.draw(ctx, width, height);
+    
+    //buyTuna.draw(ctx, width, height);
     //buyShark.draw(ctx, width, height);
     fleetA.draw(ctx, width, height);
     fleetB.draw(ctx, width, height);
@@ -63,6 +80,13 @@ class Buy extends TouchLayer{
     //selectSardine.draw(ctx, width, height);
     //selectTuna.draw(ctx, width, height);
     //selectShark.draw(ctx, width, height);
+  }
+  
+  void deleteBoat(ForSaleBoat boat){
+    if(buyingTuna.remove(boat)){
+      repaint();
+      return;
+    }
   }
   
   void show(){
@@ -73,6 +97,11 @@ class Buy extends TouchLayer{
     tmanager.disable();
   }
   void animate() {
+    if(buyingTuna.length > -1){
+      for(Boat boat in buyingTuna){
+       boat.animate();
+      }
+    }
     //buyTuna.animate();
     //buyShark.animate();
   }
