@@ -206,7 +206,8 @@ class ForSaleBoat extends Boat {
   Buy buyPhase;
   num x = 0.0;
   num y = 0.0;
-  num returnVel = 2;
+  num returnVel = 30.0;
+  num error = .1;
   
   
   
@@ -219,8 +220,15 @@ class ForSaleBoat extends Boat {
   void animate(){
     if(_dragging == false){
       if(inBuySpace()){
-        num dist = sqrt(pow(x - buyPhase.tunaWellX, 2) + pow(y - buyPhase.tunaWellY, 2));
-        move((-x + buyPhase.tunaWellX)/dist*returnVel, (-y + buyPhase.tunaWellY)/dist*returnVel);
+        if((x > buyPhase.tunaWellX + error || x < buyPhase.tunaWellX - error) && (y > buyPhase.tunaWellY + error || y < buyPhase.tunaWellY - error)){
+          num dist = sqrt(pow(x - buyPhase.tunaWellX, 2) + pow(y - buyPhase.tunaWellY, 2));
+          if(dist > returnVel){
+            move((buyPhase.tunaWellX - x)/dist*returnVel, (buyPhase.tunaWellY - y)/dist*returnVel);
+          }
+          else{
+            move((buyPhase.tunaWellX - x)/dist*dist, (buyPhase.tunaWellY - y)/dist*dist);
+          }
+        }
       }
     }
   }
