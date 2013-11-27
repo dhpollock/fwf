@@ -121,6 +121,10 @@ class Boat implements Touchable {
     }
   }
 
+  void clearPath(){
+    boatPath.clear();
+    boatPath.add(new Point(x, y));
+  }
   
   num get iwidth => img.width;
   
@@ -131,13 +135,13 @@ class Boat implements Touchable {
     ctx.save();
     {
       ctx.translate(x, y);
-      ctx.rotate(heading + 3.1415/2);
+      ctx.rotate(heading + PI/2);
       ctx.drawImage(img, -img.width/2, -img.height/2);
       if(fleetType == 'A' || fleetType == 'B'){
         ctx.lineWidth = 5;
         ctx. strokeStyle = 000;
         ctx.translate(0,0);
-        ctx.rotate(-(heading + 3.1415/2));
+        ctx.rotate(-(heading + PI/2));
         ctx.beginPath();
         for(int i = 0; i < boatPath.length; i++){
           ctx.lineTo(boatPath[i].x - boatPath.first.x, boatPath[i].y - boatPath.first.y);
@@ -208,36 +212,76 @@ class ForSaleBoat extends Boat {
   num y = 0.0;
   num returnVel = 30.0;
   num error = .1;
+  num price;
+  num fleetMax = 6;
   
   
   
-  ForSaleBoat(Buy phase, num newX, num newY, var newBoatType) : super(newX, newY, newBoatType) {
+  ForSaleBoat(Buy phase, num newX, num newY, var newBoatType, num  newPrice) : super(newX, newY, newBoatType) {
     x = newX;
     y = newY;
     buyPhase = phase;
+    price = newPrice;
+    heading = -PI/2;
   }
   
   void animate(){
+    num wellX, wellY;
+    
     if(_dragging == false){
-      if(inBuySpace()){
-        if((x > buyPhase.tunaWellX + error || x < buyPhase.tunaWellX - error) && (y > buyPhase.tunaWellY + error || y < buyPhase.tunaWellY - error)){
-          num dist = sqrt(pow(x - buyPhase.tunaWellX, 2) + pow(y - buyPhase.tunaWellY, 2));
+      if(!canBuy()){
+        
+        if(boatType == 'sardine'){
+          wellX = buyPhase.sardineWellX;
+          wellY = buyPhase.sardineWellY;
+        }
+        else if(boatType == 'tuna'){
+          wellX = buyPhase.tunaWellX;
+          wellY = buyPhase.tunaWellY;
+        }
+        else if(boatType == 'shark'){
+          wellX = buyPhase.sharkWellX;
+          wellY = buyPhase.sharkWellY;
+        }
+        
+        if((x > wellX + error || x < wellX - error) && (y > wellY + error || y < wellY - error)){
+          num dist = sqrt(pow(x - wellX, 2) + pow(y - wellY, 2));
           if(dist > returnVel){
-            move((buyPhase.tunaWellX - x)/dist*returnVel, (buyPhase.tunaWellY - y)/dist*returnVel);
+            move((wellX - x)/dist*returnVel, (wellY - y)/dist*returnVel);
           }
           else{
-            move((buyPhase.tunaWellX - x)/dist*dist, (buyPhase.tunaWellY - y)/dist*dist);
+            move((wellX - x)/dist*dist, (wellY - y)/dist*dist);
           }
         }
       }
     }
   }
   
-  bool inBuySpace(){
-    num bx = buyPhase.buySquareX;
-    num by = buyPhase.buySquareY;
-    if(x >= bx && y >= by && x <= bx + buyPhase.buySquareWidth && y <= by + buyPhase.buySquareHeight){
-      return true;
+  bool canBuy(){
+    num abx = buyPhase.fleetABuySquareX;
+    num aby = buyPhase.fleetABuySquareY;
+    num bbx = buyPhase.fleetBBuySquareX;
+    num bby = buyPhase.fleetBBuySquareY;
+    
+    if(x >= abx && y >= aby && x <= abx + buyPhase.fleetAbuySquareWidth && y <= aby + buyPhase.fleetAbuySquareHeight){
+      if(buyPhase.fleetA.coin >= price && buyPhase.fleetA.boatCount < fleetMax){
+        buyPhase.fleetA.addBoat(boatType);
+        buyPhase.fleetA.coin -= price;
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+    else if(x >= bbx && y >= bby && x <= bbx + buyPhase.fleetBbuySquareWidth && y <= bby + buyPhase.fleetBbuySquareHeight){
+      if(buyPhase.fleetB.coin >= price && buyPhase.fleetB.boatCount < fleetMax){
+        buyPhase.fleetB.addBoat(boatType);
+        buyPhase.fleetB.coin -= price;
+        return true;
+      }
+      else{
+        return false;
+      }
     }
     else{
       return false;
@@ -245,7 +289,6 @@ class ForSaleBoat extends Boat {
   }
   
   bool touchDown(Contact c) {
-    print("clicked on!");
     buyPhase.boatTouched(this);
     _dragging = true;
     return true;
@@ -260,7 +303,7 @@ class ForSaleBoat extends Boat {
   
   void touchUp(Contact c) {
     _dragging = false;
-    if(!inBuySpace()){
+    if(canBuy()){
       buyPhase.deleteBoat(this);
     }
     

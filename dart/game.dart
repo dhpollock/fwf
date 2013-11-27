@@ -47,7 +47,7 @@ class Game {
     
     // create a few boats
     
-    fleetA = new Fleet(1, 1, 1, 100, 'A');
+    fleetA = new Fleet(1, 1, 1, 3000, 'A');
     fleetB = new Fleet(1, 1, 1, 100, 'B');
     
     
@@ -110,6 +110,9 @@ class Game {
     switch(phase){
       case 'BUY':
         phase = 'FISH';
+
+        fleetA.harborArrage();
+        fleetB.harborArrage();
         
         fleetA.show();
         fleetB.show();
@@ -137,6 +140,9 @@ class Game {
         break;
       case 'SELL':
         phase = 'REGROW';
+        
+        fleetA.harborArrage();
+        fleetB.harborArrage();
         
         fleetA.hide();
         fleetB.hide();

@@ -5,85 +5,155 @@ class Buy extends TouchLayer{
   Fleet fleetA;
   Fleet fleetB;
   
-  buyObject buySardine;
+  Boat buySardine;
   Boat buyTuna;
   Boat buyShark;
   
-  num buySquareWidth = 700;
-  num buySquareHeight = 500;
-  num buySquareX = 200;
-  num buySquareY = 200;
+  num buySquareWidth = 400;
+  num buySquareHeight = 200;
+  num buySquareX = 300;
+  num buySquareY = 300;
   
+  num fleetABuySquareX = 0;
+  num fleetABuySquareY = 110;
+  num fleetAbuySquareWidth = 235;
+  num fleetAbuySquareHeight = 600;
+  
+  num fleetBBuySquareX = 765;
+  num fleetBBuySquareY = 110;
+  num fleetBbuySquareWidth = 235;
+  num fleetBbuySquareHeight = 600;
+  
+  num sardinePrice = 100;
+  num tunaPrice = 200;
+  num sharkPrice = 300;
+  
+  ImageElement harborOverlay = new ImageElement();
+  ImageElement buyOverlay = new ImageElement();
   
   num tunaWellX, tunaWellY;
+  num sardineWellX, sardineWellY;
+  num sharkWellX, sharkWellY;
   
   TouchManager tmanager = new TouchManager();
   
+  List<Boat> buyingSardine = new List<Boat>();
   List<Boat> buyingTuna = new List<Boat>();
+  List<Boat> buyingShark = new List<Boat>();
   
   Buy(Fleet A, Fleet B){
     fleetA = A;
     fleetB = B;
+
+    sardineWellX = 350.0;
+    sardineWellY = 400.0;
     
-    tunaWellX = 550.0;
-    tunaWellY = 450.0;
+    tunaWellX = 500.0;
+    tunaWellY = 400.0;
     
+    sharkWellX = 650.0;
+    sharkWellY = 400.0;
     
     tmanager.registerEvents(document.documentElement);
     tmanager.addTouchLayer(this);
     tmanager.disable();
     
-    //buySardine = new buyObject(450, 450, 'sardine', touchables);
-    Boat newTuna = new ForSaleBoat(this, tunaWellX, tunaWellY, 'tuna');
-    buyingTuna.add(newTuna);
-    //buyShark = new Boat(650, 450, 'shark', 0);
     
+    Boat newSardine = new ForSaleBoat(this, sardineWellX, sardineWellY, 'sardine', sardinePrice);
+    newSardine.heading = -PI/2;
+    buyingSardine.add(newSardine);
+    touchables.add(newSardine);
+    
+    Boat newTuna = new ForSaleBoat(this, tunaWellX, tunaWellY, 'tuna', tunaPrice);
+    newTuna.heading = -PI/2;
+    buyingTuna.add(newTuna);
     touchables.add(newTuna);
+    
+    Boat newShark = new ForSaleBoat(this, sharkWellX, sharkWellY, 'shark', sharkPrice);
+    newShark.heading = -PI/2;
+    buyingShark.add(newShark);
+    touchables.add(newShark);
+    
+    
+    harborOverlay.src = "images/harborOverlay.png";
+    buyOverlay.src = "images/buyOverlay.png";
+    
   }
   
   void boatTouched(ForSaleBoat boat) {
-    Boat newTuna = new ForSaleBoat(this, tunaWellX, tunaWellY, 'tuna');
-    buyingTuna.add(newTuna);
-    touchables.add(newTuna);
-    print("One of my boats was purchased!");
+    if(boat.boatType == 'sardine'){
+      Boat newSardine = new ForSaleBoat(this, sardineWellX, sardineWellY, 'sardine', sardinePrice);
+      buyingTuna.add(newSardine);
+      touchables.add(newSardine);
+    }
+    if(boat.boatType == 'tuna'){
+      Boat newTuna = new ForSaleBoat(this, tunaWellX, tunaWellY, 'tuna', tunaPrice);
+      buyingTuna.add(newTuna);
+      touchables.add(newTuna);
+    }
+    if(boat.boatType == 'shark'){
+      Boat newShark = new ForSaleBoat(this, sharkWellX, sharkWellY, 'shark', sharkPrice);
+      buyingTuna.add(newShark);
+      touchables.add(newShark);
+    }
   }
 
-  var selectSardine = new Boat(450, 450, 'sardine', 0);
-  var selectTuna = new Boat(550, 450, 'tuna', 0);
-  var selectShark = new Boat(650, 450, 'shark', 0);
   
   
   void draw(CanvasRenderingContext2D ctx, width, height){
     ctx.clearRect(0, 0, width, height);
+    ctx.drawImage(harborOverlay, 0, 0);
+    ctx.drawImage(buyOverlay, 0, 0);
     ctx.fillStyle = 'black';
     ctx.fillText("BUY STUFF: ", 100, 50);
     //buy box?
     ctx.fillStyle = 'grey';
     ctx.fillRect(buySquareX, buySquareY, buySquareWidth, buySquareHeight);
+    //ctx.fillRect(fleetABuySquareX, fleetABuySquareY, fleetAbuySquareWidth, fleetAbuySquareHeight);
+    //ctx.fillRect(fleetBBuySquareX, fleetBBuySquareY, fleetBbuySquareWidth, fleetBbuySquareHeight);
     ctx.fillStyle = 'white';
     ctx.fillText("Select Boats: ", 450, 250);
+    ctx.fillText("${sardinePrice}", sardineWellX - 25, 350);
+    ctx.fillText("${tunaPrice}", tunaWellX - 25, 350);
+    ctx.fillText("${sharkPrice}", sharkWellX -25, 350);
+    
+    ctx.fillText("${fleetA.coin}", 50, 700);
+    ctx.fillText("${fleetB.coin}", 900, 700);
     
     //draw boats
-    //buySardine.draw(ctx, width, height);
     
+    if(buyingSardine.length > -1){
+      for(Boat boat in buyingSardine){
+       boat.draw(ctx, width, height);
+      }
+    }
     if(buyingTuna.length > -1){
       for(Boat boat in buyingTuna){
        boat.draw(ctx, width, height);
       }
     }
+    if(buyingShark.length > -1){
+      for(Boat boat in buyingShark){
+       boat.draw(ctx, width, height);
+      }
+    }
     
-    //buyTuna.draw(ctx, width, height);
-    //buyShark.draw(ctx, width, height);
+
     fleetA.draw(ctx, width, height);
     fleetB.draw(ctx, width, height);
     
-    //selectSardine.draw(ctx, width, height);
-    //selectTuna.draw(ctx, width, height);
-    //selectShark.draw(ctx, width, height);
   }
   
   void deleteBoat(ForSaleBoat boat){
-    if(buyingTuna.remove(boat)){
+    if(buyingSardine.remove(boat)){
+      repaint();
+      return;
+    }
+    else if(buyingTuna.remove(boat)){
+      repaint();
+      return;
+    }
+    else if(buyingShark.remove(boat)){
       repaint();
       return;
     }
@@ -97,83 +167,21 @@ class Buy extends TouchLayer{
     tmanager.disable();
   }
   void animate() {
+    if(buyingSardine.length > -1){
+      for(Boat boat in buyingSardine){
+       boat.animate();
+      }
+    }
     if(buyingTuna.length > -1){
       for(Boat boat in buyingTuna){
        boat.animate();
       }
     }
-    //buyTuna.animate();
-    //buyShark.animate();
-  }
-
-}
-
-class buyObject implements Touchable{
-  ImageElement img = new ImageElement();
-  num x, y;
-  var type;
-  List<Boat> dragBoats = new List<Boat>();
-  List touchables;
-  
-  buyObject(num newX, num newY, var myType, List myTouchables){
-    x = newX;
-    y = newY;
-    type = myType;
-    touchables = myTouchables;
-    if(type == 'sardine' || type == 'tuna' || type == 'shark'){
-      img.src = "images/boat${type}.png";
-    }
-    Boat tempBoat = new Boat(x, y, type);
-    dragBoats.add(tempBoat);
-    touchables.insert(0,tempBoat);
-  }
-  
-  void draw(CanvasRenderingContext2D ctx, num width, num height) {
-    ctx.save();
-    {
-      ctx.translate(x, y);
-      ctx.rotate(0 + 3.1415/2);
-      ctx.drawImage(img, -img.width/2, -img.height/2);
-    }    
-    ctx.restore();
-  }
-  
-  List<Boat> getDragged(){
-    return dragBoats;
-  }
-  
-  bool containsTouch(Contact c) {
-    return true;
-  }
-  
-  bool touchDown(Contact c) {
-    num tx = c.touchX;
-    num ty = c.touchY;
-    num bx = x - img.width/2;
-    num by = y - img.height/2;
-    if(tx >= bx && ty >= by && tx <= bx + img.width && ty <= by + img.height){
-      print(type);
-      Boat tempBoat = new Boat(x, y, type);
-      dragBoats.add(tempBoat);
-      touchables.add(tempBoat);
-      return true;
-    }
-    else{
-      return false;
+    if(buyingShark.length > -1){
+      for(Boat boat in buyingShark){
+       boat.animate();
+      }
     }
   }
 
-  
-  void touchUp(Contact c) {
-
-  }
-  
-  
-  void touchDrag(Contact c) {
-
-  }
-  
-    
-  void touchSlide(Contact c) { }  
- 
 }
