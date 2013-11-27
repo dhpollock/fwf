@@ -30,6 +30,7 @@ class Game {
   Fish fish;
   Sell sell;
   Regrow regrow;
+  Title title;
    
   Game() {
     canvas = document.query("#game");
@@ -37,7 +38,7 @@ class Game {
     width = canvas.width;
     height = canvas.height;
     
-    phase = 'BUY'; // PHASES CAN BE 'BUY', 'FISH', 'SELL', 'GROWTH'
+    phase = 'TITLE'; // PHASES CAN BE 'BUY', 'FISH', 'SELL', 'GROWTH'
     
     myButton.initButton(transition);
     myButton.showButton("phaseButton", 50, 50);
@@ -55,6 +56,7 @@ class Game {
     fish = new Fish(fleetA, fleetB);
     sell = new Sell(fleetA, fleetB);
     regrow = new Regrow(fleetA, fleetB);
+    title = new Title();
 
     // redraw the canvas every 40 milliseconds
     new Timer.periodic(const Duration(milliseconds : 40), (timer) => animate());
@@ -68,7 +70,9 @@ class Game {
  * Animate all of the game objects 
  */
   void animate() {
-    
+    if(phase == 'TITLE'){
+      draw();
+    }
     if(phase == 'FISH'){
       fleetA.animate();
       fleetB.animate();
@@ -88,11 +92,13 @@ class Game {
   void draw() {
     
     switch(phase){
+      case 'TITLE':
+        title.draw(ctx, width, height);
+        break;
       case 'BUY':
         buy.draw(ctx, width, height);
         break;
       case 'FISH':
-        // erase the screen
         fish.draw(ctx, width, height);
         break;
       case 'SELL':
@@ -107,7 +113,25 @@ class Game {
   }
 
   void transition() {
+
     switch(phase){
+      case 'TITLE':
+        phase = 'BUY';
+
+        fleetA.harborArrage();
+        fleetB.harborArrage();
+        
+        fleetA.show();
+        fleetB.show();
+        
+        buy.show();
+        fish.hide();
+        sell.hide();
+        regrow.hide();
+        
+        repaint();
+        print(phase);
+        break;
       case 'BUY':
         phase = 'FISH';
 

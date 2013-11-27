@@ -105,6 +105,9 @@ class Buy extends TouchLayer{
     ctx.drawImage(harborOverlay, 0, 0);
     ctx.drawImage(buyOverlay, 0, 0);
     ctx.fillStyle = 'black';
+    ctx.font = '30px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'center';
     ctx.fillText("BUY STUFF: ", 100, 50);
     //buy box?
     ctx.fillStyle = 'grey';
@@ -112,6 +115,7 @@ class Buy extends TouchLayer{
     //ctx.fillRect(fleetABuySquareX, fleetABuySquareY, fleetAbuySquareWidth, fleetAbuySquareHeight);
     //ctx.fillRect(fleetBBuySquareX, fleetBBuySquareY, fleetBbuySquareWidth, fleetBbuySquareHeight);
     ctx.fillStyle = 'white';
+    
     ctx.fillText("Select Boats: ", 450, 250);
     ctx.fillText("${sardinePrice}", sardineWellX - 25, 350);
     ctx.fillText("${tunaPrice}", tunaWellX - 25, 350);

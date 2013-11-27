@@ -1,31 +1,28 @@
 part of fwf;
 
 
-class Sell extends TouchLayer{
-  Fleet fleetA;
-  Fleet fleetB;
+class Title extends TouchLayer{
+  
+  ImageElement img = new ImageElement();
   
   TouchManager tmanager = new TouchManager();
   
-  Sell(Fleet A, Fleet B){
-    fleetA = A;
-    fleetB = B;
+  Title(){
+    img.src = "images/title.png";
     
     tmanager.registerEvents(document.documentElement);
     tmanager.addTouchLayer(this);
-    tmanager.disable();
+    tmanager.enable();
   }
   
   
   void draw(CanvasRenderingContext2D ctx, width, height){
     ctx.clearRect(0, 0, width, height);
     ctx.fillStyle = 'black';
-    ctx.font = '30px sans-serif';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'center';
-    ctx.fillText("SELL STUFF: ", 100, 50);
-    //fleetA.hide();
-    //fleetB.hide();
+    ctx.drawImage(img, 0, 0);
+  }
+  void animate(){
+    
   }
   
   void show(){
