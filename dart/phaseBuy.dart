@@ -5,15 +5,18 @@ class Buy extends TouchLayer{
   Fleet fleetA;
   Fleet fleetB;
   
+  //intial well for sale boats  
   Boat buySardine;
   Boat buyTuna;
   Boat buyShark;
   
+  //dimensions of buy box 
   num buySquareWidth = 400;
   num buySquareHeight = 200;
   num buySquareX = 300;
   num buySquareY = 300;
   
+  //dimensions of fleet boxes for fleet A and B purchasing 
   num fleetABuySquareX = 0;
   num fleetABuySquareY = 110;
   num fleetAbuySquareWidth = 235;
@@ -24,19 +27,23 @@ class Buy extends TouchLayer{
   num fleetBbuySquareWidth = 235;
   num fleetBbuySquareHeight = 600;
   
+  //prices of boats 
   num sardinePrice = 100;
   num tunaPrice = 200;
   num sharkPrice = 300;
   
+  //images for harbor and buy box 
   ImageElement harborOverlay = new ImageElement();
   ImageElement buyOverlay = new ImageElement();
   
+  //coordinates for well boats 
   num tunaWellX, tunaWellY;
   num sardineWellX, sardineWellY;
   num sharkWellX, sharkWellY;
   
   TouchManager tmanager = new TouchManager();
   
+  //list of all well boats 
   List<Boat> buyingSardine = new List<Boat>();
   List<Boat> buyingTuna = new List<Boat>();
   List<Boat> buyingShark = new List<Boat>();
@@ -58,7 +65,7 @@ class Buy extends TouchLayer{
     tmanager.addTouchLayer(this);
     tmanager.disable();
     
-    
+    //create new ForSaleBoats in well locations 
     Boat newSardine = new ForSaleBoat(this, sardineWellX, sardineWellY, 'sardine', sardinePrice);
     newSardine.heading = -PI/2;
     buyingSardine.add(newSardine);
@@ -80,10 +87,11 @@ class Buy extends TouchLayer{
     
   }
   
+  //keeps the well full 
   void boatTouched(ForSaleBoat boat) {
     if(boat.boatType == 'sardine'){
       Boat newSardine = new ForSaleBoat(this, sardineWellX, sardineWellY, 'sardine', sardinePrice);
-      buyingTuna.add(newSardine);
+      buyingSardine.add(newSardine);
       touchables.add(newSardine);
     }
     if(boat.boatType == 'tuna'){
@@ -93,7 +101,7 @@ class Buy extends TouchLayer{
     }
     if(boat.boatType == 'shark'){
       Boat newShark = new ForSaleBoat(this, sharkWellX, sharkWellY, 'shark', sharkPrice);
-      buyingTuna.add(newShark);
+      buyingShark.add(newShark);
       touchables.add(newShark);
     }
   }
@@ -170,6 +178,8 @@ class Buy extends TouchLayer{
   void hide(){
     tmanager.disable();
   }
+  
+  //animates boats sliding back to well 
   void animate() {
     if(buyingSardine.length > -1){
       for(Boat boat in buyingSardine){

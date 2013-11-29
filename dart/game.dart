@@ -26,6 +26,7 @@ class Game {
   Fleet fleetA;
   Fleet fleetB;
   
+  //declaring phase objects 
   Buy buy;
   Fish fish;
   Sell sell;
@@ -51,14 +52,14 @@ class Game {
     fleetA = new Fleet(1, 1, 1, 3000, 'A');
     fleetB = new Fleet(1, 1, 1, 100, 'B');
     
-    
+    //intializing each phase 
     buy = new Buy(fleetA, fleetB);
     fish = new Fish(fleetA, fleetB);
     sell = new Sell(fleetA, fleetB);
     regrow = new Regrow(fleetA, fleetB);
     title = new Title();
 
-    // redraw the canvas every 40 milliseconds
+    // redraw the canvas every 40 milliseconds runs animate function every 40 milliseconds 
     new Timer.periodic(const Duration(milliseconds : 40), (timer) => animate());
   }
   
@@ -67,7 +68,7 @@ class Game {
 
 
 /**
- * Animate all of the game objects 
+ * Animate all of the game objects makes things movie without an event 
  */
   void animate() {
     if(phase == 'TITLE'){
@@ -111,19 +112,23 @@ class Game {
        break;       
     }
   }
-
+  
+  
+  //function that allows transition between phases 
   void transition() {
 
     switch(phase){
       case 'TITLE':
         phase = 'BUY';
-
+        
+        //puts boats in harbor
         fleetA.harborArrage();
         fleetB.harborArrage();
         
         fleetA.show();
         fleetB.show();
         
+        //enable/disable touch manager for the phase 
         buy.show();
         fish.hide();
         sell.hide();

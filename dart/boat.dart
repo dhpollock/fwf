@@ -38,7 +38,10 @@ class Boat implements Touchable {
   var boatmenu = new Menu();
   
   num menunum;
+  
+  //speed of path follow 
   var speed = 3.0;
+  
   var boatType;
   var fleetType;
   
@@ -50,11 +53,18 @@ class Boat implements Touchable {
  * Default constructor
  */
   Boat(this.x, this.y, var newBoatType, [var myfleetType]){
+    //intializes the menu for net selection
     boatmenu.initPopovers();
     fleetType = myfleetType;
+    
+    //intialize path drawing coordinate list, add starting position to list
     boatPath = new List<Point>();
     boatPath.add(new Point(x, y));
+    
+    //save starting position for coordinate reference frame 
     initPos = new Point(x,y);
+    
+    //loads boat image dependant on type and fleet 
     if(newBoatType == 'sardine' || newBoatType == 'tuna' || newBoatType == 'shark'){
       boatType = newBoatType;
 
@@ -100,9 +110,12 @@ class Boat implements Touchable {
   
   
   void animate() {
+    //animates boat moving along boatPath 
     if(fleetType == 'A' || fleetType =='B'){
       if(boatPath.length > 1){
         var dist = sqrt(pow((boatPath[1].x - boatPath[0].x), 2) + pow((boatPath[1].y - boatPath[0].y), 2));
+        
+        //if statement prevents boat from overshooting target given a velocity 
         if(dist > speed){
           heading = atan2((boatPath[1].y - boatPath[0].y), (boatPath[1].x - boatPath[0].x));
           forward(speed);
@@ -137,6 +150,8 @@ class Boat implements Touchable {
       ctx.translate(x, y);
       ctx.rotate(heading + PI/2);
       ctx.drawImage(img, -img.width/2, -img.height/2);
+      
+      //draws boatPath on canvas
       if(fleetType == 'A' || fleetType == 'B'){
         ctx.lineWidth = 5;
         ctx. strokeStyle = 000;
@@ -154,6 +169,7 @@ class Boat implements Touchable {
     ctx.restore();
   }
   
+  //hides menus for net selection
   void hide(){
     boatmenu.hidePopover("fishing-menu${menunum}");
   }
@@ -227,6 +243,7 @@ class ForSaleBoat extends Boat {
   
   void animate(){
     num wellX, wellY;
+    //slide back to well animiation 
     
     if(_dragging == false){
       if(!canBuy()){
@@ -263,7 +280,9 @@ class ForSaleBoat extends Boat {
     num bbx = buyPhase.fleetBBuySquareX;
     num bby = buyPhase.fleetBBuySquareY;
     
+    //if boat is within the buy box for fleet A 
     if(x >= abx && y >= aby && x <= abx + buyPhase.fleetAbuySquareWidth && y <= aby + buyPhase.fleetAbuySquareHeight){
+      //if player has enough money to buy boat and less than fleetMax amount of boats 
       if(buyPhase.fleetA.coin >= price && buyPhase.fleetA.boatCount < fleetMax){
         buyPhase.fleetA.addBoat(boatType);
         buyPhase.fleetA.coin -= price;
@@ -273,6 +292,8 @@ class ForSaleBoat extends Boat {
         return false;
       }
     }
+    
+    //same for fleet B
     else if(x >= bbx && y >= bby && x <= bbx + buyPhase.fleetBbuySquareWidth && y <= bby + buyPhase.fleetBbuySquareHeight){
       if(buyPhase.fleetB.coin >= price && buyPhase.fleetB.boatCount < fleetMax){
         buyPhase.fleetB.addBoat(boatType);

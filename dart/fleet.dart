@@ -4,15 +4,24 @@ part of fwf;
 
 
 class Fleet  extends TouchLayer{
+  //number of boats for each type 
   var sardineBoatsNum;
   var tunaBoatsNum;
   var sharkBoatsNum;
   var random = new Random();
+  
+  //multiple boats of each type
   List<Boat> sardineBoats = new List<Boat>();
   List<Boat> tunaBoats = new List<Boat>();
   List<Boat> sharkBoats = new List<Boat>();
+  
+  //amount of money 
   num coin;
+  
+  //which fleet type either A or B
   var fleetAB;
+  
+  //number of boats in fleet 
   num boatCount;
   
   TouchManager tmanager = new TouchManager();
@@ -37,24 +46,17 @@ class Fleet  extends TouchLayer{
       print("error, not valid fleet type");
     }
     
+
+    //creates starting boat fleet and puts boat in the appropriate list 
     boatCount = 0;
     for(var i = 0; i < sardineBoatsNum; i++){
-      Boat boat = new Boat(tempStartX , 215 + boatCount * 80, 'sardine', myfleetAB );
-      sardineBoats.add(boat);
-      touchables.add(boat);
-      boatCount++;
+      this.addBoat('sardine');
     }
     for(var i = 0; i < tunaBoatsNum; i++){
-      Boat boat = new Boat(tempStartX , 215 + boatCount * 80, 'tuna', myfleetAB);
-      tunaBoats.add(boat);
-      touchables.add(boat);
-      boatCount++;
+      this.addBoat('tuna');
     }
     for(var i = 0; i < sharkBoatsNum; i++){
-      Boat boat = new Boat(tempStartX, 215 + boatCount * 80, 'shark', myfleetAB);
-      sharkBoats.add(boat);
-      touchables.add(boat);
-      boatCount++;
+      this.addBoat('shark');
     }
     
 
@@ -65,6 +67,7 @@ class Fleet  extends TouchLayer{
     
   }
   
+  //draw all boats 
   void draw(CanvasRenderingContext2D ctx, num width, num height){
     for(Boat boat in sardineBoats){
       boat.draw(ctx, width, height);
@@ -84,6 +87,7 @@ class Fleet  extends TouchLayer{
   void hide(){
     tmanager.disable();
     for(Boat boat in sardineBoats){
+      //hide menues for each boat 
       boat.hide();
     }
     for(Boat boat in tunaBoats){
@@ -106,6 +110,8 @@ class Fleet  extends TouchLayer{
     }
   }
   
+
+  //creates boat and puts boat in the appropriate list and touchable list 
   void addBoat(var type){
     if(type == 'sardine'){
       Boat boat = new Boat(0 , 0, 'sardine', fleetAB );
@@ -126,9 +132,9 @@ class Fleet  extends TouchLayer{
       boatCount++;
     }
     harborArrage();
-    repaint();
   }
   
+  //gives boats position within harbor 
   void harborArrage(){
     num tempStartX;
     num heading;
