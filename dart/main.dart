@@ -20,6 +20,7 @@ part 'phaseBuy.dart';
 part 'phaseFish.dart';
 part 'phaseSell.dart';
 part 'phaseRegrow.dart';
+part 'agent.dart';
 
 
 // global game object

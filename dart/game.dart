@@ -32,7 +32,9 @@ class Game {
   Sell sell;
   Regrow regrow;
   Title title;
-   
+  
+  AgentManager ecosystem;
+  
   Game() {
     canvas = document.query("#game");
     ctx = canvas.getContext('2d');
@@ -53,10 +55,12 @@ class Game {
     fleetB = new Fleet(1, 1, 1, 100, 'B');
     
     //intializing each phase 
+    ecosystem = new AgentManager(200, 45, 3, 1, width, height);
+
     buy = new Buy(fleetA, fleetB);
     fish = new Fish(fleetA, fleetB);
     sell = new Sell(fleetA, fleetB);
-    regrow = new Regrow(fleetA, fleetB);
+    regrow = new Regrow(fleetA, fleetB, ecosystem);
     title = new Title();
 
     // redraw the canvas every 40 milliseconds runs animate function every 40 milliseconds 
@@ -84,6 +88,12 @@ class Game {
       buy.animate();
       draw();
     }
+    if(phase == 'REGROW'){
+      regrow.animate();
+      draw();
+    }
+    
+    
   }
   
 
@@ -107,6 +117,7 @@ class Game {
         break;
       case 'REGROW':
         regrow.draw(ctx, width, height);
+        //ecosystem.draw(ctx);
         break;
       default:
        break;       
