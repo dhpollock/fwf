@@ -9,6 +9,6 @@
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
   padding: 8px;
   z-index: 50;
-  visibility = "visible";
-  opacity = "1.0";
+  visibility = "invisible";
+  opacity: 0.0;
 }

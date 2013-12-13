@@ -6,6 +6,9 @@ part of fwf;
 
 //class Game extends TouchLayer {
 class Game {
+  
+  //turn off annoying transitions 0 = on; 1 = off
+  bool debugTransition = false;
    
   // this is the HTML canvas element
   CanvasElement canvas;
@@ -22,9 +25,13 @@ class Game {
   // list of the boats that people can touch
   List<Fleet> fleets = new List<Fleet>();
   var phase;
-  var myButton = new Button();
+  var debugPhaseButton = new Button();
+  var intro = new Instruction();
+  var finish = new finishButton();
   Fleet fleetA;
   Fleet fleetB;
+  
+  TouchManager tmanager = new TouchManager();
   
   //declaring phase objects 
   Buy buy;
@@ -43,8 +50,15 @@ class Game {
     
     phase = 'TITLE'; // PHASES CAN BE 'BUY', 'FISH', 'SELL', 'GROWTH'
     
-    myButton.initButton(transition);
-    myButton.showButton("phaseButton", 50, 50);
+    if(debugTransition){
+      debugPhaseButton.initButton(transition);
+      debugPhaseButton.showButton("phaseButton", 500, 500);
+    }
+    else{
+      intro.initInstructions();
+      finish.initfinishButton(transition);
+    }
+    
     
 //    tmanager.registerEvents(document.documentElement);
 //    tmanager.addTouchLayer(this);
@@ -67,26 +81,35 @@ class Game {
     new Timer.periodic(const Duration(milliseconds : 40), (timer) => animate());
   }
   
-
+  void timer(var input) {
+    return input();
+  }
   
-
 
 /**
  * Animate all of the game objects makes things movie without an event 
  */
   void animate() {
-    if(phase == 'TITLE'){
-      draw();
-    }
-    if(phase == 'FISH'){
-      fleetA.animate();
-      fleetB.animate();
-      draw();
-    }
-    if(phase == 'BUY'){
-      //fleetA.animate();
-      buy.animate();
-      draw();
+    switch(phase){
+      case 'TITLE':
+        draw();
+        break;
+      case 'BUY':
+        buy.animate();
+        draw();
+        break;
+      case 'FISH':
+        fish.animate();
+        fleetA.animate();
+        fleetB.animate();
+        draw();
+        break;
+      case 'SELL':
+        break;
+      case 'REGROW':
+        regrow.animate();
+        draw();
+        break;
     }
     if(phase == 'REGROW'){
       regrow.animate();
@@ -124,13 +147,17 @@ class Game {
     }
   }
   
-  
+  //keep track of how many phases encountered 
+  var phasenum = 0;
   //function that allows transition between phases 
   void transition() {
-
     switch(phase){
       case 'TITLE':
         phase = 'BUY';
+          phasenum++;
+//          if (debugTransition){
+//            phasenum = 10;
+//          }
         
         //puts boats in harbor
         fleetA.harborArrage();
@@ -140,30 +167,54 @@ class Game {
         fleetB.show();
         
         //enable/disable touch manager for the phase 
+        title.hide();
         buy.show();
         fish.hide();
         sell.hide();
         regrow.hide();
-        
         repaint();
+        //if this is the first encounter with phase show instructions
+        if (phasenum == 1 && !debugTransition){
+          intro.showInstructions("instructionBuy", 130, 130);
+          //hide fleets to prevent clicking, after click in instruction class fleets are touchable
+          fleetA.hide();
+          fleetB.hide();
+          repaint();
+        }
+        repaint();
+        //shows buttons after 5 seconds for players to move to next phase
+        if (!debugTransition && phasenum > 4){
+          transitionActions();
+        }
+        print(phasenum);
         print(phase);
         break;
       case 'BUY':
         phase = 'FISH';
-
+        phasenum++;
+        
         fleetA.harborArrage();
         fleetB.harborArrage();
-        
+          
         fleetA.show();
         fleetB.show();
-        
+          
         buy.hide();
         fish.show();
         sell.hide();
         regrow.hide();
         
+        if (phasenum == 2 && !debugTransition){
+          intro.showInstructions("instructionFish", 130, 130);
+          fleetA.hide();
+          fleetB.hide();
+          }
+        if (!debugTransition && phasenum > 4){
+          transitionActions();
+        }
         repaint();
         print(phase);
+        print(phasenum);
         break;
       case 'FISH':
         phase = 'SELL';
@@ -172,11 +223,22 @@ class Game {
         
         buy.hide();
         fish.hide();
+        fish.stopTimer();
         sell.show();
         regrow.hide();
         
         repaint();
         print(phase);
+        phasenum++; 
+        if (phasenum == 3 && !debugTransition){
+          intro.showInstructions("instructionSell", 130, 130);
+          fleetA.hide();
+          fleetB.hide();
+          }
+        print(phasenum);
+        if (!debugTransition  && phasenum > 4){
+          transitionActions();
+        }
         break;
       case 'SELL':
         phase = 'REGROW';
@@ -194,6 +256,16 @@ class Game {
 
         repaint();
         print(phase);
+        phasenum++; 
+        if (phasenum == 4 && !debugTransition){
+          intro.showInstructions("instructionRegrow", 130, 130);
+          fleetA.hide();
+          fleetB.hide();
+          }
+        print(phasenum);
+        if (!debugTransition && phasenum>4){
+          transitionActions();
+        }
         break;
       case 'REGROW':
         phase = 'BUY';
@@ -207,7 +279,36 @@ class Game {
         regrow.hide();
 
         repaint();
+        if (!debugTransition && phasenum >3){
+          transitionActions();
+        }
         print(phase);
+        phasenum++; 
+        print(phasenum);
+        break;
+    }
+  }
+  
+  void transitionActions(){
+    switch(phase){
+      case "BUY":
+        print("hello");
+        new Timer(const Duration(seconds : 3), () {
+          finish.showfinishButton("finishButton1", 10, 780);
+          finish.showfinishButton("finishButton2", 650, 780);
+        });
+        break;
+      case "FISH":
+        fish.startTimer();
+        break;
+      case "SELL":
+        new Timer(const Duration(seconds : 3), () {
+          finish.showfinishButton("finishButton1", 10, 780);
+          finish.showfinishButton("finishButton2", 650, 780);
+        });
+        break;
+      case "REGROW":
+        regrow.startTimer();
         break;
     }
   }

@@ -28,7 +28,6 @@ class Button{
   void showButton(String id, [ num x, num y ]) {
     DivElement button = querySelector("#$id");
     if (button != null) {
-
       button.style.visibility = "visible";
       button.style.opacity = "1.0";
     }

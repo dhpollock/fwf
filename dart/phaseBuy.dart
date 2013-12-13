@@ -48,7 +48,7 @@ class Buy extends TouchLayer{
   List<Boat> buyingTuna = new List<Boat>();
   List<Boat> buyingShark = new List<Boat>();
   
-  Buy(Fleet A, Fleet B){
+  Buy(Fleet A, Fleet B){    
     fleetA = A;
     fleetB = B;
 
