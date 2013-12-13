@@ -76,12 +76,25 @@ class Agent{
         else{
           if(nearest != null){
             if(goto(nearest.position)){
-              manager.removeAgent(foodType, nearest.position);
-              if(nearest.nearest != null){
-                nearest.nearest.ate = false;
+              if(nearest.population > 2){
+                num tempPopulation = nearest.population/2.floor();
+                nearest.population  = tempPopulation;
+                energy += tempPopulation;
+                
+                nearest.ateDelay();
+
+                nearest = null;
+                
+                
               }
-              nearest = null;
-              energy += 1;
+              else{
+                manager.removeAgent(foodType, nearest.position);
+                if(nearest.nearest != null){
+                  nearest.nearest.ate = false;
+                }
+                nearest = null;
+                energy += 1;
+              }
             }
           }
         }
@@ -135,8 +148,8 @@ class Agent{
     }
     //Split Agent into two based on agents represented population size
     if(population > split){
-      manager.toBeAdded.add(this);
       population = split/2;
+      manager.toBeAdded.add(this);
     }
     //Increase population if above hunger, check on energy counter timer
     //Could potentially set AVOID mode here
@@ -166,6 +179,12 @@ class Agent{
     energyCounter++;
   }
   
+  void ateDelay(){
+    new Timer(const Duration(seconds : 2), () {
+        ate = false;
+    });
+  }
+  
 }
 
 //Plankton Agent Class... sets variables and draw function
@@ -173,6 +192,7 @@ class Plankton extends Agent{
   
   Plankton(AgentManager newManager, num newX, num newY){
     position = new Point(newX, newY);
+    population = 1;
     energy = 1;
     speed = 0;
     type = 'plankton';
@@ -205,13 +225,13 @@ class Sardine extends Agent{
     mode = 'FOOD';
     ate = false;
     hunger = 3;
-    split = 6;
+    split = 10;
     energyThreshold = 32;
   }
   
   void draw(CanvasRenderingContext2D ctx){
     ctx.fillStyle = 'green';
-    ctx.fillRect(position.x, position.y, 10, 10);
+    ctx.fillRect(position.x, position.y, 10 + population, 10 + population);
   }
   
 }
@@ -222,7 +242,7 @@ class Tuna extends Agent{
     position = new Point(newX, newY);
     energy = 2;
     energyCounter = 0;
-    population = 5;
+    population = 10;
     speed = 5.5;
     type = 'tuna';
     foodType = 'sardine';
@@ -237,7 +257,7 @@ class Tuna extends Agent{
   
   void draw(CanvasRenderingContext2D ctx){
     ctx.fillStyle = 'red';
-    ctx.fillRect(position.x, position.y, 15, 15);
+    ctx.fillRect(position.x, position.y, 15 + population, 15 + population);
   }
 
 }
@@ -248,21 +268,21 @@ class Shark extends Agent{
     position = new Point(newX, newY);
     energy = 2;
     energyCounter = 0;
-    population = 2; 
-    speed = 5.5;
+    population = 10; 
+    speed = 5.75;
     type = 'shark';
     foodType = 'tuna';
     manager = newManager;
     mode = 'FOOD';
     ate = false;
-    split = 4;
+    split = 20;
     hunger = 5;
-    energyThreshold = 20;
+    energyThreshold = 30;
   }
   
   void draw(CanvasRenderingContext2D ctx){
     ctx.fillStyle = 'blue';
-    ctx.fillRect(position.x, position.y, 20, 20);
+    ctx.fillRect(position.x, position.y, 20 + population, 20 + population);
   }
 }
 

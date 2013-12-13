@@ -8,7 +8,7 @@ part of fwf;
 class Game {
   
   //turn off annoying transitions 0 = on; 1 = off
-  bool debugTransition = false;
+  bool debugTransition = true;
    
   // this is the HTML canvas element
   CanvasElement canvas;
@@ -69,7 +69,7 @@ class Game {
     fleetB = new Fleet(1, 1, 1, 100, 'B');
     
     //intializing each phase 
-    ecosystem = new AgentManager(200, 45, 3, 1, width, height);
+    ecosystem = new AgentManager(200, 45, 15, 10, width, height);
 
     buy = new Buy(fleetA, fleetB);
     fish = new Fish(fleetA, fleetB);

@@ -45,14 +45,16 @@ class Regrow extends TouchLayer{
   
   void animate(){
     if(active){
-      ecosystem.animate();
       if(timerCount >= phaseDuration){
         stopTimer();
         if (!game.debugTransition){
           game.transition();
         }
       }
-   }
+    }
+    if(active || game.debugTransition){
+      ecosystem.animate();
+    }
   }
   
   void show(){
