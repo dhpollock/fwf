@@ -51,6 +51,9 @@ class Agent{
   /* random number generator */
   Random random = new Random();
   
+  //factor that determines how fast the entities run
+  num playSpeed = 1;
+  
   
   //Uses agent manager findNearest to fill the nearest agent, marks it as ate.
   void findFood(var foodType){
@@ -182,9 +185,15 @@ class Agent{
   }
   
   void ateDelay(){
-    new Timer(const Duration(seconds : 2), () {
+    new Timer(new Duration(seconds : (10 / playSpeed).floor()), () {
         ate = false;
     });
+  }
+  
+  void updatePlaySpeed(num factor){
+    playSpeed = factor;
+    speed = speed * factor;
+    energyThreshold = energyThreshold / factor;
   }
   
 }
@@ -200,6 +209,7 @@ class Plankton extends Agent{
     type = 'plankton';
     manager = newManager;
     ate = false;
+    energyThreshold = 0;
   }
   
   void draw(CanvasRenderingContext2D ctx){
@@ -218,7 +228,7 @@ class Sardine extends Agent{
     energy = 2;
     energyCounter = 0;
     heading = 0;
-    speed = 5;
+    speed = 1.000000;
     population = 5;
     type = 'sardine';
     foodType = 'plankton';
@@ -228,7 +238,7 @@ class Sardine extends Agent{
     ate = false;
     hunger = 3;
     split = 10;
-    energyThreshold = 32;
+    energyThreshold = 160;
   }
   
   void draw(CanvasRenderingContext2D ctx){
@@ -245,7 +255,7 @@ class Tuna extends Agent{
     energy = 2;
     energyCounter = 0;
     population = 10;
-    speed = 5.5;
+    speed = 1.1;
     type = 'tuna';
     foodType = 'sardine';
     predType = 'shark';
@@ -253,8 +263,8 @@ class Tuna extends Agent{
     mode = 'FOOD';
     ate = false;
     split = 20;
-    hunger = 5;
-    energyThreshold = 36;
+    hunger = 5.0;
+    energyThreshold = 180;
   }
   
   void draw(CanvasRenderingContext2D ctx){
@@ -271,7 +281,7 @@ class Shark extends Agent{
     energy = 2;
     energyCounter = 0;
     population = 10; 
-    speed = 5.75;
+    speed = 1.15;
     type = 'shark';
     foodType = 'tuna';
     manager = newManager;
@@ -279,7 +289,7 @@ class Shark extends Agent{
     ate = false;
     split = 20;
     hunger = 5;
-    energyThreshold = 20;
+    energyThreshold = 100.0;
   }
   
   void draw(CanvasRenderingContext2D ctx){
@@ -311,12 +321,15 @@ class AgentManager{
   //Counter that keeps track on when to add more plankton
   num planktonTimer;
   
+  num playSpeed;
+  
   //Constructor, setting initial number of each agent type
   AgentManager(num startPCount,num startSaCount,num startTCount, num startSCount, num newWidth, num newHeight){
     width = newWidth;
     height = newHeight;
     
     planktonTimer = 0;
+    playSpeed = 1;
     
     //Set all the agents at random locations based off the starting counts    
     seedAgents(startPCount, 'plankton');
@@ -555,9 +568,11 @@ class AgentManager{
       shark.animate();
     }
     
-    if(planktonTimer > 1){
-      addAgent('plankton');
-      addAgent('plankton');
+    if(planktonTimer > 10/playSpeed){
+      for(int i = 0; i < playSpeed; i++){
+        addAgent('plankton');
+        addAgent('plankton');
+      }
       planktonTimer = 0;
     }
     
@@ -576,6 +591,20 @@ class AgentManager{
     
     print("${planktons.length}, ${sardines.length}, ${tunas.length}, ${sharks.length}");
     planktonTimer++;
+  }
+  
+  void updateSpeed(num factor){
+    playSpeed = factor;
+    for(Sardine sardine in sardines){
+      sardine.updatePlaySpeed(factor);
+    }
+    for(Tuna tuna in tunas){
+      tuna.updatePlaySpeed(factor);
+    }
+    for(Shark shark in sharks){
+      shark.updatePlaySpeed(factor);
+    }
+    
   }
   
 }

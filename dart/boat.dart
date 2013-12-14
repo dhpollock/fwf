@@ -179,7 +179,7 @@ class Boat implements Touchable {
       ctx.lineTo(boatPath.last.x + r * cos(radarHeading) - boatPath.first.x,boatPath.last.y + r* sin(radarHeading) - boatPath.first.y);
       ctx.stroke();
       ctx.closePath();
-      radarHeading += PI/40;
+      radarHeading += PI/60;
       Point adjustedCenter = new Point(0,0);
       adjustedCenter.x = boatPath.last.x- boatPath.first.x;
       adjustedCenter.y =  boatPath.last.y- boatPath.first.y;
@@ -240,7 +240,7 @@ class Boat implements Touchable {
     _targetX = c.touchX;
     _targetY = c.touchY;
     
-    repaint();
+    //repaint();
   }
   
     
