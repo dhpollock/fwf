@@ -145,15 +145,12 @@ class Agent{
     if(energyCounter > energyThreshold){
       energy-=1;
       energyCounter = 0;
-    }
+
     //Split Agent into two based on agents represented population size
-    if(population > split){
-      population = split/2;
-      manager.toBeAdded.add(this);
-    }
+
     //Increase population if above hunger, check on energy counter timer
     //Could potentially set AVOID mode here
-    if(energy > hunger && energyCounter > energyThreshold-1){
+    if(energy > hunger){
       mode = 'FOOD';
       population++;
     }
@@ -167,14 +164,19 @@ class Agent{
       mode = 'FOOD';
       population -= 1;
       if(population == 0 ){
-          if(nearest != null){
-            if(nearest.type == foodType){
-              nearest.ate = false;
-            }
+        if(nearest != null){
+          if(nearest.type == foodType){
+            nearest.ate = false;
           }
-          //removig agent from the ecosystem, must be added to remove queue instead of direct removal
-          manager.toBeRemoved.add(this);
+        }
+        //removig agent from the ecosystem, must be added to remove queue instead of direct removal
+        manager.toBeRemoved.add(this);
       }
+    }
+    if(population > split){
+      population = split/2;
+      manager.toBeAdded.add(this);
+    }
     }
     energyCounter++;
   }
