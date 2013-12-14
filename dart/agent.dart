@@ -146,37 +146,37 @@ class Agent{
       energy-=1;
       energyCounter = 0;
 
-    //Split Agent into two based on agents represented population size
-
-    //Increase population if above hunger, check on energy counter timer
-    //Could potentially set AVOID mode here
-    if(energy > hunger){
-      mode = 'FOOD';
-      population++;
-    }
-    //FOOD mode conditions
-    else if(energy < hunger && energy > 0){
-      mode = 'FOOD';
-    }
-    //Decrease population if there is no energy
-    //might we worth putting this on a timer count as well
-    else if (energy <= 0){
-      mode = 'FOOD';
-      population -= 1;
-      if(population == 0 ){
-        if(nearest != null){
-          if(nearest.type == foodType){
-            nearest.ate = false;
-          }
-        }
-        //removig agent from the ecosystem, must be added to remove queue instead of direct removal
-        manager.toBeRemoved.add(this);
+      //Split Agent into two based on agents represented population size
+  
+      //Increase population if above hunger, check on energy counter timer
+      //Could potentially set AVOID mode here
+      if(energy > hunger){
+        mode = 'FOOD';
+        population++;
       }
-    }
-    if(population > split){
-      population = split/2;
-      manager.toBeAdded.add(this);
-    }
+      //FOOD mode conditions
+      else if(energy < hunger && energy > 0){
+        mode = 'FOOD';
+      }
+      //Decrease population if there is no energy
+      //might we worth putting this on a timer count as well
+      else if (energy <= 0){
+        mode = 'FOOD';
+        population -= 1;
+        if(population == 0 ){
+          if(nearest != null){
+            if(nearest.type == foodType){
+              nearest.ate = false;
+            }
+          }
+          //removig agent from the ecosystem, must be added to remove queue instead of direct removal
+          manager.toBeRemoved.add(this);
+        }
+      }
+      if(population > split){
+        population = split/2;
+        manager.toBeAdded.add(this);
+      }
     }
     energyCounter++;
   }
@@ -279,7 +279,7 @@ class Shark extends Agent{
     ate = false;
     split = 20;
     hunger = 5;
-    energyThreshold = 30;
+    energyThreshold = 20;
   }
   
   void draw(CanvasRenderingContext2D ctx){
