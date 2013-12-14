@@ -143,7 +143,7 @@ class Boat implements Touchable {
   
   num get iheight => img.height;
   
-  
+  num radarHeading = 0;
   void draw(CanvasRenderingContext2D ctx, num width, num height) {
     ctx.save();
     {
@@ -153,7 +153,7 @@ class Boat implements Touchable {
       
       //draws boatPath on canvas
       if(fleetType == 'A' || fleetType == 'B'){
-        ctx.lineWidth = 5;
+        ctx.lineWidth = 2;
         ctx. strokeStyle = 000;
         ctx.translate(0,0);
         ctx.rotate(-(heading + PI/2));
@@ -165,7 +165,24 @@ class Boat implements Touchable {
         ctx.closePath();
       }
      
-    }    
+    }
+    
+    if(_dragging && boatPath.length > 1){
+      num r = 30;
+      ctx.beginPath();
+      ctx.arc(boatPath.last.x- boatPath.first.x, boatPath.last.y- boatPath.first.y, r, 0, 2*PI, false);
+      ctx.stroke();
+      ctx.closePath();
+      
+      ctx.beginPath();
+      ctx.lineTo(boatPath.last.x- boatPath.first.x, boatPath.last.y- boatPath.first.y);
+      ctx.lineTo(boatPath.last.x + r * cos(radarHeading) - boatPath.first.x,boatPath.last.y + r* sin(radarHeading) - boatPath.first.y);
+      ctx.stroke();
+      ctx.closePath();
+      radarHeading += PI/40;
+      
+      
+    }
     ctx.restore();
   }
   

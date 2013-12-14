@@ -72,7 +72,7 @@ class Game {
     ecosystem = new AgentManager(200, 45, 15, 10, width, height);
 
     buy = new Buy(fleetA, fleetB);
-    fish = new Fish(fleetA, fleetB);
+    fish = new Fish(fleetA, fleetB, ecosystem);
     sell = new Sell(fleetA, fleetB);
     regrow = new Regrow(fleetA, fleetB, ecosystem);
     title = new Title();
