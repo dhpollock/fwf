@@ -366,6 +366,33 @@ class AgentManager{
     }
   }
   
+  num distanceSquare(Point a, Point b){
+    return pow((a.x - b.x), 2) + pow((a.y - b.y), 2);
+  }
+  
+  void drawPortal(CanvasRenderingContext2D ctx, Point center, num r){
+    for(Sardine sardine in sardines){
+      var dist = distanceSquare(sardine.position, center);
+      if(r*r > dist){
+        sardine.draw(ctx);
+      }
+    }
+    for(Tuna tuna in tunas){
+      var dist = distanceSquare(tuna.position, center);
+      if(r*r > dist){
+        tuna.draw(ctx);
+      }
+    }
+    for(Shark shark in sharks){
+      var dist = distanceSquare(shark.position, center);
+      if(r*r > dist){
+        shark.draw(ctx);
+      }
+    }
+  }
+  
+  
+  
   //Find the nearest agent of type 'type' and set the parent's variable 'nearest' to that agent
   //returns true if it finds a nearest agent, otherwise returns false
   bool findNearest(var type, Agent parent){
@@ -379,7 +406,7 @@ class AgentManager{
       }
       else{
         for(Plankton plankton in planktons){
-          var dist = pow((plankton.position.x - parent.position.x), 2) + pow((plankton.position.y - parent.position.y), 2);
+          var dist = distanceSquare(plankton.position, parent.position);
           if(minDist > dist && !plankton.ate){
             minDist = dist;
             nearest = plankton;
@@ -395,8 +422,7 @@ class AgentManager{
       }
       else{
         for(Sardine sardine in sardines){
-
-          var dist = pow((sardine.position.x -parent.position.x), 2) + pow((sardine.position.y - parent.position.y), 2);
+          var dist = distanceSquare(sardine.position, parent.position);
           if(minDist > dist && !sardine.ate){
             minDist = dist;
             nearest = sardine;
@@ -412,8 +438,7 @@ class AgentManager{
       }
       else{
         for(Tuna tuna in tunas){
-
-          var dist = pow((tuna.position.x - parent.position.x), 2) + pow((tuna.position.y - parent.position.y), 2);
+          var dist = distanceSquare(tuna.position, parent.position);
           if(minDist > dist && !tuna.ate){
             minDist = dist;
             nearest = tuna;
@@ -430,7 +455,7 @@ class AgentManager{
       else{
         for(Shark shark in sharks){
 
-          var dist = pow((shark.position.x -parent.position.x), 2) + pow((shark.position.y - parent.position.y), 2);
+          var dist = distanceSquare(shark.position, parent.position);
           if(minDist > dist && !shark.ate){
             minDist = dist;
             nearest = shark;

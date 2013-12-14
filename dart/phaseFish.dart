@@ -35,7 +35,7 @@ class Fish extends TouchLayer{
   
   void draw(CanvasRenderingContext2D ctx, num width, num height){
     ctx.clearRect(0, 0, width, height);
-    ecosystem.draw(ctx);
+    //ecosystem.draw(ctx);
     // draw some text
     ctx.fillStyle = 'black';
     ctx.font = '30px sans-serif';

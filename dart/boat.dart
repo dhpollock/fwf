@@ -168,7 +168,7 @@ class Boat implements Touchable {
     }
     
     if(_dragging && boatPath.length > 1){
-      num r = 30;
+      num r = 50;
       ctx.beginPath();
       ctx.arc(boatPath.last.x- boatPath.first.x, boatPath.last.y- boatPath.first.y, r, 0, 2*PI, false);
       ctx.stroke();
@@ -180,10 +180,23 @@ class Boat implements Touchable {
       ctx.stroke();
       ctx.closePath();
       radarHeading += PI/40;
-      
+      Point adjustedCenter = new Point(0,0);
+      adjustedCenter.x = boatPath.last.x- boatPath.first.x;
+      adjustedCenter.y =  boatPath.last.y- boatPath.first.y;
+      ctx.translate(-x, -y);
+      game.fish.ecosystem.drawPortal(ctx, boatPath.last, r);
       
     }
     ctx.restore();
+  }
+  
+  bool dragging(){
+    if(_dragging && boatPath.length > 1){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
   
   //hides menus for net selection
