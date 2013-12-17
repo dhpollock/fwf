@@ -191,7 +191,7 @@ class Agent{
     });
   }
   void fishedDelay(){
-    new Timer(new Duration(seconds : (5 / playSpeed).floor()), () {
+    new Timer(new Duration(seconds : (2).floor()), () {
         fished = false;
     });
   }
