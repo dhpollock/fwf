@@ -42,6 +42,7 @@ class Agent{
   
   //Has the agent been selected for consumption by another agent
   bool ate;
+  bool fished;
   
   //nearest agent of food or pred type
   Agent nearest;
@@ -189,6 +190,11 @@ class Agent{
         ate = false;
     });
   }
+  void fishedDelay(){
+    new Timer(new Duration(seconds : (5 / playSpeed).floor()), () {
+        fished = false;
+    });
+  }
   
   void updatePlaySpeed(num factor){
     playSpeed = factor;
@@ -236,6 +242,7 @@ class Sardine extends Agent{
     manager = newManager;
     mode = 'FOOD';
     ate = false;
+    fished = false;
     hunger = 3;
     split = 10;
     energyThreshold = 160;
@@ -263,6 +270,7 @@ class Tuna extends Agent{
     manager = newManager;
     mode = 'FOOD';
     ate = false;
+    fished = false;
     split = 20;
     hunger = 5.0;
     energyThreshold = 180;
@@ -289,6 +297,7 @@ class Shark extends Agent{
     manager = newManager;
     mode = 'FOOD';
     ate = false;
+    fished = false;
     split = 20;
     hunger = 5;
     energyThreshold = 100.0;
@@ -610,40 +619,55 @@ class AgentManager{
   }
   
   void catchCheck(Boat fishingBoat){
-    if(fishingBoat.boatType == 'sardine'){
-      for(Sardine sardine in sardines){
-        if((sardine.position.x > fishingBoat.x && sardine.position.x < fishingBoat.x + fishingBoat.img.width) && (sardine.position.y > fishingBoat.y && sardine.position.y < fishingBoat.y + fishingBoat.img.height)){
-          num temp = sardine.population;
-          fishingBoat.fishCount += temp;
-          if(sardine.population > 2){
-            sardine.population = temp/2; 
-          }
-          else{
-            toBeRemoved.add(sardine);
-          }
-        }
-      }
-      for(Tuna tuna in tunas){
-        if((tuna.position.x > fishingBoat.x && tuna.position.x < fishingBoat.x + fishingBoat.img.width) && (tuna.position.y > fishingBoat.y && tuna.position.y < fishingBoat.y + fishingBoat.img.height)){
-          num temp = tuna.population;
-          fishingBoat.fishCount += temp;
-          if(tuna.population > 2){
-            tuna.population = temp/2; 
-          }
-          else{
-            toBeRemoved.add(tuna);
+    if(fishingBoat.boatPath.length > 1){
+      if(fishingBoat.boatType == 'sardine'){
+        for(Sardine sardine in sardines){
+          if((sardine.position.x > fishingBoat.x - fishingBoat.img.width/2 && sardine.position.x < fishingBoat.x + fishingBoat.img.width/2)
+              && (sardine.position.y > fishingBoat.y - fishingBoat.img.height/2 && sardine.position.y < fishingBoat.y + fishingBoat.img.height/2) && !sardine.fished){
+            num temp = sardine.population;
+            fishingBoat.fishCount += temp;
+            if(sardine.population > 2){
+              sardine.population = temp/2; 
+              sardine.fished = true;
+              sardine.fishedDelay();
+            }
+            else{
+              toBeRemoved.add(sardine);
+            }
           }
         }
       }
-      for(Shark shark in sharks){
-        if((shark.position.x > fishingBoat.x && shark.position.x < fishingBoat.x + fishingBoat.img.width) && (shark.position.y > fishingBoat.y && shark.position.y < fishingBoat.y + fishingBoat.img.height)){
-          num temp = shark.population;
-          fishingBoat.fishCount += temp;
-          if(shark.population > 2){
-            shark.population = temp/2; 
+      else if(fishingBoat.boatType == 'tuna'){
+        for(Tuna tuna in tunas){
+          if((tuna.position.x > fishingBoat.x - fishingBoat.img.width/2 && tuna.position.x < fishingBoat.x + fishingBoat.img.width/2)
+              && (tuna.position.y > fishingBoat.y && tuna.position.y - fishingBoat.img.height/2< fishingBoat.y + fishingBoat.img.height/2) && !tuna.fished){
+            num temp = tuna.population;
+            fishingBoat.fishCount += temp;
+            if(tuna.population > 2){
+              tuna.population = temp/2; 
+              tuna.fished = true;
+              tuna.fishedDelay();
+            }
+            else{
+              toBeRemoved.add(tuna);
+            }
           }
-          else{
-            toBeRemoved.add(shark);
+        }
+      }
+      else if(fishingBoat.boatType == 'shark'){
+        for(Shark shark in sharks){
+          if((shark.position.x > fishingBoat.x - fishingBoat.img.width/2 && shark.position.x < fishingBoat.x + fishingBoat.img.width/2) 
+              && (shark.position.y > fishingBoat.y && shark.position.y - fishingBoat.img.height/2< fishingBoat.y + fishingBoat.img.height/2) && !shark.fished){
+            num temp = shark.population;
+            fishingBoat.fishCount += temp;
+            if(shark.population > 2){
+              shark.population = temp/2; 
+              shark.fished = true;
+              shark.fishedDelay();
+            }
+            else{
+              toBeRemoved.add(shark);
+            }
           }
         }
       }
