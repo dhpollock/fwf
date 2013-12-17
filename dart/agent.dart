@@ -222,13 +222,13 @@ class Plankton extends Agent{
 //Sardine Agent Class... sets variables and draw function
 class Sardine extends Agent{
   
-  Sardine(AgentManager newManager,num newX, num newY){
+  Sardine(AgentManager newManager,num newX, num newY, num newPlaySpeed){
     position = new Point(newX, newY);
-
+    playSpeed = newPlaySpeed;
     energy = 2;
     energyCounter = 0;
     heading = 0;
-    speed = 1.000000;
+    speed = 1.000000 * playSpeed;
     population = 5;
     type = 'sardine';
     foodType = 'plankton';
@@ -250,12 +250,13 @@ class Sardine extends Agent{
 
 //Tuna Agent Class... sets variables and draw function
 class Tuna extends Agent{
-  Tuna(AgentManager newManager,num newX, num newY){
+  Tuna(AgentManager newManager,num newX, num newY, num newPlaySpeed){
+    playSpeed = newPlaySpeed;
     position = new Point(newX, newY);
     energy = 2;
     energyCounter = 0;
     population = 10;
-    speed = 1.1;
+    speed = 1.1 * playSpeed;
     type = 'tuna';
     foodType = 'sardine';
     predType = 'shark';
@@ -276,12 +277,13 @@ class Tuna extends Agent{
 
 //Shark Agent Class... sets variables and draw function
 class Shark extends Agent{
-  Shark(AgentManager newManager,num newX, num newY){
+  Shark(AgentManager newManager,num newX, num newY, num newPlaySpeed){
+    playSpeed = newPlaySpeed;
     position = new Point(newX, newY);
     energy = 2;
     energyCounter = 0;
     population = 10; 
-    speed = 1.15;
+    speed = 1.15 * playSpeed;
     type = 'shark';
     foodType = 'tuna';
     manager = newManager;
@@ -349,15 +351,15 @@ class AgentManager{
             planktons.add(temp);
           }
           if(type == 'sardine'){
-            Sardine temp = new Sardine(this, x, y);
+            Sardine temp = new Sardine(this, x, y, playSpeed);
             sardines.add(temp);
           }
           if(type == 'tuna'){
-            Tuna temp = new Tuna(this, x, y);
+            Tuna temp = new Tuna(this, x, y, playSpeed);
             tunas.add(temp);
           }
           if(type == 'shark'){
-            Shark temp = new Shark(this, x, y);
+            Shark temp = new Shark(this, x, y, playSpeed);
             sharks.add(temp);
           }
         }
@@ -528,7 +530,7 @@ class AgentManager{
       planktons.add(temp);
     }
     if(type == 'sardine'){
-      Sardine temp = new Sardine(this, x, y);
+      Sardine temp = new Sardine(this, x, y, playSpeed);
       if(location != null){
         temp.position.x = location.x;
         temp.position.y = location.y;
@@ -536,7 +538,7 @@ class AgentManager{
       sardines.add(temp);
     }
     if(type == 'tuna'){
-      Tuna temp = new Tuna(this, x, y);
+      Tuna temp = new Tuna(this, x, y, playSpeed);
       if(location != null){
         temp.position.x = location.x;
         temp.position.y = location.y;
@@ -544,7 +546,7 @@ class AgentManager{
       tunas.add(temp);
     }
     if(type == 'shark'){
-      Shark temp = new Shark(this, x, y);
+      Shark temp = new Shark(this, x, y, playSpeed);
       if(location != null){
         temp.position.x = location.x;
         temp.position.y = location.y;
@@ -605,6 +607,47 @@ class AgentManager{
       shark.updatePlaySpeed(factor);
     }
     
+  }
+  
+  void catchCheck(Boat fishingBoat){
+    if(fishingBoat.boatType == 'sardine'){
+      for(Sardine sardine in sardines){
+        if((sardine.position.x > fishingBoat.x && sardine.position.x < fishingBoat.x + fishingBoat.img.width) && (sardine.position.y > fishingBoat.y && sardine.position.y < fishingBoat.y + fishingBoat.img.height)){
+          num temp = sardine.population;
+          fishingBoat.fishCount += temp;
+          if(sardine.population > 2){
+            sardine.population = temp/2; 
+          }
+          else{
+            toBeRemoved.add(sardine);
+          }
+        }
+      }
+      for(Tuna tuna in tunas){
+        if((tuna.position.x > fishingBoat.x && tuna.position.x < fishingBoat.x + fishingBoat.img.width) && (tuna.position.y > fishingBoat.y && tuna.position.y < fishingBoat.y + fishingBoat.img.height)){
+          num temp = tuna.population;
+          fishingBoat.fishCount += temp;
+          if(tuna.population > 2){
+            tuna.population = temp/2; 
+          }
+          else{
+            toBeRemoved.add(tuna);
+          }
+        }
+      }
+      for(Shark shark in sharks){
+        if((shark.position.x > fishingBoat.x && shark.position.x < fishingBoat.x + fishingBoat.img.width) && (shark.position.y > fishingBoat.y && shark.position.y < fishingBoat.y + fishingBoat.img.height)){
+          num temp = shark.population;
+          fishingBoat.fishCount += temp;
+          if(shark.population > 2){
+            shark.population = temp/2; 
+          }
+          else{
+            toBeRemoved.add(shark);
+          }
+        }
+      }
+    }
   }
   
 }

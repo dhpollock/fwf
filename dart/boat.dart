@@ -40,10 +40,11 @@ class Boat implements Touchable {
   num menunum;
   
   //speed of path follow 
-  var speed = 3.0;
+  var speed = 5.0;
   
   var boatType;
   var fleetType;
+  num fishCount;
   
   var initPos;
   
@@ -56,6 +57,8 @@ class Boat implements Touchable {
     //intializes the menu for net selection
     boatmenu.initPopovers();
     fleetType = myfleetType;
+    
+    fishCount = 0;
     
     //intialize path drawing coordinate list, add starting position to list
     boatPath = new List<Point>();
@@ -132,6 +135,7 @@ class Boat implements Touchable {
     else{
 
     }
+    game.ecosystem.catchCheck(this);
   }
 
   void clearPath(){
