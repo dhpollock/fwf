@@ -42,6 +42,7 @@ class Agent{
   
   //Has the agent been selected for consumption by another agent
   bool ate;
+  bool fished;
   
   //nearest agent of food or pred type
   Agent nearest;
@@ -50,6 +51,9 @@ class Agent{
   
   /* random number generator */
   Random random = new Random();
+  
+  //factor that determines how fast the entities run
+  num playSpeed = 1;
   
   
   //Uses agent manager findNearest to fill the nearest agent, marks it as ate.
@@ -107,7 +111,7 @@ class Agent{
           if(!manager.findNearest(predType, this)){
             if(nearest != null){
               heading = atan2((nearest.position.y - position.y), (nearest.position.x - position.x))+ PI;
-              forward(speed);
+              forward(speed * playSpeed);
             }
           }
         }
@@ -121,8 +125,8 @@ class Agent{
   bool goto(Point newPoint){
     var dist = sqrt(pow((newPoint.x - position.x), 2) + pow((newPoint.y - position.y), 2));
     heading = atan2((newPoint.y - position.y), (newPoint.x - position.x));
-    if(dist > speed){
-      forward(speed);
+    if(dist > speed * playSpeed){
+      forward(speed * playSpeed);
       return false;
     }
     else{
@@ -182,9 +186,20 @@ class Agent{
   }
   
   void ateDelay(){
-    new Timer(const Duration(seconds : 2), () {
+    new Timer(new Duration(seconds : (10 / playSpeed).floor()), () {
         ate = false;
     });
+  }
+  void fishedDelay(){
+    new Timer(new Duration(seconds : (2).floor()), () {
+        fished = false;
+    });
+  }
+  
+  void updatePlaySpeed(num factor){
+    playSpeed = factor;
+    //speed = speed * factor;
+    energyThreshold = energyThreshold / factor;
   }
   
 }
@@ -200,6 +215,7 @@ class Plankton extends Agent{
     type = 'plankton';
     manager = newManager;
     ate = false;
+    energyThreshold = 0;
   }
   
   void draw(CanvasRenderingContext2D ctx){
@@ -212,13 +228,13 @@ class Plankton extends Agent{
 //Sardine Agent Class... sets variables and draw function
 class Sardine extends Agent{
   
-  Sardine(AgentManager newManager,num newX, num newY){
+  Sardine(AgentManager newManager,num newX, num newY, num newPlaySpeed){
     position = new Point(newX, newY);
-
+    playSpeed = newPlaySpeed;
     energy = 2;
     energyCounter = 0;
     heading = 0;
-    speed = 5;
+    speed = 1.000000;
     population = 5;
     type = 'sardine';
     foodType = 'plankton';
@@ -226,9 +242,10 @@ class Sardine extends Agent{
     manager = newManager;
     mode = 'FOOD';
     ate = false;
+    fished = false;
     hunger = 3;
     split = 10;
-    energyThreshold = 32;
+    energyThreshold = 160;
   }
   
   void draw(CanvasRenderingContext2D ctx){
@@ -240,21 +257,23 @@ class Sardine extends Agent{
 
 //Tuna Agent Class... sets variables and draw function
 class Tuna extends Agent{
-  Tuna(AgentManager newManager,num newX, num newY){
+  Tuna(AgentManager newManager,num newX, num newY, num newPlaySpeed){
+    playSpeed = newPlaySpeed;
     position = new Point(newX, newY);
     energy = 2;
     energyCounter = 0;
     population = 10;
-    speed = 5.5;
+    speed = 1.1;
     type = 'tuna';
     foodType = 'sardine';
     predType = 'shark';
     manager = newManager;
     mode = 'FOOD';
     ate = false;
+    fished = false;
     split = 20;
-    hunger = 5;
-    energyThreshold = 36;
+    hunger = 5.0;
+    energyThreshold = 180;
   }
   
   void draw(CanvasRenderingContext2D ctx){
@@ -266,20 +285,22 @@ class Tuna extends Agent{
 
 //Shark Agent Class... sets variables and draw function
 class Shark extends Agent{
-  Shark(AgentManager newManager,num newX, num newY){
+  Shark(AgentManager newManager,num newX, num newY, num newPlaySpeed){
+    playSpeed = newPlaySpeed;
     position = new Point(newX, newY);
     energy = 2;
     energyCounter = 0;
     population = 10; 
-    speed = 5.75;
+    speed = 1.15;
     type = 'shark';
     foodType = 'tuna';
     manager = newManager;
     mode = 'FOOD';
     ate = false;
+    fished = false;
     split = 20;
     hunger = 5;
-    energyThreshold = 20;
+    energyThreshold = 100.0;
   }
   
   void draw(CanvasRenderingContext2D ctx){
@@ -311,12 +332,15 @@ class AgentManager{
   //Counter that keeps track on when to add more plankton
   num planktonTimer;
   
+  num playSpeed;
+  
   //Constructor, setting initial number of each agent type
   AgentManager(num startPCount,num startSaCount,num startTCount, num startSCount, num newWidth, num newHeight){
     width = newWidth;
     height = newHeight;
     
     planktonTimer = 0;
+    playSpeed = 1;
     
     //Set all the agents at random locations based off the starting counts    
     seedAgents(startPCount, 'plankton');
@@ -336,15 +360,15 @@ class AgentManager{
             planktons.add(temp);
           }
           if(type == 'sardine'){
-            Sardine temp = new Sardine(this, x, y);
+            Sardine temp = new Sardine(this, x, y, playSpeed);
             sardines.add(temp);
           }
           if(type == 'tuna'){
-            Tuna temp = new Tuna(this, x, y);
+            Tuna temp = new Tuna(this, x, y, playSpeed);
             tunas.add(temp);
           }
           if(type == 'shark'){
-            Shark temp = new Shark(this, x, y);
+            Shark temp = new Shark(this, x, y, playSpeed);
             sharks.add(temp);
           }
         }
@@ -366,6 +390,33 @@ class AgentManager{
     }
   }
   
+  num distanceSquare(Point a, Point b){
+    return pow((a.x - b.x), 2) + pow((a.y - b.y), 2);
+  }
+  
+  void drawPortal(CanvasRenderingContext2D ctx, Point center, num r){
+    for(Sardine sardine in sardines){
+      var dist = distanceSquare(sardine.position, center);
+      if(r*r > dist){
+        sardine.draw(ctx);
+      }
+    }
+    for(Tuna tuna in tunas){
+      var dist = distanceSquare(tuna.position, center);
+      if(r*r > dist){
+        tuna.draw(ctx);
+      }
+    }
+    for(Shark shark in sharks){
+      var dist = distanceSquare(shark.position, center);
+      if(r*r > dist){
+        shark.draw(ctx);
+      }
+    }
+  }
+  
+  
+  
   //Find the nearest agent of type 'type' and set the parent's variable 'nearest' to that agent
   //returns true if it finds a nearest agent, otherwise returns false
   bool findNearest(var type, Agent parent){
@@ -379,7 +430,7 @@ class AgentManager{
       }
       else{
         for(Plankton plankton in planktons){
-          var dist = pow((plankton.position.x - parent.position.x), 2) + pow((plankton.position.y - parent.position.y), 2);
+          var dist = distanceSquare(plankton.position, parent.position);
           if(minDist > dist && !plankton.ate){
             minDist = dist;
             nearest = plankton;
@@ -395,8 +446,7 @@ class AgentManager{
       }
       else{
         for(Sardine sardine in sardines){
-
-          var dist = pow((sardine.position.x -parent.position.x), 2) + pow((sardine.position.y - parent.position.y), 2);
+          var dist = distanceSquare(sardine.position, parent.position);
           if(minDist > dist && !sardine.ate){
             minDist = dist;
             nearest = sardine;
@@ -412,8 +462,7 @@ class AgentManager{
       }
       else{
         for(Tuna tuna in tunas){
-
-          var dist = pow((tuna.position.x - parent.position.x), 2) + pow((tuna.position.y - parent.position.y), 2);
+          var dist = distanceSquare(tuna.position, parent.position);
           if(minDist > dist && !tuna.ate){
             minDist = dist;
             nearest = tuna;
@@ -430,7 +479,7 @@ class AgentManager{
       else{
         for(Shark shark in sharks){
 
-          var dist = pow((shark.position.x -parent.position.x), 2) + pow((shark.position.y - parent.position.y), 2);
+          var dist = distanceSquare(shark.position, parent.position);
           if(minDist > dist && !shark.ate){
             minDist = dist;
             nearest = shark;
@@ -490,7 +539,7 @@ class AgentManager{
       planktons.add(temp);
     }
     if(type == 'sardine'){
-      Sardine temp = new Sardine(this, x, y);
+      Sardine temp = new Sardine(this, x, y, playSpeed);
       if(location != null){
         temp.position.x = location.x;
         temp.position.y = location.y;
@@ -498,7 +547,7 @@ class AgentManager{
       sardines.add(temp);
     }
     if(type == 'tuna'){
-      Tuna temp = new Tuna(this, x, y);
+      Tuna temp = new Tuna(this, x, y, playSpeed);
       if(location != null){
         temp.position.x = location.x;
         temp.position.y = location.y;
@@ -506,7 +555,7 @@ class AgentManager{
       tunas.add(temp);
     }
     if(type == 'shark'){
-      Shark temp = new Shark(this, x, y);
+      Shark temp = new Shark(this, x, y, playSpeed);
       if(location != null){
         temp.position.x = location.x;
         temp.position.y = location.y;
@@ -530,9 +579,11 @@ class AgentManager{
       shark.animate();
     }
     
-    if(planktonTimer > 1){
-      addAgent('plankton');
-      addAgent('plankton');
+    if(planktonTimer > 10/playSpeed){
+      for(int i = 0; i < playSpeed; i++){
+        addAgent('plankton');
+        addAgent('plankton');
+      }
       planktonTimer = 0;
     }
     
@@ -551,6 +602,76 @@ class AgentManager{
     
     print("${planktons.length}, ${sardines.length}, ${tunas.length}, ${sharks.length}");
     planktonTimer++;
+  }
+  
+  void updateSpeed(num factor){
+    playSpeed = factor;
+    for(Sardine sardine in sardines){
+      sardine.updatePlaySpeed(factor);
+    }
+    for(Tuna tuna in tunas){
+      tuna.updatePlaySpeed(factor);
+    }
+    for(Shark shark in sharks){
+      shark.updatePlaySpeed(factor);
+    }
+    
+  }
+  
+  void catchCheck(Boat fishingBoat){
+    if(fishingBoat.boatPath.length > 1){
+      if(fishingBoat.boatType == 'sardine'){
+        for(Sardine sardine in sardines){
+          if((sardine.position.x > fishingBoat.x - fishingBoat.img.width/2 && sardine.position.x < fishingBoat.x + fishingBoat.img.width/2)
+              && (sardine.position.y > fishingBoat.y - fishingBoat.img.height/2 && sardine.position.y < fishingBoat.y + fishingBoat.img.height/2) && !sardine.fished){
+            num temp = sardine.population;
+            fishingBoat.fishCount += temp;
+            if(sardine.population > 2){
+              sardine.population = temp/2; 
+              sardine.fished = true;
+              sardine.fishedDelay();
+            }
+            else{
+              toBeRemoved.add(sardine);
+            }
+          }
+        }
+      }
+      else if(fishingBoat.boatType == 'tuna'){
+        for(Tuna tuna in tunas){
+          if((tuna.position.x > fishingBoat.x - fishingBoat.img.width/2 && tuna.position.x < fishingBoat.x + fishingBoat.img.width/2)
+              && (tuna.position.y > fishingBoat.y && tuna.position.y - fishingBoat.img.height/2< fishingBoat.y + fishingBoat.img.height/2) && !tuna.fished){
+            num temp = tuna.population;
+            fishingBoat.fishCount += temp;
+            if(tuna.population > 2){
+              tuna.population = temp/2; 
+              tuna.fished = true;
+              tuna.fishedDelay();
+            }
+            else{
+              toBeRemoved.add(tuna);
+            }
+          }
+        }
+      }
+      else if(fishingBoat.boatType == 'shark'){
+        for(Shark shark in sharks){
+          if((shark.position.x > fishingBoat.x - fishingBoat.img.width/2 && shark.position.x < fishingBoat.x + fishingBoat.img.width/2) 
+              && (shark.position.y > fishingBoat.y && shark.position.y - fishingBoat.img.height/2< fishingBoat.y + fishingBoat.img.height/2) && !shark.fished){
+            num temp = shark.population;
+            fishingBoat.fishCount += temp;
+            if(shark.population > 2){
+              shark.population = temp/2; 
+              shark.fished = true;
+              shark.fishedDelay();
+            }
+            else{
+              toBeRemoved.add(shark);
+            }
+          }
+        }
+      }
+    }
   }
   
 }

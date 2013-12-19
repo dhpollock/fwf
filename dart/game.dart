@@ -72,7 +72,7 @@ class Game {
     ecosystem = new AgentManager(200, 45, 15, 10, width, height);
 
     buy = new Buy(fleetA, fleetB);
-    fish = new Fish(fleetA, fleetB);
+    fish = new Fish(fleetA, fleetB, ecosystem);
     sell = new Sell(fleetA, fleetB);
     regrow = new Regrow(fleetA, fleetB, ecosystem);
     title = new Title();
@@ -204,6 +204,8 @@ class Game {
         sell.hide();
         regrow.hide();
         
+        ecosystem.updateSpeed(.5);
+        
         if (phasenum == 2 && !debugTransition){
           intro.showInstructions("instructionFish", 130, 130);
           fleetA.hide();
@@ -253,6 +255,7 @@ class Game {
         fish.hide();
         sell.hide();
         regrow.show();
+        ecosystem.updateSpeed(5);
 
         repaint();
         print(phase);
@@ -300,6 +303,7 @@ class Game {
         break;
       case "FISH":
         fish.startTimer();
+        
         break;
       case "SELL":
         new Timer(const Duration(seconds : 3), () {

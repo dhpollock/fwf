@@ -40,10 +40,11 @@ class Boat implements Touchable {
   num menunum;
   
   //speed of path follow 
-  var speed = 3.0;
+  var speed = 5.0;
   
   var boatType;
   var fleetType;
+  num fishCount;
   
   var initPos;
   
@@ -56,6 +57,8 @@ class Boat implements Touchable {
     //intializes the menu for net selection
     boatmenu.initPopovers();
     fleetType = myfleetType;
+    
+    fishCount = 0;
     
     //intialize path drawing coordinate list, add starting position to list
     boatPath = new List<Point>();
@@ -132,6 +135,7 @@ class Boat implements Touchable {
     else{
 
     }
+    game.ecosystem.catchCheck(this);
   }
 
   void clearPath(){
@@ -143,7 +147,7 @@ class Boat implements Touchable {
   
   num get iheight => img.height;
   
-  
+  num radarHeading = 0;
   void draw(CanvasRenderingContext2D ctx, num width, num height) {
     ctx.save();
     {
@@ -153,7 +157,7 @@ class Boat implements Touchable {
       
       //draws boatPath on canvas
       if(fleetType == 'A' || fleetType == 'B'){
-        ctx.lineWidth = 5;
+        ctx.lineWidth = 2;
         ctx. strokeStyle = 000;
         ctx.translate(0,0);
         ctx.rotate(-(heading + PI/2));
@@ -165,8 +169,38 @@ class Boat implements Touchable {
         ctx.closePath();
       }
      
-    }    
+    }
+    
+    if(_dragging && boatPath.length > 1){
+      num r = 50;
+      ctx.beginPath();
+      ctx.arc(boatPath.last.x- boatPath.first.x, boatPath.last.y- boatPath.first.y, r, 0, 2*PI, false);
+      ctx.stroke();
+      ctx.closePath();
+      
+      ctx.beginPath();
+      ctx.lineTo(boatPath.last.x- boatPath.first.x, boatPath.last.y- boatPath.first.y);
+      ctx.lineTo(boatPath.last.x + r * cos(radarHeading) - boatPath.first.x,boatPath.last.y + r* sin(radarHeading) - boatPath.first.y);
+      ctx.stroke();
+      ctx.closePath();
+      radarHeading += PI/60;
+      Point adjustedCenter = new Point(0,0);
+      adjustedCenter.x = boatPath.last.x- boatPath.first.x;
+      adjustedCenter.y =  boatPath.last.y- boatPath.first.y;
+      ctx.translate(-x, -y);
+      game.fish.ecosystem.drawPortal(ctx, boatPath.last, r);
+      
+    }
     ctx.restore();
+  }
+  
+  bool dragging(){
+    if(_dragging && boatPath.length > 1){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
   
   //hides menus for net selection
@@ -210,7 +244,7 @@ class Boat implements Touchable {
     _targetX = c.touchX;
     _targetY = c.touchY;
     
-    repaint();
+    //repaint();
   }
   
     

@@ -6,14 +6,18 @@ class Fish extends TouchLayer{
   Fleet fleetB;
   TouchManager tmanager = new TouchManager();
   
+  AgentManager ecosystem;
+  
   bool active;
   
   num timerCount;
   num phaseDuration;
   
-  Fish(Fleet A, Fleet B){
+  Fish(Fleet A, Fleet B, AgentManager newEcosystem){
     fleetA = A;
     fleetB = B;
+
+    ecosystem = newEcosystem;
     
     phaseDuration = 15;
     active = false;
@@ -31,7 +35,7 @@ class Fish extends TouchLayer{
   
   void draw(CanvasRenderingContext2D ctx, num width, num height){
     ctx.clearRect(0, 0, width, height);
-    
+//    ecosystem.draw(ctx);
     // draw some text
     ctx.fillStyle = 'black';
     ctx.font = '30px sans-serif';
@@ -55,7 +59,11 @@ class Fish extends TouchLayer{
   }
   
   void animate(){
+    if(game.debugTransition){
+      ecosystem.animate();
+    }
     if(active){
+      ecosystem.animate();
       if(timerCount >= phaseDuration){
         stopTimer();
         if (!game.debugTransition){

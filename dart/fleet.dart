@@ -152,6 +152,7 @@ class Fleet  extends TouchLayer{
       boat.y = 215 + tempCount * 80;
       boat.heading = heading;
       boat.clearPath();
+      boat.fishCount = 0;
       tempCount++;
     }
     for(Boat boat in tunaBoats){
@@ -159,12 +160,14 @@ class Fleet  extends TouchLayer{
       boat.y = 215 + tempCount * 80;
       boat.heading = heading;
       boat.clearPath();
+      boat.fishCount = 0;
       tempCount++;
     }    for(Boat boat in sharkBoats){
       boat.x = tempStartX;
       boat.y = 215 + tempCount * 80;
       boat.heading = heading;
       boat.clearPath();
+      boat.fishCount = 0;
       tempCount++;
     }
     
