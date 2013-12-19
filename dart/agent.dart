@@ -600,7 +600,7 @@ class AgentManager{
     }
     toBeAdded.clear();
     
-    print("${planktons.length}, ${sardines.length}, ${tunas.length}, ${sharks.length}");
+    //print("${planktons.length}, ${sardines.length}, ${tunas.length}, ${sharks.length}");
     planktonTimer++;
   }
   
