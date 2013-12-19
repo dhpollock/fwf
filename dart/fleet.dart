@@ -173,4 +173,35 @@ class Fleet  extends TouchLayer{
     
   }
   
+  Boat collided(Boat boat){
+    for(Boat sardine in sardineBoats){
+      if(boat.x != sardine.x && boat.y != sardine.y){
+        var dist = pow((boat.x - sardine.x), 2) + pow((boat.y - sardine.y), 2);
+        var rad = boat.img.width;
+        if(dist < pow(rad, 2)){
+          return sardine;
+        }
+      }
+    }
+    for(Boat tuna in tunaBoats){
+      if(boat.x != tuna.x && boat.y != tuna.y){
+        var dist = pow((boat.x - tuna.x), 2) + pow((boat.y - tuna.y), 2);
+        var rad = boat.img.width;
+        if(dist < pow(rad, 2)){
+          return tuna;
+        }
+      }
+    }
+    for(Boat shark in sharkBoats){
+      if(boat.x != shark.x && boat.y != shark.y){
+        var dist = pow((boat.x - shark.x), 2) + pow((boat.y - shark.y), 2);
+        var rad = boat.img.width;
+        if(dist < pow(rad, 2)){
+          return shark;
+        }
+      }
+    }
+    return null;
+  }
+  
 }

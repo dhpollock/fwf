@@ -71,6 +71,8 @@ class Fish extends TouchLayer{
         }
       }
    }
+    collisionDetect(fleetA);
+    collisionDetect(fleetB);
   }
   
   
@@ -96,6 +98,31 @@ class Fish extends TouchLayer{
   void stopTimer(){
     active = false;
     timerCount = 0;
+  }
+  
+  void collisionDetect(Fleet fleet){
+    for(Boat boat in fleet.sardineBoats){
+      collideChecker(boat);
+    }
+    for(Boat boat in fleet.tunaBoats){
+      collideChecker(boat);
+    }
+    for(Boat boat in fleet.sharkBoats){
+      collideChecker(boat);
+    }
+  }
+  void collideChecker(Boat boat){
+    Boat boatHit = fleetA.collided(boat);
+    num dif = PI/12;
+    if(boatHit != null){
+      boatHit.collide(boat);
+      boat.collide(boatHit);
+    }
+    boatHit = fleetB.collided(boat);
+    if(boatHit != null){
+      boatHit.collide(boat);
+      boat.collide(boatHit);
+    }
   }
   
 }

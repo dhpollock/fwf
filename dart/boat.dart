@@ -143,6 +143,14 @@ class Boat implements Touchable {
     boatPath.add(new Point(x, y));
   }
   
+  void collide(Boat boatHit){
+    clearPath();
+    num temp = heading;
+    heading = -atan2((boatHit.y - y) , (boatHit.x - x));
+    forward(speed/2);
+    heading = temp;
+  }
+  
   num get iwidth => img.width;
   
   num get iheight => img.height;
