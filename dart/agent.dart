@@ -111,7 +111,7 @@ class Agent{
           if(!manager.findNearest(predType, this)){
             if(nearest != null){
               heading = atan2((nearest.position.y - position.y), (nearest.position.x - position.x))+ PI;
-              forward(speed);
+              forward(speed * playSpeed);
             }
           }
         }
@@ -125,8 +125,8 @@ class Agent{
   bool goto(Point newPoint){
     var dist = sqrt(pow((newPoint.x - position.x), 2) + pow((newPoint.y - position.y), 2));
     heading = atan2((newPoint.y - position.y), (newPoint.x - position.x));
-    if(dist > speed){
-      forward(speed);
+    if(dist > speed * playSpeed){
+      forward(speed * playSpeed);
       return false;
     }
     else{
@@ -198,7 +198,7 @@ class Agent{
   
   void updatePlaySpeed(num factor){
     playSpeed = factor;
-    speed = speed * factor;
+    //speed = speed * factor;
     energyThreshold = energyThreshold / factor;
   }
   
@@ -234,7 +234,7 @@ class Sardine extends Agent{
     energy = 2;
     energyCounter = 0;
     heading = 0;
-    speed = 1.000000 * playSpeed;
+    speed = 1.000000;
     population = 5;
     type = 'sardine';
     foodType = 'plankton';
@@ -263,7 +263,7 @@ class Tuna extends Agent{
     energy = 2;
     energyCounter = 0;
     population = 10;
-    speed = 1.1 * playSpeed;
+    speed = 1.1;
     type = 'tuna';
     foodType = 'sardine';
     predType = 'shark';
@@ -291,7 +291,7 @@ class Shark extends Agent{
     energy = 2;
     energyCounter = 0;
     population = 10; 
-    speed = 1.15 * playSpeed;
+    speed = 1.15;
     type = 'shark';
     foodType = 'tuna';
     manager = newManager;
