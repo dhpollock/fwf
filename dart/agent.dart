@@ -54,6 +54,8 @@ class Agent{
   
   //factor that determines how fast the entities run
   num playSpeed = 1;
+  bool nofoodBool = false;
+  Point nofoodPoint = new Point(0,0);
   
   
   //Uses agent manager findNearest to fill the nearest agent, marks it as ate.
@@ -84,12 +86,8 @@ class Agent{
                 num tempPopulation = nearest.population/2.floor();
                 nearest.population  = tempPopulation;
                 energy += tempPopulation;
-                
                 nearest.ateDelay();
-
                 nearest = null;
-                
-                
               }
               else{
                 manager.removeAgent(foodType, nearest.position);
@@ -106,14 +104,17 @@ class Agent{
         
       //Find Pred and go the opposite direction until hungry again
       //CURRENTLY NOT USED
-      case 'AVOID':
-        if(predType != null){
-          if(!manager.findNearest(predType, this)){
-            if(nearest != null){
-              heading = atan2((nearest.position.y - position.y), (nearest.position.x - position.x))+ PI;
-              forward(speed * playSpeed);
-            }
-          }
+      case 'NOFOOD':
+        if(nearest == null){
+          findFood(foodType);
+        }
+        if(!nofoodBool){
+          nofoodPoint.x = random.nextInt(game.width);
+          nofoodPoint.y = random.nextInt(game.height);    
+          nofoodBool = true;
+        }
+        if(goto(nofoodPoint)){
+          nofoodBool = false;
         }
         break;
       default:
@@ -167,26 +168,29 @@ class Agent{
       else if (energy <= 0){
         mode = 'FOOD';
         population -= 1;
-        if(population == 0 ){
-          if(nearest != null){
-            if(nearest.type == foodType){
-              nearest.ate = false;
-            }
+      }
+      if(population == 0 ){
+        if(nearest != null){
+          if(nearest.type == foodType){
+            nearest.ate = false;
           }
-          //removig agent from the ecosystem, must be added to remove queue instead of direct removal
-          manager.toBeRemoved.add(this);
         }
+        //removig agent from the ecosystem, must be added to remove queue instead of direct removal
+        manager.toBeRemoved.add(this);
       }
       if(population > split){
         population = split/2;
         manager.toBeAdded.add(this);
+      }
+      if(nearest == null){
+        mode = 'NOFOOD';
       }
     }
     energyCounter++;
   }
   
   void ateDelay(){
-    new Timer(new Duration(seconds : (10 / playSpeed).floor()), () {
+    new Timer(new Duration(seconds : (5 / playSpeed).floor()), () {
         ate = false;
     });
   }
