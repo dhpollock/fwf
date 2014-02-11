@@ -14,6 +14,7 @@ class Fleet  extends TouchLayer{
   List<Boat> sardineBoats = new List<Boat>();
   List<Boat> tunaBoats = new List<Boat>();
   List<Boat> sharkBoats = new List<Boat>();
+  List<Boat> rewardBoats = new List<Boat>();
   
   //amount of money 
   num coin;
@@ -78,6 +79,9 @@ class Fleet  extends TouchLayer{
     for(Boat boat in sharkBoats){
       boat.draw(ctx, width, height);
     }
+    for(Boat boat in rewardBoats){
+      boat.draw(ctx, width, height);
+    }
   }
   
   void show(){
@@ -96,6 +100,9 @@ class Fleet  extends TouchLayer{
     for(Boat boat in sharkBoats){
       boat.hide();
     }
+    for(Boat boat in rewardBoats){
+      boat.hide();
+    }
   }
   
   void animate(){
@@ -106,6 +113,9 @@ class Fleet  extends TouchLayer{
       boat.animate();
     }
     for(Boat boat in sharkBoats){
+      boat.animate();
+    }
+    for(Boat boat in rewardBoats){
       boat.animate();
     }
   }
@@ -307,7 +317,13 @@ class Fleet  extends TouchLayer{
       else if(upgrade == 'capacity'){
         boat.capacity += upgradeVal;
       }
-    } 
+    }
+    
+    if(upgrade == 'reward'){
+      Boat newBoat = new Boat(500,400, 'reward', fleetAB);
+      rewardBoats.add(newBoat);
+      touchables.add(newBoat);
+    }
   }
   
 }

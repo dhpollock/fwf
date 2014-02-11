@@ -65,7 +65,7 @@ class Game {
     
     // create a few boats
     
-    fleetA = new Fleet(1, 0, 0, 100, 'A');
+    fleetA = new Fleet(1, 0, 0, 10000, 'A');
     fleetB = new Fleet(1, 0, 0, 100, 'B');
     
     //intializing each phase 

@@ -70,16 +70,23 @@ class Boat implements Touchable {
     initPos = new Point(x,y);
     
     //loads boat image dependant on type and fleet 
-    if(newBoatType == 'sardine' || newBoatType == 'tuna' || newBoatType == 'shark'){
+    if(newBoatType == 'sardine' || newBoatType == 'tuna' || newBoatType == 'shark' || newBoatType == 'reward'){
       boatType = newBoatType;
 
       if(fleetType == null){
-        img.src = "images/boat${boatType}.png";
+
+          img.src = "images/boat${boatType}.png";
       }
       else{
-        img.src = "images/boat${boatType}${fleetType}.png";
-        menunum = 1;
+        if(boatType == 'reward'){
+          img.src = "images/reward.png";
+        }
+        else{
+          img.src = "images/boat${boatType}${fleetType}.png";
+          menunum = 1;
+        }
       }
+      
     }
     else{
       print("error, wrong type of boat");
@@ -449,3 +456,4 @@ class ForSaleBoat extends Boat {
     
   void touchSlide(Contact c) { }  
 }
+
