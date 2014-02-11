@@ -105,16 +105,23 @@ class Game {
         draw();
         break;
       case 'SELL':
+        sell.animate();
+        fleetA.animate();
+        fleetB.animate();
+        draw();
         break;
       case 'REGROW':
+        //fleetA.animate();
+        //fleetB.animate();
+        //draw();
         regrow.animate();
         draw();
         break;
     }
-    if(phase == 'REGROW'){
-      regrow.animate();
-      draw();
-    }
+//    if(phase == 'REGROW'){
+//      regrow.animate();
+//      draw();
+//    }
     
     
   }
@@ -163,8 +170,8 @@ class Game {
         fleetA.harborArrage();
         fleetB.harborArrage();
         
-        fleetA.show();
-        fleetB.show();
+        fleetA.hide();
+        fleetB.hide();
         
         //enable/disable touch manager for the phase 
         title.hide();
@@ -173,6 +180,7 @@ class Game {
         sell.hide();
         regrow.hide();
         repaint();
+        
         //if this is the first encounter with phase show instructions
         if (phasenum == 1 && !debugTransition){
           intro.showInstructions("instructionBuy", 130, 130);
@@ -199,6 +207,7 @@ class Game {
         fleetA.show();
         fleetB.show();
           
+        //enable/disable touch manager for the phase 
         buy.hide();
         fish.show();
         sell.hide();
@@ -222,7 +231,10 @@ class Game {
         phase = 'SELL';
         fleetA.hide();
         fleetB.hide();
+//        fleetA.show();
+//        fleetB.show();
         
+        //enable/disable touch manager for the phase 
         buy.hide();
         fish.hide();
         fish.stopTimer();
@@ -251,6 +263,7 @@ class Game {
         fleetA.hide();
         fleetB.hide();
         
+        //enable/disable touch manager for the phase 
         buy.hide();
         fish.hide();
         sell.hide();
@@ -276,6 +289,7 @@ class Game {
         fleetA.hide();
         fleetB.hide();
         
+        //enable/disable touch manager for the phase 
         buy.show();
         fish.hide();
         sell.hide();

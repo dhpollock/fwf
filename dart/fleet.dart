@@ -162,7 +162,8 @@ class Fleet  extends TouchLayer{
       boat.clearPath();
       boat.fishCount = 0;
       tempCount++;
-    }    for(Boat boat in sharkBoats){
+    }    
+    for(Boat boat in sharkBoats){
       boat.x = tempStartX;
       boat.y = 215 + tempCount * 80;
       boat.heading = heading;
@@ -172,6 +173,72 @@ class Fleet  extends TouchLayer{
     }
     
   }
+  
+  bool animateSellPhase(){
+    bool atSellLocal = true;
+    num tempStartX;
+    num tempStartY;
+    num heading;
+    
+    if(fleetAB == 'A'){
+      tempStartX = 75;
+      heading = 0;
+    }
+    else{
+      tempStartX = 925;
+      heading = PI;
+    }
+    num tempCount = 0;
+      for(Boat boat in sardineBoats){
+        if(!boat.animateGoTo(tempStartX, 215 + tempCount * 80)){
+          atSellLocal = false;
+          
+        }
+        tempCount++;
+        boat.sold = false;
+
+      }
+      for(Boat boat in tunaBoats){
+        if(!boat.animateGoTo(tempStartX, 215 + tempCount * 80)){
+          atSellLocal = false;
+        }
+        tempCount++;
+        boat.sold = false;
+      }    
+      for(Boat boat in sharkBoats){
+        if(!boat.animateGoTo(tempStartX, 215 + tempCount * 80)){
+          atSellLocal = false;
+        }
+        tempCount++;
+        boat.sold = false;
+      }
+      //animate();
+      return atSellLocal;
+  }
+  
+  bool animateSellPhaseUnload(num sardinePrice,num tunaPrice,num sharkPrice){
+    for(Boat boat in sardineBoats){
+      if(!boat.sold){
+        boat.animateSellFish(sardinePrice);
+        return false;
+      }
+    }
+    for(Boat boat in tunaBoats){
+      if(!boat.sold){
+        boat.animateSellFish(tunaPrice);
+        return false;
+      }
+    }
+    for(Boat boat in sharkBoats){
+      if(!boat.sold){
+        boat.animateSellFish(sharkPrice);
+        return false;
+      }
+    }
+    
+    return true;
+  }
+  
   
   Boat collided(Boat boat){
     for(Boat sardine in sardineBoats){

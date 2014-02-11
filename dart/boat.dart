@@ -137,6 +137,67 @@ class Boat implements Touchable {
     }
     game.ecosystem.catchCheck(this);
   }
+  
+  bool animateGoTo(num goToX, num goToY){
+    clearPath();
+    var dist = sqrt(pow((goToX - x), 2) + pow((goToY - y), 2));
+    if(dist > speed){
+      heading = atan2((goToY - y), (goToX - x));
+      forward(speed);
+      return false;
+    }
+    else{
+      heading = atan2((goToY - y) , (goToX - x));
+      forward(dist);
+      return true;   
+    }
+  }
+  
+  
+  num textSize = 1;
+  var textString = null;
+  num textX= 0.0, textY = 0.0, textHeading = 0.0;
+  num textSpeed = .25;
+  bool animateBoatText(var string, num goToX, num goToY){
+    textString = string;
+    var dist = sqrt(pow((goToX - textX), 2) + pow((goToY - textY), 2));
+    if(dist > textSpeed){
+      textHeading = atan2((goToY - textY), (goToX - textX));
+      textX += cos(textHeading) * textSpeed;
+      textY += sin(textHeading) * textSpeed;
+      textSize += 3;
+      return false;
+    }
+    else{
+      textHeading = atan2((goToY - textY) , (goToX - textX));
+      textX += cos(textHeading) * dist;
+      textY += sin(textHeading) * dist;
+      textSize += 5;
+      return true;   
+    }
+  }
+  
+  bool flashSellSign = false;
+  bool sold = false;
+  
+  bool animateSellFish(num price){
+    if(!flashSellSign){
+      forward(10); 
+      textSize = 1;
+      textString = null;
+      textX= 0.0; textY = 0.0; textHeading = 0.0;
+      flashSellSign = true;
+    }
+    if(animateBoatText("${price*fishCount}", 5, 5)){
+      backward(10);
+      flashSellSign = false;
+      sold = true;
+      return true;
+    }
+    return false;
+
+    
+  }
 
   void clearPath(){
     boatPath.clear();
@@ -150,6 +211,7 @@ class Boat implements Touchable {
     forward(speed/2);
     heading = temp;
   }
+  
   
   num get iwidth => img.width;
   
@@ -198,6 +260,14 @@ class Boat implements Touchable {
       ctx.translate(-x, -y);
       game.fish.ecosystem.drawPortal(ctx, boatPath.last, r);
       
+    }
+    
+    if(flashSellSign){
+      ctx.fillStyle = 'white';
+      ctx.font = '${textSize}px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'center';
+      ctx.fillText(textString, textX, textY);
     }
     ctx.restore();
   }

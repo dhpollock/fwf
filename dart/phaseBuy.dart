@@ -108,7 +108,7 @@ class Buy extends TouchLayer{
 
   
   
-  void draw(CanvasRenderingContext2D ctx, width, height){
+  void draw(CanvasRenderingContext2D ctx, num width, num height){
     ctx.clearRect(0, 0, width, height);
     ctx.drawImage(harborOverlay, 0, 0);
     ctx.drawImage(buyOverlay, 0, 0);
@@ -173,25 +173,29 @@ class Buy extends TouchLayer{
   
   void show(){
     tmanager.enable();
+//    fleetA.show();
+//    fleetB.show();
   }
   
   void hide(){
     tmanager.disable();
+//    fleetA.hide();
+//    fleetB.hide();
   }
   
   //animates boats sliding back to well 
   void animate() {
-    if(buyingSardine.length > -1){
+    if(buyingSardine.length > 0){
       for(Boat boat in buyingSardine){
        boat.animate();
       }
     }
-    if(buyingTuna.length > -1){
+    if(buyingTuna.length > 0){
       for(Boat boat in buyingTuna){
        boat.animate();
       }
     }
-    if(buyingShark.length > -1){
+    if(buyingShark.length > 0){
       for(Boat boat in buyingShark){
        boat.animate();
       }
