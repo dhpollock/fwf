@@ -45,6 +45,7 @@ class Boat implements Touchable {
   var boatType;
   var fleetType;
   num fishCount;
+  num capacity;
   
   var initPos;
   
@@ -59,6 +60,7 @@ class Boat implements Touchable {
     fleetType = myfleetType;
     
     fishCount = 0;
+    capacity = 10;
     
     //intialize path drawing coordinate list, add starting position to list
     boatPath = new List<Point>();
@@ -135,7 +137,9 @@ class Boat implements Touchable {
     else{
 
     }
-    game.ecosystem.catchCheck(this);
+    if(fishCount < capacity){
+      game.ecosystem.catchCheck(this);
+    }
   }
   
   bool animateGoTo(num goToX, num goToY){

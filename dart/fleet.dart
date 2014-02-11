@@ -283,4 +283,31 @@ class Fleet  extends TouchLayer{
     return null;
   }
   
+  void upgrade(var upgrade, num upgradeVal){
+    for(Boat boat in sardineBoats){
+      if(upgrade == 'speed'){
+        boat.speed += upgradeVal;
+      }
+      else if(upgrade == 'capacity'){
+        boat.capacity += upgradeVal;
+      }
+    }
+    for(Boat boat in tunaBoats){
+      if(upgrade == 'speed'){
+        boat.speed += upgradeVal;
+      }
+      else if(upgrade == 'capacity'){
+        boat.capacity += upgradeVal;
+      }
+    }
+    for(Boat boat in sharkBoats){
+      if(upgrade == 'speed'){
+        boat.speed += upgradeVal;
+      }
+      else if(upgrade == 'capacity'){
+        boat.capacity += upgradeVal;
+      }
+    } 
+  }
+  
 }

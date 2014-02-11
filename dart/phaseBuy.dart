@@ -12,7 +12,7 @@ class Buy extends TouchLayer{
   
   //dimensions of buy box 
   num buySquareWidth = 400;
-  num buySquareHeight = 200;
+  num buySquareHeight = 400;
   num buySquareX = 300;
   num buySquareY = 300;
   
@@ -40,6 +40,8 @@ class Buy extends TouchLayer{
   num tunaWellX, tunaWellY;
   num sardineWellX, sardineWellY;
   num sharkWellX, sharkWellY;
+  num speedWellX, speedWellY;
+  num capacityWellX, capacityWellY;
   
   TouchManager tmanager = new TouchManager();
   
@@ -47,6 +49,9 @@ class Buy extends TouchLayer{
   List<Boat> buyingSardine = new List<Boat>();
   List<Boat> buyingTuna = new List<Boat>();
   List<Boat> buyingShark = new List<Boat>();
+  List<Upgrade> buyingSpeed = new List<Upgrade>();
+  List<Upgrade> buyingCapacity = new List<Upgrade>();
+  
   
   Buy(Fleet A, Fleet B){    
     fleetA = A;
@@ -60,6 +65,12 @@ class Buy extends TouchLayer{
     
     sharkWellX = 650.0;
     sharkWellY = 400.0;
+    
+    speedWellX = 350.0;
+    speedWellY = 600.0;
+    
+    capacityWellX = 500.0;
+    capacityWellY = 600.0;
     
     tmanager.registerEvents(document.documentElement);
     tmanager.addTouchLayer(this);
@@ -81,6 +92,13 @@ class Buy extends TouchLayer{
     buyingShark.add(newShark);
     touchables.add(newShark);
     
+    Upgrade newSpeed = new Upgrade(this, speedWellX, speedWellY, 'speed');
+    buyingSpeed.add(newSpeed);
+    touchables.add(newSpeed);
+    
+    Upgrade newCapacity = new Upgrade(this, capacityWellX, capacityWellY, 'capacity');
+    buyingSpeed.add(newCapacity);
+    touchables.add(newCapacity);
     
     harborOverlay.src = "images/harborOverlay.png";
     buyOverlay.src = "images/buyOverlay.png";
@@ -106,7 +124,18 @@ class Buy extends TouchLayer{
     }
   }
 
-  
+    void upgradeTouched(Upgrade upgrade){
+      if(upgrade.upgrade == 'speed'){
+        Upgrade newUpgrade = new Upgrade(this, speedWellX, speedWellY, 'speed');
+        buyingSpeed.add(newUpgrade);
+        touchables.add(newUpgrade);
+      }
+      if(upgrade.upgrade == 'capacity'){
+        Upgrade newUpgrade = new Upgrade(this, capacityWellX, capacityWellY, 'capacity');
+        buyingCapacity.add(newUpgrade);
+        touchables.add(newUpgrade);
+      }
+    }
   
   void draw(CanvasRenderingContext2D ctx, num width, num height){
     ctx.clearRect(0, 0, width, height);
@@ -149,7 +178,16 @@ class Buy extends TouchLayer{
        boat.draw(ctx, width, height);
       }
     }
-    
+    if(buyingSpeed.length > -1){
+      for(Upgrade upgrade in buyingSpeed){
+        upgrade.draw(ctx, width, height);
+      }
+    }
+    if(buyingCapacity.length > -1){
+      for(Upgrade upgrade in buyingCapacity){
+        upgrade.draw(ctx, width, height);
+      }
+    }
 
     fleetA.draw(ctx, width, height);
     fleetB.draw(ctx, width, height);
@@ -169,6 +207,18 @@ class Buy extends TouchLayer{
       repaint();
       return;
     }
+  }
+  
+  void deleteUpgrade(Upgrade upgrade){
+    if(buyingSpeed.remove(upgrade)){
+      repaint();
+      return;
+    }
+    else if(buyingCapacity.remove(upgrade)){
+      repaint();
+      return;
+    }
+    
   }
   
   void show(){
@@ -200,6 +250,191 @@ class Buy extends TouchLayer{
        boat.animate();
       }
     }
+    if(buyingSpeed.length > 0){
+      for(Upgrade upgrade in buyingSpeed){
+        upgrade.animate();
+      }
+    }
+    if(buyingCapacity.length > 0){
+      for(Upgrade upgrade in buyingCapacity){
+        upgrade.animate();
+      }
+    }
+    
   }
 
+}
+
+
+
+class Upgrade implements Touchable {
+  
+  Buy buyPhase;
+  var upgradeType;
+  var upgrade;
+  num x,y, wellX, wellY, upgradeVal;
+  num heading = 0.0;
+  num returnVel = 30.0;
+  num error = .1;
+  num price;
+  
+  ImageElement img = new ImageElement();
+  
+  /* used for mouse / touch interaction */  
+  double _targetX, _targetY;
+  
+  /* is this boat being touched now? */
+  bool _dragging = false;
+  
+  Upgrade(Buy phase, num newX, num newY, var newUpgrade){
+    x = newX;
+    y = newY;
+    wellX = newX;
+    wellY = newY;
+    buyPhase = phase;
+    
+    upgrade = newUpgrade;
+    
+    if(newUpgrade == 'speed'){
+      price = 100;
+      upgradeType = 'fleet';
+      upgrade = 'speed';
+      upgradeVal = 10;
+      img.src = 'images/speed.png';
+      
+    }
+    else if(newUpgrade == 'capacity'){
+      price = 100;
+      upgradeType = 'fleet';
+      upgrade = 'capacity';
+      upgradeVal = 10;
+      img.src = 'images/capacity.png';
+      
+    }
+    
+    heading = -PI/2;
+
+
+    
+  }
+  
+  void move(num dx, num dy) {
+    x += dx;
+    y += dy;
+  }
+  
+  
+  bool canBuy(){
+
+    if(upgradeType == 'fleet'){
+      num abx = buyPhase.fleetABuySquareX;
+      num aby = buyPhase.fleetABuySquareY;
+      num bbx = buyPhase.fleetBBuySquareX;
+      num bby = buyPhase.fleetBBuySquareY;
+      
+      //if boat is within the buy box for fleet A 
+      if(x >= abx && y >= aby && x <= abx + buyPhase.fleetAbuySquareWidth && y <= aby + buyPhase.fleetAbuySquareHeight){
+        //if player has enough money to buy boat and less than fleetMax amount of boats 
+        if(buyPhase.fleetA.coin >= price){
+          buyPhase.fleetA.upgrade(upgrade, upgradeVal);
+          buyPhase.fleetA.coin -= price;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      
+      //same for fleet B
+      else if(x >= bbx && y >= bby && x <= bbx + buyPhase.fleetBbuySquareWidth && y <= bby + buyPhase.fleetBbuySquareHeight){
+        if(buyPhase.fleetB.coin >= price){
+          buyPhase.fleetB.upgrade(upgrade, upgradeVal);
+          buyPhase.fleetB.coin -= price;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      else{
+        return false;
+      }
+    }
+  }
+  
+  void animate(){
+    //slide back to well animiation 
+    
+    if(_dragging == false){
+      if(!canBuy()){
+        
+        if(upgradeType == 'speed'){
+          wellX = buyPhase.speedWellX;
+          wellY = buyPhase.speedWellY;
+        }
+        else if(upgradeType == 'capacity'){
+          wellX = buyPhase.capacityWellX;
+          wellY = buyPhase.capacityWellY;
+        }
+
+        if((x > wellX + error || x < wellX - error) && (y > wellY + error || y < wellY - error)){
+          num dist = sqrt(pow(x - wellX, 2) + pow(y - wellY, 2));
+          if(dist > returnVel){
+            move((wellX - x)/dist*returnVel, (wellY - y)/dist*returnVel);
+          }
+          else{
+            move((wellX - x)/dist*dist, (wellY - y)/dist*dist);
+          }
+        }
+      }
+    }
+  }
+  
+  num get iwidth => img.width;
+  
+  num get iheight => img.height;
+  
+  void draw(CanvasRenderingContext2D ctx, num width, num height) {
+    ctx.save();
+    {
+      ctx.translate(x, y);
+      ctx.rotate(heading + PI/2);
+      ctx.drawImage(img, -img.width/2, -img.height/2);
+     
+    }
+
+    ctx.restore();
+  }
+  
+  bool touchDown(Contact c) {
+    buyPhase.upgradeTouched(this);
+    _dragging = true;
+    return true;
+  }
+  
+  void touchDrag(Contact c) {
+    move(c.touchX - x, c.touchY - y);
+    _targetX = c.touchX;
+    _targetY = c.touchY;    
+    repaint();
+  }
+  
+  void touchUp(Contact c) {
+    _dragging = false;
+    if(canBuy()){
+      buyPhase.deleteUpgrade(this);
+    }
+    
+  }
+
+  bool containsTouch(Contact c) {
+    num tx = c.touchX;
+    num ty = c.touchY;
+    num bx = x - iwidth/2;
+    num by = y - iheight/2;
+    return (tx >= bx && ty >= by && tx <= bx + iwidth && ty <= by + iheight);
+  }
+  
+    
+  void touchSlide(Contact c) { }  
 }
