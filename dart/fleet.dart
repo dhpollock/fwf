@@ -222,17 +222,29 @@ class Fleet  extends TouchLayer{
         boat.animateSellFish(sardinePrice);
         return false;
       }
+      else{
+        coin += sardinePrice * boat.fishCount;
+        boat.fishCount = 0;
+      }
     }
     for(Boat boat in tunaBoats){
       if(!boat.sold){
         boat.animateSellFish(tunaPrice);
         return false;
       }
+      else{
+        coin += tunaPrice * boat.fishCount;
+        boat.fishCount = 0;
+      }
     }
     for(Boat boat in sharkBoats){
       if(!boat.sold){
         boat.animateSellFish(sharkPrice);
         return false;
+      }
+      else{
+        coin += sharkPrice * boat.fishCount;
+        boat.fishCount = 0;
       }
     }
     

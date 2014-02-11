@@ -341,7 +341,7 @@ class ForSaleBoat extends Boat {
   num returnVel = 30.0;
   num error = .1;
   num price;
-  num fleetMax = 6;
+  num fleetMax = 3;
   
   
   

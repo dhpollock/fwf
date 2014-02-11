@@ -65,8 +65,8 @@ class Game {
     
     // create a few boats
     
-    fleetA = new Fleet(1, 1, 1, 3000, 'A');
-    fleetB = new Fleet(1, 1, 1, 100, 'B');
+    fleetA = new Fleet(1, 0, 0, 100, 'A');
+    fleetB = new Fleet(1, 0, 0, 100, 'B');
     
     //intializing each phase 
     ecosystem = new AgentManager(200, 45, 15, 10, width, height);
