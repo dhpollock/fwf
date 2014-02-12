@@ -65,8 +65,8 @@ class Game {
     
     // create a few boats
     
-    fleetA = new Fleet(1, 0, 0, 10000, 'A');
-    fleetB = new Fleet(1, 0, 0, 100, 'B');
+    fleetA = new Fleet(1, 0, 0, 1000, 'A');
+    fleetB = new Fleet(1, 0, 0, 1000, 'B');
     
     //intializing each phase 
     ecosystem = new AgentManager(200, 45, 15, 10, width, height);
@@ -138,15 +138,19 @@ class Game {
         break;
       case 'BUY':
         buy.draw(ctx, width, height);
+        drawEcosystemStatus();
         break;
       case 'FISH':
         fish.draw(ctx, width, height);
+        drawEcosystemStatus();
         break;
       case 'SELL':
         sell.draw(ctx, width, height);
+        drawEcosystemStatus();
         break;
       case 'REGROW':
         regrow.draw(ctx, width, height);
+        drawEcosystemStatus();
         //ecosystem.draw(ctx);
         break;
       default:
@@ -329,5 +333,28 @@ class Game {
         regrow.startTimer();
         break;
     }
+  }
+  
+  void drawEcosystemStatus(){
+    num boxX = width - 150;
+    num boxY = height - 85;
+    
+    ctx.fillStyle = 'grey';
+    ctx.fillRect(boxX, boxY, 25, 75);
+    ctx.fillStyle = 'white';
+    ctx.font = '15px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'center';
+    ctx.fillText("Sa: ", boxX+28, boxY+15);
+    ctx.fillText("T: ", boxX+28, boxY+40);
+    ctx.fillText("Sh: ", boxX+28, boxY+65);
+    //buy box?
+    ctx.fillStyle = 'green';
+    ctx.fillRect(boxX+25, boxY, ecosystem.sardines.length, 25);
+    ctx.fillStyle = 'red';
+    ctx.fillRect(boxX+25, boxY + 25, ecosystem.tunas.length, 25);
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(boxX+25, boxY + 50, ecosystem.sharks.length, 25);
+    
   }
 }
