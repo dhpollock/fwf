@@ -169,7 +169,7 @@ class Agent{
         mode = 'FOOD';
         population -= 1;
       }
-      if(population == 0 ){
+      if(population <= 0 ){
         if(nearest != null){
           if(nearest.type == foodType){
             nearest.ate = false;

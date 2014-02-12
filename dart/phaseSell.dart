@@ -71,6 +71,9 @@ class Sell extends TouchLayer{
       bool animB = fleetB.animateSellPhaseUnload(sardinePrice, tunaPrice, sharkPrice);
       if(animA && animB){
         unloadPhase = false;
+        if(!game.debugTransition){
+          game.transition();
+        }
       }
     
     }

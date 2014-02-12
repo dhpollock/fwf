@@ -34,6 +34,9 @@ class Regrow extends TouchLayer{
   void draw(CanvasRenderingContext2D ctx, width, height){
     ctx.clearRect(0, 0, width, height);
     ctx.fillStyle = 'black';
+    ctx.font = '30px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'center';
     ctx.fillText("REGROW ALL THE FISHES ", 100, 50);
     ecosystem.draw(ctx);
     if (!game.debugTransition && active){
