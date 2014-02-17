@@ -164,43 +164,76 @@ class Game {
   void transition() {
     switch(phase){
       case 'TITLE':
-        phase = 'BUY';
-          phasenum++;
-//          if (debugTransition){
-//            phasenum = 10;
-//          }
+        phase = 'FISH';
+        phasenum++;
         
-        //puts boats in harbor
         fleetA.harborArrage();
         fleetB.harborArrage();
-        
-        fleetA.hide();
-        fleetB.hide();
-        
-        //enable/disable touch manager for the phase 
+          
+        fleetA.show();
+        fleetB.show();
+          
+        //enable/disable touch manager for the phase
         title.hide();
-        buy.show();
-        fish.hide();
+        buy.hide();
+        fish.show();
         sell.hide();
         regrow.hide();
-        repaint();
         
-        //if this is the first encounter with phase show instructions
+        ecosystem.updateSpeed(.5);
         if (phasenum == 1 && !debugTransition){
-          intro.showInstructions("instructionBuy", 130, 130);
+          intro.showInstructions("instructionFish", 130, 130);
           //hide fleets to prevent clicking, after click in instruction class fleets are touchable
           fleetA.hide();
           fleetB.hide();
           repaint();
         }
-        repaint();
-        //shows buttons after 5 seconds for players to move to next phase
+//        if (phasenum == 2 && !debugTransition){
+//          intro.showInstructions("instructionFish", 130, 130);
+//          fleetA.hide();
+//          fleetB.hide();
+//          }
         if (!debugTransition && phasenum > 4){
           transitionActions();
         }
-        print(phasenum);
+        repaint();
         print(phase);
+        print(phasenum);
         break;
+//        phase = 'BUY';
+//        phasenum++;        
+//        //puts boats in harbor
+//        
+//        fleetA.harborArrage();
+//        fleetB.harborArrage();
+//        
+//        fleetA.hide();
+//        fleetB.hide();
+//        
+//        //enable/disable touch manager for the phase 
+//        title.hide();
+//        buy.show();
+//        fish.hide();
+//        sell.hide();
+//        regrow.hide();
+//        repaint();
+//        
+//        //if this is the first encounter with phase show instructions
+//        if (phasenum == 1 && !debugTransition){
+//          intro.showInstructions("instructionBuy", 130, 130);
+//          //hide fleets to prevent clicking, after click in instruction class fleets are touchable
+//          fleetA.hide();
+//          fleetB.hide();
+//          repaint();
+//        }
+//        repaint();
+//        //shows buttons after 5 seconds for players to move to next phase
+//        if (!debugTransition && phasenum > 4){
+//          transitionActions();
+//        }
+//        print(phasenum);
+//        print(phase);
+//        break;
       case 'BUY':
         phase = 'FISH';
         phasenum++;
@@ -219,11 +252,11 @@ class Game {
         
         ecosystem.updateSpeed(.5);
         
-        if (phasenum == 2 && !debugTransition){
-          intro.showInstructions("instructionFish", 130, 130);
-          fleetA.hide();
-          fleetB.hide();
-          }
+//        if (phasenum == 2 && !debugTransition){
+//          intro.showInstructions("instructionFish", 130, 130);
+//          fleetA.hide();
+//          fleetB.hide();
+//          }
         if (!debugTransition && phasenum > 4){
           transitionActions();
         }
@@ -233,6 +266,11 @@ class Game {
         break;
       case 'FISH':
         phase = 'SELL';
+        phasenum++; 
+
+        fleetA.fleetStop();
+        fleetB.fleetStop();
+        
         fleetA.hide();
         fleetB.hide();
 //        fleetA.show();
@@ -247,20 +285,20 @@ class Game {
         
         repaint();
         print(phase);
-        phasenum++; 
-        if (phasenum == 3 && !debugTransition){
+
+        if (phasenum == 2 && !debugTransition){
           intro.showInstructions("instructionSell", 130, 130);
           fleetA.hide();
           fleetB.hide();
           }
         print(phasenum);
-        if (!debugTransition  && phasenum > 4){
+        if (!debugTransition  && phasenum > 2){
           transitionActions();
         }
         break;
       case 'SELL':
         phase = 'REGROW';
-        
+        phasenum++; 
         fleetA.harborArrage();
         fleetB.harborArrage();
         
@@ -276,19 +314,20 @@ class Game {
 
         repaint();
         print(phase);
-        phasenum++; 
-        if (phasenum == 4 && !debugTransition){
+
+        if (phasenum == 3 && !debugTransition){
           intro.showInstructions("instructionRegrow", 130, 130);
           fleetA.hide();
           fleetB.hide();
           }
         print(phasenum);
-        if (!debugTransition && phasenum>4){
-          //transitionActions();
+        if (!debugTransition && phasenum>3){
+          transitionActions();
         }
         break;
       case 'REGROW':
         phase = 'BUY';
+        phasenum++; 
         
         fleetA.hide();
         fleetB.hide();
@@ -298,13 +337,19 @@ class Game {
         fish.hide();
         sell.hide();
         regrow.hide();
-
+        if (phasenum == 4 && !debugTransition){
+          intro.showInstructions("instructionBuy", 130, 130);
+          //hide fleets to prevent clicking, after click in instruction class fleets are touchable
+          fleetA.hide();
+          fleetB.hide();
+          repaint();
+        }
         repaint();
-        if (!debugTransition && phasenum >3){
+        if (!debugTransition && phasenum >4){
           transitionActions();
         }
         print(phase);
-        phasenum++; 
+
         print(phasenum);
         break;
     }
@@ -313,7 +358,7 @@ class Game {
   void transitionActions(){
     switch(phase){
       case "BUY":
-        print("hello");
+        //print("hello");
         new Timer(const Duration(seconds : 3), () {
           finish.showfinishButton("finishButton1", 10, 780);
           finish.showfinishButton("finishButton2", 650, 780);
@@ -321,13 +366,15 @@ class Game {
         break;
       case "FISH":
         fish.startTimer();
-        
+        fleetA.show();
+        fleetB.show();
         break;
       case "SELL":
-        new Timer(const Duration(seconds : 3), () {
-          finish.showfinishButton("finishButton1", 10, 780);
-          finish.showfinishButton("finishButton2", 650, 780);
-        });
+        sell.firstInstructions = true;
+//        new Timer(const Duration(seconds : 3), () {
+//          finish.showfinishButton("finishButton1", 10, 780);
+//          finish.showfinishButton("finishButton2", 650, 780);
+//        });
         break;
       case "REGROW":
         regrow.startTimer();

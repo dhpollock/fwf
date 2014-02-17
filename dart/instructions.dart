@@ -65,8 +65,8 @@ class Instruction{
    */
   void instructionAction(String instruction, String action) {
     //show fleets after click to continue
-    game.fleetA.show();
-    game.fleetB.show();
+    //game.fleetA.show();
+    //game.fleetB.show();
     game.transitionActions();
   }
   

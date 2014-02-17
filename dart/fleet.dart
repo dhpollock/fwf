@@ -68,6 +68,21 @@ class Fleet  extends TouchLayer{
     
   }
   
+  void fleetStop(){
+    for(Boat boat in sardineBoats){
+      boat.clearPath();
+    }
+    for(Boat boat in tunaBoats){
+      boat.clearPath();
+    }
+    for(Boat boat in sharkBoats){
+      boat.clearPath();
+    }
+    for(Boat boat in rewardBoats){
+      boat.clearPath();
+    }
+  }
+  
   //draw all boats 
   void draw(CanvasRenderingContext2D ctx, num width, num height){
     for(Boat boat in sardineBoats){
