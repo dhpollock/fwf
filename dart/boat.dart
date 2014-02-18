@@ -239,7 +239,7 @@ class Boat implements Touchable {
       //draws boatPath on canvas
       if(fleetType == 'A' || fleetType == 'B'){
         ctx.lineWidth = 2;
-        ctx. strokeStyle = 000;
+        ctx.strokeStyle = 000;
         ctx.translate(0,0);
         ctx.rotate(-(heading + PI/2));
         ctx.beginPath();
@@ -248,12 +248,22 @@ class Boat implements Touchable {
         }
         ctx.stroke();
         ctx.closePath();
-      }
+        
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = 000;
+        ctx.setStrokeColorRgb(0, 255, 0);
+        ctx.beginPath();
+        num r = 50;
+        ctx.arc(0, 0, r, 0, 2.0*PI*fishCount/capacity, false);
+        ctx.stroke();
+        ctx.closePath();
      
     }
     
     if(_dragging && boatPath.length > 1){
       num r = 50;
+      ctx.setStrokeColorRgb(0, 0, 0);
+      ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.arc(boatPath.last.x- boatPath.first.x, boatPath.last.y- boatPath.first.y, r, 0, 2*PI, false);
       ctx.stroke();
@@ -281,6 +291,7 @@ class Boat implements Touchable {
       ctx.fillText(textString, textX, textY);
     }
     ctx.restore();
+  }
   }
   
   bool dragging(){
