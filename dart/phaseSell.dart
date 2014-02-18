@@ -57,7 +57,7 @@ class Sell extends TouchLayer{
   }
   
   void animate(){
-    if(firstInstructions){
+    if(firstInstructions || game.debugTransition){
       if(setupPhase){
         bool animA = fleetA.animateSellPhase();
         bool animB = fleetB.animateSellPhase();

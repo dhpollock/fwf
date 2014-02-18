@@ -24,6 +24,8 @@ class Fleet  extends TouchLayer{
   
   //number of boats in fleet 
   num boatCount;
+  num speedMult = 0;
+  num speedMultMax = 3;
   
   TouchManager tmanager = new TouchManager();
   
@@ -308,7 +310,12 @@ class Fleet  extends TouchLayer{
     return null;
   }
   
+
+  
   void upgrade(var upgrade, num upgradeVal){
+    if(upgrade == 'speed'){
+      speedMult += 1;
+    }
     for(Boat boat in sardineBoats){
       if(upgrade == 'speed'){
         boat.speed += upgradeVal;

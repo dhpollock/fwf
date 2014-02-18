@@ -374,7 +374,7 @@ class Upgrade implements Touchable {
       //if boat is within the buy box for fleet A 
       if(x >= abx && y >= aby && x <= abx + buyPhase.fleetAbuySquareWidth && y <= aby + buyPhase.fleetAbuySquareHeight){
         //if player has enough money to buy boat and less than fleetMax amount of boats 
-        if(buyPhase.fleetA.coin >= price){
+        if(buyPhase.fleetA.coin >= price && speedCap(buyPhase.fleetA)){
           buyPhase.fleetA.upgrade(upgrade, upgradeVal);
           buyPhase.fleetA.coin -= price;
           return true;
@@ -386,7 +386,7 @@ class Upgrade implements Touchable {
       
       //same for fleet B
       else if(x >= bbx && y >= bby && x <= bbx + buyPhase.fleetBbuySquareWidth && y <= bby + buyPhase.fleetBbuySquareHeight){
-        if(buyPhase.fleetB.coin >= price){
+        if(buyPhase.fleetB.coin >= price &&  speedCap(buyPhase.fleetB)){
           buyPhase.fleetB.upgrade(upgrade, upgradeVal);
           buyPhase.fleetB.coin -= price;
           return true;
@@ -398,6 +398,15 @@ class Upgrade implements Touchable {
       else{
         return false;
       }
+    }
+  }
+  
+  bool speedCap(Fleet fleet){
+    if(fleet.speedMult >= fleet.speedMultMax && upgrade == 'speed'){
+      return false;
+    }
+    else{
+      return true;
     }
   }
   
