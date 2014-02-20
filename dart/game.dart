@@ -96,6 +96,8 @@ class Game {
         break;
       case 'BUY':
         buy.animate();
+        fleetA.animate();
+        fleetB.animate();
         draw();
         break;
       case 'FISH':
@@ -329,8 +331,8 @@ class Game {
         phase = 'BUY';
         phasenum++; 
         
-        fleetA.hide();
-        fleetB.hide();
+        fleetA.show();
+        fleetB.show();
         
         //enable/disable touch manager for the phase 
         buy.show();
@@ -363,6 +365,8 @@ class Game {
           finish.showfinishButton("finishButton1", 10, 780);
           finish.showfinishButton("finishButton2", 650, 780);
         });
+        fleetA.show();
+        fleetB.show();
         break;
       case "FISH":
         fish.startTimer();

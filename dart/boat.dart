@@ -20,6 +20,9 @@ class Boat implements Touchable {
   /* heading in radians */
   num heading = 0.0;
   
+  /* position in harbor -- defined by fleet harborArrange()*/
+  num harborX = 0.0, harborY = 0.0;
+  
   /* bitmap image */
   ImageElement img = new ImageElement();
   
@@ -38,6 +41,10 @@ class Boat implements Touchable {
   var boatmenu = new Menu();
   
   num menunum;
+  
+  //BUY Phase parameters
+  num returnVel = 30.0;
+  num error = .1;
   
   //speed of path follow 
   var speed = 5.0;
@@ -123,7 +130,7 @@ class Boat implements Touchable {
   
   void animate() {
     //animates boat moving along boatPath 
-    if(fleetType == 'A' || fleetType =='B'){
+    if((fleetType == 'A' || fleetType =='B') && game.phase == 'FISH'){
       if(boatPath.length > 1){
         var dist = sqrt(pow((boatPath[1].x - boatPath[0].x), 2) + pow((boatPath[1].y - boatPath[0].y), 2));
         
@@ -141,12 +148,50 @@ class Boat implements Touchable {
         }
       }
     }
-    else{
-
+    else if((fleetType == 'A' || fleetType =='B') && game.phase == 'BUY'){
+      if(_dragging == false){
+        if(!sold()){
+          if((x > harborX + error || x < harborX - error) && (y > harborY + error || y < harborY - error)){
+            num dist = sqrt(pow(x - harborX, 2) + pow(y - harborY, 2));
+            if(dist > returnVel){
+              move((harborX - x)/dist*returnVel, (harborY - y)/dist*returnVel);
+            }
+            else{
+              move((harborX - x)/dist*dist, (harborY - y)/dist*dist);
+            }
+          }
+      }
+      }
     }
     if(fishCount < capacity){
       game.ecosystem.catchCheck(this);
     }
+  }
+  
+  bool sold(){
+    Buy buyPhase = game.buy;
+    num abx = buyPhase.boatSellSquareX;
+    num aby = buyPhase.boatSellSquareY;
+    
+    //if boat is within the buy box for fleet A 
+    if(x >= abx && y >= aby && x <= abx + buyPhase.boatSellSquareWidth && y <= aby + buyPhase.boatSellSquareHeight){
+      //if player has enough money to buy boat and less than fleetMax amount of boats 
+      if(fleetType == 'A'){
+        buyPhase.fleetA.removeBoats.add(this);
+        buyPhase.fleetA.coin += 100;
+        print("removing boat");
+        return true;
+      }
+      else if(fleetType == 'B'){
+        buyPhase.fleetB.removeBoats.add(this);
+        buyPhase.fleetB.coin += 100;
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+    return false;
   }
   
   bool animateGoTo(num goToX, num goToY){
@@ -189,7 +234,7 @@ class Boat implements Touchable {
   }
   
   bool flashSellSign = false;
-  bool sold = false;
+  bool soldFish = false;
   
   bool animateSellFish(num price){
     if(!flashSellSign){
@@ -202,7 +247,7 @@ class Boat implements Touchable {
     if(animateBoatText("${price*fishCount}", 5, 5)){
       backward(10);
       flashSellSign = false;
-      sold = true;
+      soldFish = true;
       return true;
     }
     return false;
@@ -335,12 +380,13 @@ class Boat implements Touchable {
   
   
   void touchDrag(Contact c) {
-    if(fleetType == 'A' || fleetType =='B'){
+    if((fleetType == 'A' || fleetType =='B') && game.phase == "FISH"){
       boatPath.add(new Point(c.touchX,c.touchY));
     }
-//    else{
-//      move(c.touchX - _targetX, c.touchY - _targetY);
-//    }
+    else if((fleetType == 'A' || fleetType =='B') && game.phase == "BUY"){
+      x = c.touchX;
+      y = c.touchY;
+    }
     _targetX = c.touchX;
     _targetY = c.touchY;
     

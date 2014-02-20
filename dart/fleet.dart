@@ -16,6 +16,8 @@ class Fleet  extends TouchLayer{
   List<Boat> sharkBoats = new List<Boat>();
   List<Boat> rewardBoats = new List<Boat>();
   
+  List<Boat> removeBoats = new List<Boat>();
+  
   //amount of money 
   num coin;
   
@@ -135,6 +137,10 @@ class Fleet  extends TouchLayer{
     for(Boat boat in rewardBoats){
       boat.animate();
     }
+    
+    for(Boat boat in removeBoats){
+     removeBoat(boat);
+    }
   }
   
 
@@ -161,6 +167,26 @@ class Fleet  extends TouchLayer{
     harborArrage();
   }
   
+  void removeBoat(Boat boat){
+    if(boat.boatType == 'sardine'){
+      sardineBoats.remove(boat);
+      touchables.remove(boat);
+      boatCount += -1;
+    }
+    else if(boat.boatType == 'tuna'){
+      tunaBoats.remove(boat);
+      touchables.remove(boat);
+      boatCount += -1;
+    }
+    else if(boat.boatType == 'shark'){
+      sharkBoats.remove(boat);
+      touchables.remove(boat);
+      boatCount += -1;
+    }
+    //harborArrage();
+    
+  }
+  
   //gives boats position within harbor 
   void harborArrage(){
     num tempStartX;
@@ -177,6 +203,8 @@ class Fleet  extends TouchLayer{
     for(Boat boat in sardineBoats){
       boat.x = tempStartX;
       boat.y = 215 + tempCount * 80;
+      boat.harborX = boat.x;
+      boat.harborY = boat.y;
       boat.heading = heading;
       boat.clearPath();
       boat.fishCount = 0;
@@ -185,6 +213,8 @@ class Fleet  extends TouchLayer{
     for(Boat boat in tunaBoats){
       boat.x = tempStartX;
       boat.y = 215 + tempCount * 80;
+      boat.harborX = boat.x;
+      boat.harborY = boat.y;
       boat.heading = heading;
       boat.clearPath();
       boat.fishCount = 0;
@@ -193,6 +223,8 @@ class Fleet  extends TouchLayer{
     for(Boat boat in sharkBoats){
       boat.x = tempStartX;
       boat.y = 215 + tempCount * 80;
+      boat.harborX = boat.x;
+      boat.harborY = boat.y;
       boat.heading = heading;
       boat.clearPath();
       boat.fishCount = 0;
@@ -222,7 +254,7 @@ class Fleet  extends TouchLayer{
           
         }
         tempCount++;
-        boat.sold = false;
+        boat.soldFish = false;
 
       }
       for(Boat boat in tunaBoats){
@@ -230,14 +262,14 @@ class Fleet  extends TouchLayer{
           atSellLocal = false;
         }
         tempCount++;
-        boat.sold = false;
+        boat.soldFish = false;
       }    
       for(Boat boat in sharkBoats){
         if(!boat.animateGoTo(tempStartX, 215 + tempCount * 80)){
           atSellLocal = false;
         }
         tempCount++;
-        boat.sold = false;
+        boat.soldFish = false;
       }
       //animate();
       return atSellLocal;
@@ -245,7 +277,7 @@ class Fleet  extends TouchLayer{
   
   bool animateSellPhaseUnload(num sardinePrice,num tunaPrice,num sharkPrice){
     for(Boat boat in sardineBoats){
-      if(!boat.sold){
+      if(!boat.soldFish){
         boat.animateSellFish(sardinePrice);
         return false;
       }
@@ -255,7 +287,7 @@ class Fleet  extends TouchLayer{
       }
     }
     for(Boat boat in tunaBoats){
-      if(!boat.sold){
+      if(!boat.soldFish){
         boat.animateSellFish(tunaPrice);
         return false;
       }
@@ -265,7 +297,7 @@ class Fleet  extends TouchLayer{
       }
     }
     for(Boat boat in sharkBoats){
-      if(!boat.sold){
+      if(!boat.soldFish){
         boat.animateSellFish(sharkPrice);
         return false;
       }
@@ -345,6 +377,10 @@ class Fleet  extends TouchLayer{
       Boat newBoat = new Boat(500,400, 'reward', fleetAB);
       rewardBoats.add(newBoat);
       touchables.add(newBoat);
+    }
+    
+    if(upgrade == 'park'){
+      
     }
   }
   

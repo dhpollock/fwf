@@ -27,6 +27,11 @@ class Buy extends TouchLayer{
   num fleetBbuySquareWidth = 235;
   num fleetBbuySquareHeight = 600;
   
+  num boatSellSquareX = 500;
+  num boatSellSquareY = 100;
+  num boatSellSquareWidth = 200;
+  num boatSellSquareHeight = 100;
+  
   //prices of boats 
   num sardinePrice = 100;
   num tunaPrice = 200;
@@ -194,7 +199,7 @@ class Buy extends TouchLayer{
     ctx.fillText("100", parkWellX - 25, 625);
     
     ctx.fillStyle = 'grey';
-    ctx.fillRect(500, 100, 200, 100);
+    ctx.fillRect(boatSellSquareX, boatSellSquareY, boatSellSquareWidth, boatSellSquareHeight);
     ctx.fillStyle = 'white';
     ctx.fillText("Sell Boats Here", 500, 100);
     
