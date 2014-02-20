@@ -39,6 +39,7 @@ class Game {
   Sell sell;
   Regrow regrow;
   Title title;
+  GameOver gameOver;
   
   AgentManager ecosystem;
   
@@ -76,6 +77,7 @@ class Game {
     sell = new Sell(fleetA, fleetB);
     regrow = new Regrow(fleetA, fleetB, ecosystem);
     title = new Title();
+    gameOver = new GameOver();
 
     // redraw the canvas every 40 milliseconds runs animate function every 40 milliseconds 
     new Timer.periodic(const Duration(milliseconds : 40), (timer) => animate());
@@ -119,6 +121,9 @@ class Game {
         regrow.animate();
         draw();
         break;
+      case 'GAMEOVER':
+        draw();
+        break;
     }
 //    if(phase == 'REGROW'){
 //      regrow.animate();
@@ -154,6 +159,9 @@ class Game {
         regrow.draw(ctx, width, height);
         drawEcosystemStatus();
         //ecosystem.draw(ctx);
+        break;
+      case 'GAMEOVER':
+        gameOver.draw(ctx,width, height);
         break;
       default:
        break;       
@@ -299,61 +307,67 @@ class Game {
         }
         break;
       case 'SELL':
-        phase = 'REGROW';
-        phasenum++; 
-        fleetA.harborArrage();
-        fleetB.harborArrage();
-        
-        fleetA.hide();
-        fleetB.hide();
-        
-        //enable/disable touch manager for the phase 
-        buy.hide();
-        fish.hide();
-        sell.hide();
-        regrow.show();
-        ecosystem.updateSpeed(5);
-
-        repaint();
-        print(phase);
-
-        if (phasenum == 3 && !debugTransition){
-          intro.showInstructions("instructionRegrow", 130, 130);
-          fleetA.hide();
-          fleetB.hide();
-          }
-        print(phasenum);
-        if (!debugTransition && phasenum>3){
-          transitionActions();
+        if(ecosystem.sardines.length <= 0 || ecosystem.tunas.length <= 0 || ecosystem.sharks.length <= 0){
+          phase = 'GAMEOVER';
         }
-        break;
-      case 'REGROW':
-        phase = 'BUY';
-        phasenum++; 
-        
-        fleetA.show();
-        fleetB.show();
-        
-        //enable/disable touch manager for the phase 
-        buy.show();
-        fish.hide();
-        sell.hide();
-        regrow.hide();
-        if (phasenum == 4 && !debugTransition){
-          intro.showInstructions("instructionBuy", 130, 130);
-          //hide fleets to prevent clicking, after click in instruction class fleets are touchable
+        else{
+          phase = 'REGROW';
+          phasenum++; 
+          fleetA.harborArrage();
+          fleetB.harborArrage();
+          
           fleetA.hide();
           fleetB.hide();
+          
+          //enable/disable touch manager for the phase 
+          buy.hide();
+          fish.hide();
+          sell.hide();
+          regrow.show();
+          ecosystem.updateSpeed(5);
+  
           repaint();
+          print(phase);
+  
+          if (phasenum == 3 && !debugTransition){
+            intro.showInstructions("instructionRegrow", 130, 130);
+            fleetA.hide();
+            fleetB.hide();
+            }
+          print(phasenum);
+          if (!debugTransition && phasenum>3){
+            transitionActions();
+          }
         }
-        repaint();
-        if (!debugTransition && phasenum >4){
-          transitionActions();
-        }
-        print(phase);
-
-        print(phasenum);
         break;
+        case 'REGROW':
+          phase = 'BUY';
+          phasenum++; 
+          
+          fleetA.show();
+          fleetB.show();
+          
+          //enable/disable touch manager for the phase 
+          buy.show();
+          fish.hide();
+          sell.hide();
+          regrow.hide();
+          if (phasenum == 4 && !debugTransition){
+            intro.showInstructions("instructionBuy", 130, 130);
+            //hide fleets to prevent clicking, after click in instruction class fleets are touchable
+            fleetA.hide();
+            fleetB.hide();
+            repaint();
+          }
+          repaint();
+          if (!debugTransition && phasenum >4){
+            transitionActions();
+          }
+          print(phase);
+  
+          print(phasenum);
+        break;
+        
     }
   }
   

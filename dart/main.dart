@@ -20,6 +20,7 @@ part 'phaseBuy.dart';
 part 'phaseFish.dart';
 part 'phaseSell.dart';
 part 'phaseRegrow.dart';
+part 'phaseOver.dart';
 part 'agent.dart';
 part 'instructions.dart';
 part 'finishButton.dart';
