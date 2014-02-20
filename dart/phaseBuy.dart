@@ -43,6 +43,7 @@ class Buy extends TouchLayer{
   num speedWellX, speedWellY;
   num capacityWellX, capacityWellY;
   num rewardWellX, rewardWellY;
+  num parkWellX, parkWellY;
   
   TouchManager tmanager = new TouchManager();
   
@@ -53,6 +54,7 @@ class Buy extends TouchLayer{
   List<Upgrade> buyingSpeed = new List<Upgrade>();
   List<Upgrade> buyingCapacity = new List<Upgrade>();
   List<Upgrade> buyingReward = new List<Upgrade>();
+  List<Upgrade> buyingPark = new List<Upgrade>();
   
   Buy(Fleet A, Fleet B){    
     fleetA = A;
@@ -75,6 +77,9 @@ class Buy extends TouchLayer{
     
     rewardWellX = 650.0;
     rewardWellY = 550.0;
+    
+    parkWellX = 350.0;
+    parkWellY = 700.0;
     
     tmanager.registerEvents(document.documentElement);
     tmanager.addTouchLayer(this);
@@ -107,6 +112,10 @@ class Buy extends TouchLayer{
     Upgrade newReward = new Upgrade(this, rewardWellX, rewardWellY, 'reward');
     buyingReward.add(newReward);
     touchables.add(newReward);
+    
+    Upgrade newPark = new Upgrade(this, parkWellX, parkWellY, 'park');
+    buyingPark.add(newPark);
+    touchables.add(newPark);
     
     harborOverlay.src = "images/harborOverlay.png";
     buyOverlay.src = "images/buyOverlay.png";
@@ -145,7 +154,12 @@ class Buy extends TouchLayer{
       }
       if(upgrade.upgrade == 'reward'){
         Upgrade newUpgrade = new Upgrade(this, rewardWellX, rewardWellY, 'reward');
-        buyingCapacity.add(newUpgrade);
+        buyingReward.add(newUpgrade);
+        touchables.add(newUpgrade);
+      }
+      if(upgrade.upgrade == 'park'){
+        Upgrade newUpgrade = new Upgrade(this, parkWellX, parkWellY, 'park');
+        buyingPark.add(newUpgrade);
         touchables.add(newUpgrade);
       }
     }
@@ -177,7 +191,12 @@ class Buy extends TouchLayer{
     ctx.fillText("100", speedWellX - 25, 475);
     ctx.fillText("100", capacityWellX - 25, 475);
     
-    ctx.fillText("10,000", rewardWellX - 25, 475);
+    ctx.fillText("100", parkWellX - 25, 625);
+    
+    ctx.fillStyle = 'grey';
+    ctx.fillRect(500, 100, 200, 100);
+    ctx.fillStyle = 'white';
+    ctx.fillText("Sell Boats Here", 500, 100);
     
     //draw boats
     
@@ -208,6 +227,11 @@ class Buy extends TouchLayer{
     }
     if(buyingReward.length > -1){
       for(Upgrade upgrade in buyingReward){
+        upgrade.draw(ctx, width, height);
+      }
+    }
+    if(buyingPark.length > -1){
+      for(Upgrade upgrade in buyingPark){
         upgrade.draw(ctx, width, height);
       }
     }
@@ -242,6 +266,10 @@ class Buy extends TouchLayer{
       return;
     }
     else if(buyingReward.remove(upgrade)){
+      repaint();
+      return;
+    }
+    else if(buyingPark.remove(upgrade)){
       repaint();
       return;
     }
@@ -289,6 +317,11 @@ class Buy extends TouchLayer{
     }
     if(buyingReward.length > 0){
       for(Upgrade upgrade in buyingReward){
+        upgrade.animate();
+      }
+    }
+    if(buyingPark.length > 0){
+      for(Upgrade upgrade in buyingPark){
         upgrade.animate();
       }
     }
@@ -348,6 +381,15 @@ class Upgrade implements Touchable {
       upgrade = 'reward';
       upgradeVal = 10;
       img.src = 'images/reward.png';
+      
+    }
+    
+    else if(newUpgrade == 'park'){
+      price = 100;
+      upgradeType = 'fleet';
+      upgrade = 'park';
+      upgradeVal = 10;
+      img.src = 'images/park.png';
       
     }
     
@@ -424,7 +466,10 @@ class Upgrade implements Touchable {
           wellX = buyPhase.capacityWellX;
           wellY = buyPhase.capacityWellY;
         }
-
+        else if(upgradeType == 'park'){
+          wellX = buyPhase.parkWellX;
+          wellY = buyPhase.parkWellY;
+        }
         if((x > wellX + error || x < wellX - error) && (y > wellY + error || y < wellY - error)){
           num dist = sqrt(pow(x - wellX, 2) + pow(y - wellY, 2));
           if(dist > returnVel){
