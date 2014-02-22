@@ -141,6 +141,7 @@ class Fleet  extends TouchLayer{
     for(Boat boat in removeBoats){
      removeBoat(boat);
     }
+    removeBoats.clear();
   }
   
 
@@ -172,16 +173,19 @@ class Fleet  extends TouchLayer{
       sardineBoats.remove(boat);
       touchables.remove(boat);
       boatCount += -1;
+      print(boatCount);
     }
     else if(boat.boatType == 'tuna'){
       tunaBoats.remove(boat);
       touchables.remove(boat);
       boatCount += -1;
+      print(boatCount);
     }
     else if(boat.boatType == 'shark'){
       sharkBoats.remove(boat);
       touchables.remove(boat);
       boatCount += -1;
+      print(boatCount);
     }
     //harborArrage();
     
