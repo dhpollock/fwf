@@ -381,7 +381,7 @@ class Upgrade implements Touchable {
       
     }
     else if(newUpgrade == 'reward'){
-      price = 10000;
+      price = 4000;
       upgradeType = 'fleet';
       upgrade = 'reward';
       upgradeVal = 10;

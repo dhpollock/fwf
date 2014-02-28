@@ -8,7 +8,7 @@ part of fwf;
 class Game {
   
   //turn off annoying transitions 0 = on; 1 = off
-  bool debugTransition = false;
+  bool debugTransition = true;
    
   // this is the HTML canvas element
   CanvasElement canvas;
@@ -33,6 +33,7 @@ class Game {
   
   TouchManager tmanager = new TouchManager();
   
+  num roundNum = 0;
   //declaring phase objects 
   Buy buy;
   Fish fish;
@@ -66,7 +67,7 @@ class Game {
     
     // create a few boats
     
-    fleetA = new Fleet(1, 0, 0, 1000, 'A');
+    fleetA = new Fleet(1, 0, 0, 10000, 'A');
     fleetB = new Fleet(1, 0, 0, 1000, 'B');
     
     //intializing each phase 
@@ -175,6 +176,7 @@ class Game {
     switch(phase){
       case 'TITLE':
         phase = 'FISH';
+        ws.send('newgame');
         phasenum++;
         
         fleetA.harborArrage();
@@ -307,7 +309,7 @@ class Game {
 //        }
 //        break;
       case 'FISH':
-
+        sendData();
           phase = 'REGROW';
           phasenum++; 
           fleetA.harborArrage();
@@ -337,8 +339,9 @@ class Game {
           }
         break;
         case 'REGROW':
-          if(ecosystem.sardines.length <= 0 || ecosystem.tunas.length <= 0 || ecosystem.sharks.length <= 0){
+          if(ecosystem.sardines.length <= 0 || ecosystem.tunas.length <= 0 || ecosystem.sharks.length <= 0 || roundNum > 7){
             phase = 'GAMEOVER';
+            ws.send('outcome:loss');
           }
           else{
           phase = 'BUY';
@@ -367,6 +370,7 @@ class Game {
   
           print(phasenum);
           }
+          roundNum ++;
         break;
         
     }
@@ -423,4 +427,10 @@ class Game {
     ctx.fillRect(boxX+25, boxY + 50, ecosystem.sharks.length, 25);
     
   }
+  void sendData(){
+    var msg = '${roundNum},${fleetA.sardineBoats.length},${fleetA.tunaBoats.length},${fleetA.sharkBoats.length},${fleetA.speedMult},${fleetA.capacityMult},${fleetA.coin},${fleetA.fishCount('sardine')},${fleetA.fishCount('tuna')},${fleetA.fishCount('shark')},${fleetB.sardineBoats.length},${fleetB.tunaBoats.length},${fleetB.sharkBoats.length},${fleetB.speedMult},${fleetB.capacityMult},${fleetB.coin},${fleetB.fishCount('sardine')},${fleetB.fishCount('tuna')},${fleetB.fishCount('shark')},${ecosystem.sardines.length},${ecosystem.tunas.length},${ecosystem.sharks.length}';
+    print(msg);
+    ws.send(msg);
+  }
 }
+

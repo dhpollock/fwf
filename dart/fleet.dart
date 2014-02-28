@@ -26,7 +26,7 @@ class Fleet  extends TouchLayer{
   
   //number of boats in fleet 
   num boatCount;
-  num speedMult = 0;
+  num speedMult = 0, capacityMult = 0;
   num speedMultMax = 3;
   
   TouchManager tmanager = new TouchManager();
@@ -352,6 +352,9 @@ class Fleet  extends TouchLayer{
     if(upgrade == 'speed'){
       speedMult += 1;
     }
+    if(upgrade == 'capacity'){
+      capacityMult += 1;
+    }
     for(Boat boat in sardineBoats){
       if(upgrade == 'speed'){
         boat.speed += upgradeVal;
@@ -381,11 +384,32 @@ class Fleet  extends TouchLayer{
       Boat newBoat = new Boat(500,400, 'reward', fleetAB);
       rewardBoats.add(newBoat);
       touchables.add(newBoat);
+      ws.send('outcome:win');
     }
     
     if(upgrade == 'park'){
       
     }
+  }
+  
+  num fishCount(var fishType){
+    num total = 0;
+    if(fishType == 'sardine'){
+      for(Boat boat in sardineBoats){
+        total += boat.fishCount;
+      }
+    }
+    if(fishType == 'tuna'){
+      for(Boat boat in tunaBoats){
+        total += boat.fishCount;
+      }
+    }
+    if(fishType == 'shark'){
+      for(Boat boat in sharkBoats){
+        total += boat.fishCount;
+      }
+    }
+    return total;
   }
   
 }
