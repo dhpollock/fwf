@@ -49,6 +49,9 @@ class Fish extends TouchLayer{
     ctx.textBaseline = 'center';
     ctx.fillText("Player 2: ", 700, 50);
     
+    ctx.fillText("${fleetA.coin}", 50, 700);
+    ctx.fillText("${fleetB.coin}", 900, 700);
+    
     if (!game.debugTransition && active){
       ctx.fillRect(100, 100, (phaseDuration - timerCount) * 10, 50);
     }
@@ -73,6 +76,9 @@ class Fish extends TouchLayer{
    }
     collisionDetect(fleetA);
     collisionDetect(fleetB);
+    
+    fleetA.animateFishPhaseUnload(10,20,30);
+    fleetB.animateFishPhaseUnload(10,20,30);
   }
   
   

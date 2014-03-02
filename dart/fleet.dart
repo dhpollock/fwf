@@ -314,6 +314,43 @@ class Fleet  extends TouchLayer{
     return true;
   }
   
+  bool animateFishPhaseUnload(num sardinePrice,num tunaPrice,num sharkPrice){
+    for(Boat boat in sardineBoats){
+      if(!boat.soldFish){
+        //boat.animateSellFish(sardinePrice);
+        return false;
+      }
+      else{
+        coin += sardinePrice*(boat.fishCount - boat.oldfishCount);
+        boat.soldFish = false;
+      }
+    }
+    for(Boat boat in tunaBoats){
+      if(!boat.soldFish){
+        //boat.animateSellFish(tunaPrice);
+        return false;
+      }
+      else{
+        coin += tunaPrice*(boat.fishCount - boat.oldfishCount);
+        boat.soldFish = false;
+
+      }
+    }
+    for(Boat boat in sharkBoats){
+      if(!boat.soldFish){
+        //boat.animateSellFish(sharkPrice);
+        return false;
+      }
+      else{
+        coin += sharkPrice*(boat.fishCount - boat.oldfishCount);
+        boat.soldFish = false;
+
+      }
+    }
+    
+    return true;
+  }
+  
   
   Boat collided(Boat boat){
     for(Boat sardine in sardineBoats){

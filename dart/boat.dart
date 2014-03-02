@@ -52,6 +52,7 @@ class Boat implements Touchable {
   var boatType;
   var fleetType;
   num fishCount;
+  num oldfishCount;
   num capacity;
   
   var initPos;

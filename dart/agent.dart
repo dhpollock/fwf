@@ -629,7 +629,9 @@ class AgentManager{
           if((sardine.position.x > fishingBoat.x - fishingBoat.img.width/2 && sardine.position.x < fishingBoat.x + fishingBoat.img.width/2)
               && (sardine.position.y > fishingBoat.y - fishingBoat.img.height/2 && sardine.position.y < fishingBoat.y + fishingBoat.img.height/2) && !sardine.fished){
             num temp = sardine.population;
+            fishingBoat.oldfishCount = fishingBoat.fishCount;
             fishingBoat.fishCount += temp;
+            fishingBoat.soldFish = true;
             if(sardine.population > 2){
               sardine.population = temp/2; 
               sardine.fished = true;
@@ -646,7 +648,9 @@ class AgentManager{
           if((tuna.position.x > fishingBoat.x - fishingBoat.img.width/2 && tuna.position.x < fishingBoat.x + fishingBoat.img.width/2)
               && (tuna.position.y > fishingBoat.y && tuna.position.y - fishingBoat.img.height/2< fishingBoat.y + fishingBoat.img.height/2) && !tuna.fished){
             num temp = tuna.population;
+            fishingBoat.oldfishCount = fishingBoat.fishCount;
             fishingBoat.fishCount += temp;
+            fishingBoat.soldFish = true;
             if(tuna.population > 2){
               tuna.population = temp/2; 
               tuna.fished = true;
@@ -663,7 +667,9 @@ class AgentManager{
           if((shark.position.x > fishingBoat.x - fishingBoat.img.width/2 && shark.position.x < fishingBoat.x + fishingBoat.img.width/2) 
               && (shark.position.y > fishingBoat.y && shark.position.y - fishingBoat.img.height/2< fishingBoat.y + fishingBoat.img.height/2) && !shark.fished){
             num temp = shark.population;
+            fishingBoat.oldfishCount = fishingBoat.fishCount;
             fishingBoat.fishCount += temp;
+            fishingBoat.soldFish = true;
             if(shark.population > 2){
               shark.population = temp/2; 
               shark.fished = true;
