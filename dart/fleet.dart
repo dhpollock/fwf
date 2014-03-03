@@ -318,7 +318,6 @@ class Fleet  extends TouchLayer{
     for(Boat boat in sardineBoats){
       if(!boat.soldFish){
         //boat.animateSellFish(sardinePrice);
-        return false;
       }
       else{
         coin += sardinePrice*(boat.fishCount - boat.oldfishCount);
@@ -328,7 +327,6 @@ class Fleet  extends TouchLayer{
     for(Boat boat in tunaBoats){
       if(!boat.soldFish){
         //boat.animateSellFish(tunaPrice);
-        return false;
       }
       else{
         coin += tunaPrice*(boat.fishCount - boat.oldfishCount);
@@ -339,7 +337,6 @@ class Fleet  extends TouchLayer{
     for(Boat boat in sharkBoats){
       if(!boat.soldFish){
         //boat.animateSellFish(sharkPrice);
-        return false;
       }
       else{
         coin += sharkPrice*(boat.fishCount - boat.oldfishCount);
