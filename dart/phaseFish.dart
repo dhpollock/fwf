@@ -77,8 +77,14 @@ class Fish extends TouchLayer{
     collisionDetect(fleetA);
     collisionDetect(fleetB);
     
-    fleetA.animateFishPhaseUnload(10,20,30);
-    fleetB.animateFishPhaseUnload(10,20,30);
+    var prices = {
+      'sardines' : 10,
+      'sharks' : 30,
+      'tuna' : 20
+    };
+    
+    fleetA.animateFishPhaseUnload(prices);
+    fleetB.animateFishPhaseUnload(prices);
   }
   
   
@@ -106,29 +112,24 @@ class Fish extends TouchLayer{
     timerCount = 0;
   }
   
-  void collisionDetect(Fleet fleet){
-    for(Boat boat in fleet.sardineBoats){
-      collideChecker(boat);
-    }
-    for(Boat boat in fleet.tunaBoats){
-      collideChecker(boat);
-    }
-    for(Boat boat in fleet.sharkBoats){
+  void collisionDetect(Fleet fleet) {
+    for(Boat boat in fleet.boats) {
       collideChecker(boat);
     }
   }
+  
+  
   void collideChecker(Boat boat){
     Boat boatHit = fleetA.collided(boat);
     num dif = PI/12;
-    if(boatHit != null){
+    if(boatHit != null) {
       boatHit.collide(boat);
       boat.collide(boatHit);
     }
     boatHit = fleetB.collided(boat);
-    if(boatHit != null){
+    if(boatHit != null) {
       boatHit.collide(boat);
       boat.collide(boatHit);
     }
   }
-  
 }

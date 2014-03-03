@@ -1,32 +1,25 @@
 part of fwf;
 
 
-class Agent{
+abstract class Agent {
+  
   //Position in space
-  Point position ;
+  Point position;
   
   //Energy value, used for determining behavior modes & population increase/decrease
   num energy;
   
   //Counter, essentially a timer based off of animation recall (every 40ms) to update energy value
-  num energyCounter = 0;
+  int energyCounter = 0;
   
-  //Hunger Energy Threshold, allows for population growth and behavior change
-  num hunger;
   //Split Energy Threshold for breaking agent into seperate agents
   num split;
+  
   //Counter Threshold, ie when to take action on energyCounter level
   num energyThreshold;
   
-  /*
-  //Alternatively make the energy use dependent on distance traveled by agent
-  num distTravel;
-  num dist2Energy = 50;
-   */
-  
   //Population represnted by agent
   num population;
-
   
   //Current heading and max speed for animation
   num heading;
@@ -37,7 +30,7 @@ class Agent{
   var foodType;
   var predType;
   
-  //Current Behavior Mode
+  //Current Behavior Mode (random or chase mode)
   var mode;
   
   //Has the agent been selected for consumption by another agent
@@ -59,12 +52,11 @@ class Agent{
   
   
   //Uses agent manager findNearest to fill the nearest agent, marks it as ate.
-  void findFood(var foodType){
-    if(!manager.findNearest(foodType, this)){
+  void findFood(var foodType) {
+    if (!manager.findNearest(foodType, this)) {
       nearest = null;
-    }
-    else{
-      if(nearest != null){
+    } else {
+      if (nearest != null) {
         nearest.ate = true;
       }
     }
@@ -317,7 +309,8 @@ class Shark extends Agent{
 /*Agent Manager class for the ecosystem.  Should be initalized in Game() but drawn in
 appriorate phases, such as REGROW and possibly FISH
 */
-class AgentManager{
+class AgentManager {
+  
   //Lists of each agent types
   List<Plankton> planktons = new List<Plankton>();
   List<Sardine> sardines = new List<Sardine>();
@@ -423,11 +416,26 @@ class AgentManager{
   
   //Find the nearest agent of type 'type' and set the parent's variable 'nearest' to that agent
   //returns true if it finds a nearest agent, otherwise returns false
-  bool findNearest(var type, Agent parent){
+  bool findNearest(var type, Agent parent) {
     
     //set minDist to high, since we're comparing dist squared
     num minDist = 50000000;
-    Agent nearest;
+    Agent nearest = null;
+    
+    /*
+    for (Agent fish in agents) {
+      if (fish is parent.runtimeType) {
+        var dist = distanceSquare(fish.position, parent.position);
+        if (minDist > dist && !fish.ate) {
+          minDist = dist;
+          nearest = fish;
+        }
+      }
+    }
+    return nearest;
+    */
+    
+    
     if(type == 'plankton'){
       if(planktons.length == 0){
         return false;

@@ -49,7 +49,7 @@ class Boat implements Touchable {
   //speed of path follow 
   var speed = 5.0;
   
-  var boatType;
+  String boatType;
   var fleetType;
   num fishCount;
   num oldfishCount;

@@ -57,28 +57,28 @@ class Sell extends TouchLayer{
   }
   
   void animate(){
-    if(firstInstructions || game.debugTransition){
-      if(setupPhase){
-        bool animA = fleetA.animateSellPhase();
-        bool animB = fleetB.animateSellPhase();
-        bool animM = animateMarket(500, 400);
-        if(animA && animB && animM){
-          setupPhase = false;
-          unloadPhase = true;
-        }
-      }
-      if(unloadPhase){
-        bool animA = fleetA.animateSellPhaseUnload(sardinePrice, tunaPrice, sharkPrice);
-        bool animB = fleetB.animateSellPhaseUnload(sardinePrice, tunaPrice, sharkPrice);
-        if(animA && animB){
-          unloadPhase = false;
-          if(!game.debugTransition){
-            game.transition();
-          }
-        }
-      
-      }
-    }
+//    if(firstInstructions || game.debugTransition){
+//      if(setupPhase){
+//        bool animA = fleetA.animateSellPhase();
+//        bool animB = fleetB.animateSellPhase();
+//        bool animM = animateMarket(500, 400);
+//        if(animA && animB && animM){
+//          setupPhase = false;
+//          unloadPhase = true;
+//        }
+//      }
+//      if(unloadPhase){
+//        bool animA = fleetA.animateSellPhaseUnload(sardinePrice, tunaPrice, sharkPrice);
+//        bool animB = fleetB.animateSellPhaseUnload(sardinePrice, tunaPrice, sharkPrice);
+//        if(animA && animB){
+//          unloadPhase = false;
+//          if(!game.debugTransition){
+//            game.transition();
+//          }
+//        }
+//      
+//      }
+//    }
   }
   
   void animateSell(){

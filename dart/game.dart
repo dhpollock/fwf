@@ -45,7 +45,7 @@ class Game {
   AgentManager ecosystem;
   
   Game() {
-    canvas = document.query("#game");
+    canvas = querySelector("#game");
     ctx = canvas.getContext('2d');
     width = canvas.width;
     height = canvas.height;
@@ -84,9 +84,9 @@ class Game {
     new Timer.periodic(const Duration(milliseconds : 40), (timer) => animate());
   }
   
-  void timer(var input) {
-    return input();
-  }
+//  void timer(var input) {
+//    return input();
+//  }
   
 
 /**
@@ -179,8 +179,8 @@ class Game {
         ws.send('newgame');
         phasenum++;
         
-        fleetA.harborArrage();
-        fleetB.harborArrage();
+        fleetA.harborArrange();
+        fleetB.harborArrange();
           
         fleetA.show();
         fleetB.show();
@@ -250,8 +250,8 @@ class Game {
         phase = 'FISH';
         phasenum++;
         
-        fleetA.harborArrage();
-        fleetB.harborArrage();
+        fleetA.harborArrange();
+        fleetB.harborArrange();
           
         fleetA.show();
         fleetB.show();
@@ -312,8 +312,8 @@ class Game {
         sendData();
           phase = 'REGROW';
           phasenum++; 
-          fleetA.harborArrage();
-          fleetB.harborArrage();
+          fleetA.harborArrange();
+          fleetB.harborArrange();
           
           fleetA.hide();
           fleetB.hide();
@@ -427,8 +427,9 @@ class Game {
     ctx.fillRect(boxX+25, boxY + 50, ecosystem.sharks.length, 25);
     
   }
+  
   void sendData(){
-    var msg = '${roundNum},${fleetA.sardineBoats.length},${fleetA.tunaBoats.length},${fleetA.sharkBoats.length},${fleetA.speedMult},${fleetA.capacityMult},${fleetA.coin},${fleetA.fishCount('sardine')},${fleetA.fishCount('tuna')},${fleetA.fishCount('shark')},${fleetB.sardineBoats.length},${fleetB.tunaBoats.length},${fleetB.sharkBoats.length},${fleetB.speedMult},${fleetB.capacityMult},${fleetB.coin},${fleetB.fishCount('sardine')},${fleetB.fishCount('tuna')},${fleetB.fishCount('shark')},${ecosystem.sardines.length},${ecosystem.tunas.length},${ecosystem.sharks.length}';
+    var msg = 'howdy'; //'${roundNum},${fleetA.sardineBoats.length},${fleetA.tunaBoats.length},${fleetA.sharkBoats.length},${fleetA.speedMult},${fleetA.capacityMult},${fleetA.coin},${fleetA.fishCount('sardine')},${fleetA.fishCount('tuna')},${fleetA.fishCount('shark')},${fleetB.sardineBoats.length},${fleetB.tunaBoats.length},${fleetB.sharkBoats.length},${fleetB.speedMult},${fleetB.capacityMult},${fleetB.coin},${fleetB.fishCount('sardine')},${fleetB.fishCount('tuna')},${fleetB.fishCount('shark')},${ecosystem.sardines.length},${ecosystem.tunas.length},${ecosystem.sharks.length}';
     print(msg);
     ws.send(msg);
   }
