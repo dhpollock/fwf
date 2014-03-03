@@ -71,7 +71,7 @@ class Game {
     fleetB = new Fleet(1, 0, 0, 1000, 'B');
     
     //intializing each phase 
-    ecosystem = new AgentManager(200, 45, 15, 10, width, height);
+    ecosystem = new AgentManager(200, 80, 40, 20, width, height);
 
     buy = new Buy(fleetA, fleetB);
     fish = new Fish(fleetA, fleetB, ecosystem);
