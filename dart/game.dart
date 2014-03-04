@@ -340,8 +340,9 @@ class Game {
         break;
         case 'REGROW':
           if(ecosystem.sardines.length <= 0 || ecosystem.tunas.length <= 0 || ecosystem.sharks.length <= 0 || roundNum > 7){
-            phase = 'GAMEOVER';
             ws.send('outcome:loss');
+            phase = 'GAMEOVER';
+            
           }
           else{
           phase = 'BUY';

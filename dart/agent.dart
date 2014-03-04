@@ -632,7 +632,7 @@ class AgentManager{
             fishingBoat.oldfishCount = fishingBoat.fishCount;
             fishingBoat.fishCount += temp;
             fishingBoat.soldFish = true;
-            if(sardine.population > 2){
+            if(sardine.population < 0){
               sardine.population = temp/2; 
               sardine.fished = true;
               sardine.fishedDelay();
@@ -651,7 +651,7 @@ class AgentManager{
             fishingBoat.oldfishCount = fishingBoat.fishCount;
             fishingBoat.fishCount += temp;
             fishingBoat.soldFish = true;
-            if(tuna.population > 2){
+            if(tuna.population <0){
               tuna.population = temp/2; 
               tuna.fished = true;
               tuna.fishedDelay();
@@ -670,7 +670,7 @@ class AgentManager{
             fishingBoat.oldfishCount = fishingBoat.fishCount;
             fishingBoat.fishCount += temp;
             fishingBoat.soldFish = true;
-            if(shark.population > 2){
+            if(shark.population <0){
               shark.population = temp/2; 
               shark.fished = true;
               shark.fishedDelay();

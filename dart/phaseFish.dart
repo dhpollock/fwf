@@ -19,7 +19,7 @@ class Fish extends TouchLayer{
 
     ecosystem = newEcosystem;
     
-    phaseDuration = 15;
+    phaseDuration = 20;
     active = false;
     
     tmanager.registerEvents(document.documentElement);

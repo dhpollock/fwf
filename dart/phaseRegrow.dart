@@ -22,7 +22,7 @@ class Regrow extends TouchLayer{
     tmanager.addTouchLayer(this);
     tmanager.disable();
     
-    phaseDuration = 15;
+    phaseDuration = 10;
     active = false;
     
     const countdown = const Duration(seconds : 1);
