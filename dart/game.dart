@@ -8,7 +8,7 @@ part of fwf;
 class Game {
   
   //turn off annoying transitions 0 = on; 1 = off
-  bool debugTransition = true;
+  bool debugTransition = false;
    
   // this is the HTML canvas element
   CanvasElement canvas;
