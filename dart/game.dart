@@ -339,7 +339,7 @@ class Game {
           }
         break;
         case 'REGROW':
-          if(ecosystem.sardines.length <= 0 || ecosystem.tunas.length <= 0 || ecosystem.sharks.length <= 0 || roundNum > 7){
+          if(ecosystem.returnCount('sardine') <= 0 || ecosystem.returnCount('tuna') <= 0 || ecosystem.returnCount('shark') <= 0 || roundNum > 7){
             phase = 'GAMEOVER';
             ws.send('outcome:loss');
           }
@@ -420,11 +420,11 @@ class Game {
     ctx.fillText("Sh: ", boxX+28, boxY+65);
     //buy box?
     ctx.fillStyle = 'green';
-    ctx.fillRect(boxX+25, boxY, ecosystem.sardines.length, 25);
+    ctx.fillRect(boxX+25, boxY, ecosystem.returnCount('sardine'), 25);
     ctx.fillStyle = 'red';
-    ctx.fillRect(boxX+25, boxY + 25, ecosystem.tunas.length, 25);
+    ctx.fillRect(boxX+25, boxY + 25, ecosystem.returnCount('tuna'), 25);
     ctx.fillStyle = 'blue';
-    ctx.fillRect(boxX+25, boxY + 50, ecosystem.sharks.length, 25);
+    ctx.fillRect(boxX+25, boxY + 50, ecosystem.returnCount('shark'), 25);
     
   }
 //  void sendData(){
