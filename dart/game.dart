@@ -37,7 +37,7 @@ class Game {
   //declaring phase objects 
   Buy buy;
   Fish fish;
-  Sell sell;
+//  Sell sell;
   Regrow regrow;
   Title title;
   GameOver gameOver;
@@ -45,7 +45,7 @@ class Game {
   AgentManager ecosystem;
   
   Game() {
-    canvas = document.query("#game");
+    canvas = document.querySelector("#game");
     ctx = canvas.getContext('2d');
     width = canvas.width;
     height = canvas.height;
@@ -75,7 +75,7 @@ class Game {
 
     buy = new Buy(fleetA, fleetB);
     fish = new Fish(fleetA, fleetB, ecosystem);
-    sell = new Sell(fleetA, fleetB);
+//    sell = new Sell(fleetA, fleetB);
     regrow = new Regrow(fleetA, fleetB, ecosystem);
     title = new Title();
     gameOver = new GameOver();
@@ -109,12 +109,12 @@ class Game {
         fleetB.animate();
         draw();
         break;
-      case 'SELL':
-        sell.animate();
-        fleetA.animate();
-        fleetB.animate();
-        draw();
-        break;
+//      case 'SELL':
+//        sell.animate();
+//        fleetA.animate();
+//        fleetB.animate();
+//        draw();
+//        break;
       case 'REGROW':
         //fleetA.animate();
         //fleetB.animate();
@@ -152,10 +152,10 @@ class Game {
         fish.draw(ctx, width, height);
         drawEcosystemStatus();
         break;
-      case 'SELL':
-        sell.draw(ctx, width, height);
-        drawEcosystemStatus();
-        break;
+//      case 'SELL':
+//        sell.draw(ctx, width, height);
+//        drawEcosystemStatus();
+//        break;
       case 'REGROW':
         regrow.draw(ctx, width, height);
         drawEcosystemStatus();
@@ -189,7 +189,7 @@ class Game {
         title.hide();
         buy.hide();
         fish.show();
-        sell.hide();
+//        sell.hide();
         regrow.hide();
         
         ecosystem.updateSpeed(.5);
@@ -259,7 +259,7 @@ class Game {
         //enable/disable touch manager for the phase 
         buy.hide();
         fish.show();
-        sell.hide();
+//        sell.hide();
         regrow.hide();
         
         ecosystem.updateSpeed(.5);
@@ -309,7 +309,7 @@ class Game {
 //        }
 //        break;
       case 'FISH':
-        sendData();
+//        sendData();
           phase = 'REGROW';
           phasenum++; 
           fleetA.harborArrage();
@@ -321,7 +321,7 @@ class Game {
           //enable/disable touch manager for the phase 
           buy.hide();
           fish.hide();
-          sell.hide();
+//          sell.hide();
           regrow.show();
           ecosystem.updateSpeed(5);
   
@@ -353,7 +353,7 @@ class Game {
           //enable/disable touch manager for the phase 
           buy.show();
           fish.hide();
-          sell.hide();
+//          sell.hide();
           regrow.hide();
           if (phasenum == 3 && !debugTransition){
             intro.showInstructions("instructionBuy", 130, 130);
@@ -427,10 +427,10 @@ class Game {
     ctx.fillRect(boxX+25, boxY + 50, ecosystem.sharks.length, 25);
     
   }
-  void sendData(){
-    var msg = '${roundNum},${fleetA.sardineBoats.length},${fleetA.tunaBoats.length},${fleetA.sharkBoats.length},${fleetA.speedMult},${fleetA.capacityMult},${fleetA.coin},${fleetA.fishCount('sardine')},${fleetA.fishCount('tuna')},${fleetA.fishCount('shark')},${fleetB.sardineBoats.length},${fleetB.tunaBoats.length},${fleetB.sharkBoats.length},${fleetB.speedMult},${fleetB.capacityMult},${fleetB.coin},${fleetB.fishCount('sardine')},${fleetB.fishCount('tuna')},${fleetB.fishCount('shark')},${ecosystem.sardines.length},${ecosystem.tunas.length},${ecosystem.sharks.length}';
-    print(msg);
-    ws.send(msg);
-  }
+//  void sendData(){
+//    var msg = '${roundNum},${fleetA.sardineBoats.length},${fleetA.tunaBoats.length},${fleetA.sharkBoats.length},${fleetA.speedMult},${fleetA.capacityMult},${fleetA.coin},${fleetA.fishCount('sardine')},${fleetA.fishCount('tuna')},${fleetA.fishCount('shark')},${fleetB.sardineBoats.length},${fleetB.tunaBoats.length},${fleetB.sharkBoats.length},${fleetB.speedMult},${fleetB.capacityMult},${fleetB.coin},${fleetB.fishCount('sardine')},${fleetB.fishCount('tuna')},${fleetB.fishCount('shark')},${ecosystem.sardines.length},${ecosystem.tunas.length},${ecosystem.sharks.length}';
+//    print(msg);
+//    ws.send(msg);
+//  }
 }
 

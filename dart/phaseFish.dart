@@ -13,6 +13,7 @@ class Fish extends TouchLayer{
   num timerCount;
   num phaseDuration;
   
+ 
   Fish(Fleet A, Fleet B, AgentManager newEcosystem){
     fleetA = A;
     fleetB = B;
@@ -77,8 +78,14 @@ class Fish extends TouchLayer{
     collisionDetect(fleetA);
     collisionDetect(fleetB);
     
-    fleetA.animateFishPhaseUnload(10,20,30);
-    fleetB.animateFishPhaseUnload(10,20,30);
+    var prices = {
+      'sardine' : 10,
+      'shark' : 30,
+      'tuna' : 20
+    };
+    
+    fleetA.animateFishPhaseUnload(prices);
+    fleetB.animateFishPhaseUnload(prices);
   }
   
   
@@ -107,13 +114,7 @@ class Fish extends TouchLayer{
   }
   
   void collisionDetect(Fleet fleet){
-    for(Boat boat in fleet.sardineBoats){
-      collideChecker(boat);
-    }
-    for(Boat boat in fleet.tunaBoats){
-      collideChecker(boat);
-    }
-    for(Boat boat in fleet.sharkBoats){
+    for(Boat boat in fleet.boats){
       collideChecker(boat);
     }
   }
