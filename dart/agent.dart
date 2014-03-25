@@ -140,7 +140,6 @@ class Agent{
   void forward(num distance) {
     position.x += cos(heading) * distance;
     position.y += sin(heading) * distance;
-    //distTravel += distance; // USE IF TRYING TO BASE ENERGY USE OFF OF DISTANCE TRAVELED
   }
   
   //RUN manageEnergy() concurrently with animate, keeps track of energy usages and updates
@@ -224,12 +223,12 @@ class Agent{
         ctx.fillStyle = 'blue';
         ctx.fillRect(position.x, position.y, 20 + population, 20 + population);
         break;
-  }
+    }
   }
   
 }
 
-//Plankton Agent Class... sets variables and draw function
+//Plankton Agent Class... sets variables
 class Plankton extends Agent{
   
   Plankton(AgentManager newManager, num newX, num newY){
@@ -242,12 +241,6 @@ class Plankton extends Agent{
     ate = false;
     energyThreshold = 0;
   }
-  
-//  void draw(CanvasRenderingContext2D ctx){
-//    ctx.fillStyle = 'black';
-//    ctx.fillRect(position.x, position.y, 5, 5);
-//  }
-  
 }
 
 //Sardine Agent Class... sets variables and draw function
@@ -273,11 +266,6 @@ class Sardine extends Agent{
     energyThreshold = 160;
   }
   
-//  void draw(CanvasRenderingContext2D ctx){
-//    ctx.fillStyle = 'green';
-//    ctx.fillRect(position.x, position.y, 10 + population, 10 + population);
-//  }
-  
 }
 
 //Tuna Agent Class... sets variables and draw function
@@ -300,15 +288,9 @@ class Tuna extends Agent{
     hunger = 5.0;
     energyThreshold = 180;
   }
-  
-//  void draw(CanvasRenderingContext2D ctx){
-//    ctx.fillStyle = 'red';
-//    ctx.fillRect(position.x, position.y, 15 + population, 15 + population);
-//  }
-
 }
 
-//Shark Agent Class... sets variables and draw function
+//Shark Agent Class... sets variables
 class Shark extends Agent{
   Shark(AgentManager newManager,num newX, num newY, num newPlaySpeed){
     playSpeed = newPlaySpeed;
@@ -327,11 +309,6 @@ class Shark extends Agent{
     hunger = 5;
     energyThreshold = 100.0;
   }
-  
-//  void draw(CanvasRenderingContext2D ctx){
-//    ctx.fillStyle = 'blue';
-//    ctx.fillRect(position.x, position.y, 20 + population, 20 + population);
-//  }
 }
 
 
@@ -339,12 +316,7 @@ class Shark extends Agent{
 appriorate phases, such as REGROW and possibly FISH
 */
 class AgentManager{
-  //Lists of each agent types
-//  List<Plankton> planktons = new List<Plankton>();
-//  List<Sardine> sardines = new List<Sardine>();
-//  List<Tuna> tunas = new List<Tuna>();
-//  List<Shark> sharks = new List<Shark>();
-  
+  //Lists of agents
   List<Agent> fish = new List<Agent>();
   
   //Add and remove queues to keep for loops from throwing exceptions
@@ -380,23 +352,23 @@ class AgentManager{
     for(int i = 0; i < Count; i++){
       num x = random.nextInt(width);
       num y = random.nextInt(height);
-          if(type == 'plankton'){
-            Plankton temp = new Plankton(this, x, y);
-            fish.add(temp);
-          }
-          if(type == 'sardine'){
-            Sardine temp = new Sardine(this, x, y, playSpeed);
-            fish.add(temp);
-          }
-          if(type == 'tuna'){
-            Tuna temp = new Tuna(this, x, y, playSpeed);
-            fish.add(temp);
-          }
-          if(type == 'shark'){
-            Shark temp = new Shark(this, x, y, playSpeed);
-            fish.add(temp);
-          }
+        if(type == 'plankton'){
+          Plankton temp = new Plankton(this, x, y);
+          fish.add(temp);
         }
+        if(type == 'sardine'){
+          Sardine temp = new Sardine(this, x, y, playSpeed);
+          fish.add(temp);
+        }
+        if(type == 'tuna'){
+          Tuna temp = new Tuna(this, x, y, playSpeed);
+          fish.add(temp);
+        }
+        if(type == 'shark'){
+          Shark temp = new Shark(this, x, y, playSpeed);
+          fish.add(temp);
+        }
+      }
   }
   
   //Iterate through each list and draw the agent
@@ -522,7 +494,6 @@ class AgentManager{
       }
       planktonTimer = 0;
     }
-    //print("${planktons.length}, ${sardines.length}, ${tunas.length}, ${sharks.length}");
     planktonTimer++;
   }
   
