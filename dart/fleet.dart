@@ -103,8 +103,20 @@ class Fleet  extends TouchLayer{
 
   //creates boat and puts boat in the appropriate list and touchable list 
   void addBoat(var type){
-    if(type == 'sardine' || type == 'tuna' || type == 'shark'){
+    if(type == 'sardine'){
       Boat boat = new Boat(0 , 0, type, fleetAB );
+      boats.add(boat);
+      touchables.add(boat);
+      boatCount++;
+    }
+    else if(type == 'tuna'){
+      Boat boat = new Boat2(0 , 0, type, fleetAB );
+      boats.add(boat);
+      touchables.add(boat);
+      boatCount++;
+    }
+    else if(type == 'shark'){
+      Boat boat = new Boat3(0 , 0, type, fleetAB );
       boats.add(boat);
       touchables.add(boat);
       boatCount++;

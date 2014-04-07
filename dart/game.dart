@@ -8,7 +8,7 @@ part of fwf;
 class Game {
   
   //turn off annoying transitions 0 = on; 1 = off
-  bool debugTransition = false;
+  bool debugTransition = true;
    
   // this is the HTML canvas element
   CanvasElement canvas;
@@ -67,7 +67,7 @@ class Game {
     
     // create a few boats
     
-    fleetA = new Fleet(1, 0, 0, 1000, 'A');
+    fleetA = new Fleet(1, 1, 1, 1000, 'A');
     fleetB = new Fleet(1, 0, 0, 1000, 'B');
     
     //intializing each phase 

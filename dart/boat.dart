@@ -401,6 +401,159 @@ class Boat implements Touchable {
 }
 
 
+class Boat2 extends Boat {
+  
+  Boat2(num x,num y, var newBoatType, [var myfleetType]) : super(x, y, newBoatType, [myfleetType]){
+    //intializes the menu for net selection
+    boatmenu.initPopovers();
+    fleetType = myfleetType;
+    
+    speed = 100;
+    
+    fishCount = 0;
+    capacity = 10;
+    
+    //intialize path drawing coordinate list, add starting position to list
+    boatPath = new List<Point>();
+    boatPath.add(new Point(x, y));
+    
+    //save starting position for coordinate reference frame 
+    initPos = new Point(x,y);
+    
+    //loads boat image dependant on type and fleet 
+    if(newBoatType == 'sardine' || newBoatType == 'tuna' || newBoatType == 'shark' || newBoatType == 'reward'){
+      boatType = newBoatType;
+
+      if(fleetType == null){
+
+          img.src = "images/boat${boatType}.png";
+      }
+      else{
+        if(boatType == 'reward'){
+          img.src = "images/reward.png";
+        }
+        else{
+          img.src = "images/boat${boatType}${fleetType}.png";
+          menunum = 1;
+        }
+      }
+      
+    }
+    else{
+      print("error, wrong type of boat");
+    }
+  }
+  
+  void touchDrag(Contact c) {
+    if((fleetType == 'A' || fleetType =='B') && game.phase == "FISH"){
+      boatPath.add(new Point(c.touchX,c.touchY));
+      if(boatPath.length > 15){
+        boatPath.removeLast();
+      }
+    }
+    _targetX = c.touchX;
+    _targetY = c.touchY;
+  }
+  void draw(CanvasRenderingContext2D ctx, num width, num height) {
+    ctx.save();
+    {
+      ctx.translate(x, y);
+      ctx.rotate(heading + PI/2);
+      ctx.drawImage(img, -img.width/2, -img.height/2);
+      
+    }
+    
+    if(flashSellSign){
+      ctx.fillStyle = 'white';
+      ctx.font = '${textSize}px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'center';
+      ctx.fillText(textString, textX, textY);
+    }
+    ctx.restore();
+  }
+}
+
+class Boat3 extends Boat {
+  Boat3(num x,num y, var newBoatType, [var myfleetType]) : super(x, y, newBoatType, [myfleetType]){
+    //intializes the menu for net selection
+    boatmenu.initPopovers();
+    fleetType = myfleetType;
+    
+    speed = 100;
+    
+    fishCount = 0;
+    capacity = 10;
+    
+    //intialize path drawing coordinate list, add starting position to list
+    boatPath = new List<Point>();
+    boatPath.add(new Point(x, y));
+    
+    //save starting position for coordinate reference frame 
+    initPos = new Point(x,y);
+    
+    //loads boat image dependant on type and fleet 
+    if(newBoatType == 'sardine' || newBoatType == 'tuna' || newBoatType == 'shark' || newBoatType == 'reward'){
+      boatType = newBoatType;
+
+      if(fleetType == null){
+
+          img.src = "images/boat${boatType}.png";
+      }
+      else{
+        if(boatType == 'reward'){
+          img.src = "images/reward.png";
+        }
+        else{
+          img.src = "images/boat${boatType}${fleetType}.png";
+          menunum = 1;
+        }
+      }
+      
+    }
+    else{
+      print("error, wrong type of boat");
+    }
+  }
+  
+  void touchDrag(Contact c) {
+    if((fleetType == 'A' || fleetType =='B') && game.phase == "FISH"){
+      boatPath.add(new Point(c.touchX,c.touchY));
+      if(boatPath.length > 15){
+        boatPath.removeLast();
+      }
+    }
+    _targetX = c.touchX;
+    _targetY = c.touchY;
+  }
+  
+  void touchUp(Contact c) {
+    _dragging = false;
+    clearPath();
+   // boatmenu.showPopover("fishing-menu${menunum}", x, y);
+  }
+  
+  void draw(CanvasRenderingContext2D ctx, num width, num height) {
+    ctx.save();
+    {
+      ctx.translate(x, y);
+      ctx.rotate(heading + PI/2);
+      ctx.drawImage(img, -img.width/2, -img.height/2);
+      
+    }
+    
+    if(flashSellSign){
+      ctx.fillStyle = 'white';
+      ctx.font = '${textSize}px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'center';
+      ctx.fillText(textString, textX, textY);
+    }
+    ctx.restore();
+  }
+}
+  
+
 
 class ForSaleBoat extends Boat {
   
