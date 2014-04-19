@@ -218,7 +218,6 @@ class Fleet  extends TouchLayer{
       Boat newBoat = new Boat(500,400, 'reward', fleetAB);
       boats.add(newBoat);
       touchables.add(newBoat);
-      ws.send('outcome:win');
     }
     
     if(upgradeVar == 'park'){

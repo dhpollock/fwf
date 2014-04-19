@@ -5,10 +5,10 @@ part of fwf;
 
 
 //class Game extends TouchLayer {
-class Game {
+class Game extends stagexl.Sprite implements stagexl.Animatable{
   
   //turn off annoying transitions 0 = on; 1 = off
-  bool debugTransition = false;
+  bool debugTransition = true;
    
   // this is the HTML canvas element
   CanvasElement canvas;
@@ -32,6 +32,7 @@ class Game {
   Fleet fleetB;
   
   TouchManager tmanager = new TouchManager();
+  stagexl.ResourceManager _resourceManager; 
   
   num roundNum = 0;
   //declaring phase objects 
@@ -44,11 +45,13 @@ class Game {
   
   AgentManager ecosystem;
   
-  Game() {
-    canvas = document.querySelector("#game");
-    ctx = canvas.getContext('2d');
-    width = canvas.width;
-    height = canvas.height;
+  Game(stagexl.ResourceManager this._resourceManager) {
+    stagexl.Bitmap background = new stagexl.Bitmap(_resourceManager.getBitmapData("background"));
+    addChild(background);
+    //canvas = document.querySelector("#game");
+    //ctx = canvas.getContext('2d');
+   // width = canvas.width;
+    //height = canvas.height;
     
     phase = 'TITLE'; // PHASES CAN BE 'BUY', 'FISH', 'SELL', 'GROWTH'
     
@@ -61,10 +64,6 @@ class Game {
       finish.initfinishButton(transition);
     }
     
-    
-//    tmanager.registerEvents(document.documentElement);
-//    tmanager.addTouchLayer(this);
-    
     // create a few boats
     
     fleetA = new Fleet(1, 0, 0, 1000, 'A');
@@ -75,7 +74,6 @@ class Game {
 
     buy = new Buy(fleetA, fleetB);
     fish = new Fish(fleetA, fleetB, ecosystem);
-//    sell = new Sell(fleetA, fleetB);
     regrow = new Regrow(fleetA, fleetB, ecosystem);
     title = new Title();
     gameOver = new GameOver();
@@ -109,29 +107,14 @@ class Game {
         fleetB.animate();
         draw();
         break;
-//      case 'SELL':
-//        sell.animate();
-//        fleetA.animate();
-//        fleetB.animate();
-//        draw();
-//        break;
       case 'REGROW':
-        //fleetA.animate();
-        //fleetB.animate();
-        //draw();
         regrow.animate();
         draw();
         break;
       case 'GAMEOVER':
         draw();
         break;
-    }
-//    if(phase == 'REGROW'){
-//      regrow.animate();
-//      draw();
-//    }
-    
-    
+    }   
   }
   
 
@@ -152,10 +135,6 @@ class Game {
         fish.draw(ctx, width, height);
         drawEcosystemStatus();
         break;
-//      case 'SELL':
-//        sell.draw(ctx, width, height);
-//        drawEcosystemStatus();
-//        break;
       case 'REGROW':
         regrow.draw(ctx, width, height);
         drawEcosystemStatus();
@@ -176,7 +155,6 @@ class Game {
     switch(phase){
       case 'TITLE':
         phase = 'FISH';
-        ws.send('newgame');
         phasenum++;
         
         fleetA.harborArrage();
@@ -189,7 +167,6 @@ class Game {
         title.hide();
         buy.hide();
         fish.show();
-//        sell.hide();
         regrow.hide();
         
         ecosystem.updateSpeed(.5);
@@ -200,11 +177,6 @@ class Game {
           fleetB.hide();
           repaint();
         }
-//        if (phasenum == 2 && !debugTransition){
-//          intro.showInstructions("instructionFish", 130, 130);
-//          fleetA.hide();
-//          fleetB.hide();
-//          }
         if (!debugTransition && phasenum > 4){
           transitionActions();
         }
@@ -212,40 +184,6 @@ class Game {
         print(phase);
         print(phasenum);
         break;
-//        phase = 'BUY';
-//        phasenum++;        
-//        //puts boats in harbor
-//        
-//        fleetA.harborArrage();
-//        fleetB.harborArrage();
-//        
-//        fleetA.hide();
-//        fleetB.hide();
-//        
-//        //enable/disable touch manager for the phase 
-//        title.hide();
-//        buy.show();
-//        fish.hide();
-//        sell.hide();
-//        regrow.hide();
-//        repaint();
-//        
-//        //if this is the first encounter with phase show instructions
-//        if (phasenum == 1 && !debugTransition){
-//          intro.showInstructions("instructionBuy", 130, 130);
-//          //hide fleets to prevent clicking, after click in instruction class fleets are touchable
-//          fleetA.hide();
-//          fleetB.hide();
-//          repaint();
-//        }
-//        repaint();
-//        //shows buttons after 5 seconds for players to move to next phase
-//        if (!debugTransition && phasenum > 4){
-//          transitionActions();
-//        }
-//        print(phasenum);
-//        print(phase);
-//        break;
       case 'BUY':
         phase = 'FISH';
         phasenum++;
@@ -259,16 +197,9 @@ class Game {
         //enable/disable touch manager for the phase 
         buy.hide();
         fish.show();
-//        sell.hide();
         regrow.hide();
         
         ecosystem.updateSpeed(.5);
-        
-//        if (phasenum == 2 && !debugTransition){
-//          intro.showInstructions("instructionFish", 130, 130);
-//          fleetA.hide();
-//          fleetB.hide();
-//          }
         if (!debugTransition && phasenum > 3){
           transitionActions();
         }
@@ -276,40 +207,8 @@ class Game {
         print(phase);
         print(phasenum);
         break;
-//      case 'FISH':
-//        phase = 'SELL';
-//        phasenum++; 
-//
-//        fleetA.fleetStop();
-//        fleetB.fleetStop();
-//        
-//        fleetA.hide();
-//        fleetB.hide();
-////        fleetA.show();
-////        fleetB.show();
-//        
-//        //enable/disable touch manager for the phase 
-//        buy.hide();
-//        fish.hide();
-//        fish.stopTimer();
-//        sell.show();
-//        regrow.hide();
-//        
-//        repaint();
-//        print(phase);
-//
-//        if (phasenum == 2 && !debugTransition){
-//          intro.showInstructions("instructionSell", 130, 130);
-//          fleetA.hide();
-//          fleetB.hide();
-//          }
-//        print(phasenum);
-//        if (!debugTransition  && phasenum > 2){
-//          transitionActions();
-//        }
-//        break;
+
       case 'FISH':
-//        sendData();
           phase = 'REGROW';
           phasenum++; 
           fleetA.harborArrage();
@@ -321,7 +220,6 @@ class Game {
           //enable/disable touch manager for the phase 
           buy.hide();
           fish.hide();
-//          sell.hide();
           regrow.show();
           ecosystem.updateSpeed(5);
   
@@ -341,7 +239,6 @@ class Game {
         case 'REGROW':
           if(ecosystem.returnCount('sardine') <= 0 || ecosystem.returnCount('tuna') <= 0 || ecosystem.returnCount('shark') <= 0 || roundNum > 7){
             phase = 'GAMEOVER';
-            ws.send('outcome:loss');
           }
           else{
           phase = 'BUY';
@@ -392,13 +289,6 @@ class Game {
         fleetA.show();
         fleetB.show();
         break;
-//      case "SELL":
-//        sell.firstInstructions = true;
-////        new Timer(const Duration(seconds : 3), () {
-////          finish.showfinishButton("finishButton1", 10, 780);
-////          finish.showfinishButton("finishButton2", 650, 780);
-////        });
-//        break;
       case "REGROW":
         regrow.startTimer();
         break;
@@ -427,10 +317,6 @@ class Game {
     ctx.fillRect(boxX+25, boxY + 50, ecosystem.returnCount('shark'), 25);
     
   }
-//  void sendData(){
-//    var msg = '${roundNum},${fleetA.sardineBoats.length},${fleetA.tunaBoats.length},${fleetA.sharkBoats.length},${fleetA.speedMult},${fleetA.capacityMult},${fleetA.coin},${fleetA.fishCount('sardine')},${fleetA.fishCount('tuna')},${fleetA.fishCount('shark')},${fleetB.sardineBoats.length},${fleetB.tunaBoats.length},${fleetB.sharkBoats.length},${fleetB.speedMult},${fleetB.capacityMult},${fleetB.coin},${fleetB.fishCount('sardine')},${fleetB.fishCount('tuna')},${fleetB.fishCount('shark')},${ecosystem.sardines.length},${ecosystem.tunas.length},${ecosystem.sharks.length}';
-//    print(msg);
-//    ws.send(msg);
-//  }
+
 }
 
