@@ -1,24 +1,20 @@
 part of fwf;
 
 
-class Title extends TouchLayer{
+class Title extends stagexl.Sprite implements Touchable{
   
-  TouchManager tmanager = new TouchManager();
-  IntroTouch myIntro = new IntroTouch();
+  TouchManager tmanager;
+  stagexl.ResourceManager _resourceManager;
+  stagexl.Bitmap title;
   
-  Title(){
+  Title(stagexl.ResourceManager this._resourceManager, TouchManager this.tmanager){
    
-    
-    tmanager.registerEvents(document.documentElement);
-    tmanager.addTouchLayer(this);
-    tmanager.enable();
-    
-    touchables.add(myIntro);
+    title = new stagexl.Bitmap(_resourceManager.getBitmapData("title"));
   }
   
   
-  void draw(CanvasRenderingContext2D ctx,num width,num height){
-    myIntro.draw(ctx, width, height);
+  void draw(){
+    addChild(title);
   }
   void animate(){
     
@@ -31,26 +27,11 @@ class Title extends TouchLayer{
   void hide(){
     tmanager.disable();
   }
-}
-
-class IntroTouch implements Touchable{
-  ImageElement img = new ImageElement();
-  
-  IntroTouch(){
-    img.src = "images/title.png";
-  }
-  
-  void draw(CanvasRenderingContext2D ctx,num width,num height){
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = 'black';
-    ctx.drawImage(img, 0, 0);
-  }
-  
   bool containsTouch(Contact c) {
     num tx = c.touchX;
     num ty = c.touchY;
-    num bx = img.width;
-    num by = img.height;
+    num bx = title.width;
+    num by = title.height;
     return (tx >= 0 && ty >= 0 && tx <= bx && ty <= by);
   }
   
@@ -60,9 +41,7 @@ class IntroTouch implements Touchable{
     return true;
   }
   void touchUp(Contact c) {
-    if(!game.debugTransition){
         game.transition();
-    }
   }
   void touchDrag(Contact c) {  }
   void touchSlide(Contact c) { }  
