@@ -45,6 +45,8 @@ class Fleet extends stagexl.Sprite{
       addChild(boat);
       _game.tlayer.touchables.add(boat);
       _juggler.add(boat);
+      addChild(boat.myNet);
+      _juggler.add(boat.myNet);
     }
   }
   

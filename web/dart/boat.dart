@@ -68,6 +68,8 @@ class Boat extends stagexl.Bitmap implements Touchable, stagexl.Animatable {
   stagexl.Sprite boatSprite;
   Game _game;
   stagexl.BitmapData bitmapData;
+  
+  Net myNet;
 
 /**
  * Default constructor
@@ -86,6 +88,9 @@ class Boat extends stagexl.Bitmap implements Touchable, stagexl.Animatable {
     _goalY = y;
     fishCount = 0;
     capacity = 1000;
+    
+    myNet = new Net(_resourceManager, this);
+    
   }
   
   void forward(num distance) {
@@ -94,6 +99,7 @@ class Boat extends stagexl.Bitmap implements Touchable, stagexl.Animatable {
   }
   
   bool advanceTime(num time){
+    num oldRotation = rotation;
     if(_goalX != x || _goalY !=y){
       rotation = atan2(_goalY - y, _goalX - x);
       num curSpeed;
@@ -106,6 +112,9 @@ class Boat extends stagexl.Bitmap implements Touchable, stagexl.Animatable {
       }
     forward(curSpeed);
     }
+    
+    myNet.skewX = 5*(oldRotation - rotation);
+     
     
     if(fishCount < capacity){
       _game.ecosystem.catchCheck(this);
@@ -143,5 +152,126 @@ class Boat extends stagexl.Bitmap implements Touchable, stagexl.Animatable {
       _goalX = c.touchX;
       _goalY = c.touchY;
   }
+  
+}
+
+
+
+class Net extends stagexl.Sprite implements stagexl.Animatable{
+  
+  static const scale = 0.2;
+  
+  static const EMPTY = 0;
+  static const SLIGHT = 1;
+  static const HALF = 2;
+  static const FULL = 3;
+  
+  num xAdjust;
+  num yAdjust;
+  
+  stagexl.ResourceManager _resourceManager;
+  
+  Boat boat;
+  stagexl.Sprite netSprite;
+  stagexl.Bitmap netBitmapEmpty;
+  stagexl.Bitmap netBitmapSlight;
+  stagexl.Bitmap netBitmapHalf;
+  stagexl.Bitmap netBitmapFull;
+  
+  int curNet;
+  int oldNet;
+  
+  Net(this._resourceManager, Boat this.boat){
+    
+    netSprite = new stagexl.Sprite();
+    netBitmapEmpty = new stagexl.Bitmap(_resourceManager.getBitmapData("netEmpty"));
+    netBitmapSlight = new stagexl.Bitmap(_resourceManager.getBitmapData("netSlight"));
+    netBitmapHalf = new stagexl.Bitmap(_resourceManager.getBitmapData("netHalf"));
+    netBitmapFull = new stagexl.Bitmap(_resourceManager.getBitmapData("netFull"));
+    
+    addChild(netSprite);
+    netSprite.addChild(netBitmapEmpty);
+    
+    netBitmapEmpty.scaleX = scale;
+    netBitmapEmpty.scaleY = scale;
+    
+    netBitmapSlight.scaleX = scale;
+    netBitmapSlight.scaleY = scale;
+        
+    netBitmapHalf.scaleX = scale;
+    netBitmapHalf.scaleY = scale;
+          
+    netBitmapFull.scaleX = scale;
+    netBitmapFull.scaleY = scale;
+    
+    yAdjust = boat.width-30;
+    xAdjust = -height/2;
+    
+    curNet = EMPTY;
+
+  }
+  
+  bool advanceTime(num time){
+    
+    this.rotation = boat.rotation+PI/2;
+    
+    
+//    netBitmap.pivotX = width;
+//    netBitmap.pivotY = height/2;
+
+    
+    
+    this.x = boat.x+xAdjust*cos(rotation) + yAdjust*cos(rotation+PI/2);
+    this.y = boat.y+xAdjust*sin(rotation) + yAdjust*sin(rotation+PI/2);
+   
+    if(boat.fishCount <= 0){
+      curNet = EMPTY;
+    }
+    else if(boat.fishCount >0 && boat.fishCount <= boat.capacity/2){
+      curNet = SLIGHT;
+    }
+    else if(boat.fishCount > boat.capacity/2 && boat.fishCount < boat.capacity){
+      curNet = HALF;
+    }
+    else{
+      curNet = FULL;
+    }
+    
+    
+    if(curNet != oldNet){
+      if(oldNet == EMPTY){
+        netSprite.removeChild(netBitmapEmpty);
+      }
+      if(oldNet == SLIGHT){
+        netSprite.removeChild(netBitmapSlight);
+      }
+      if(oldNet == HALF){
+        netSprite.removeChild(netBitmapHalf);
+      }
+      if(oldNet == FULL){
+        netSprite.removeChild(netBitmapFull);
+      }
+      
+      
+      if(curNet == EMPTY){
+        netSprite.addChild(netBitmapEmpty);
+      }
+      if(curNet == SLIGHT){
+        netSprite.addChild(netBitmapSlight);
+      }
+      if(curNet == HALF){
+        netSprite.addChild(netBitmapHalf);
+      }
+      if(curNet == FULL){
+        netSprite.addChild(netBitmapFull);
+      }
+      
+    }
+
+        
+    return true;
+  }
+  
+  
   
 }

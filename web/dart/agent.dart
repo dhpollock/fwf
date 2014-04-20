@@ -699,7 +699,6 @@ class AgentManager extends stagexl.Sprite implements stagexl.Animatable{
             fishingBoat.oldfishCount = fishingBoat.fishCount;
             fishingBoat.fishCount += temp;
             //fishingBoat.soldFish = true;
-            print("caught");
             if(fishies.population > 2){
               fishies.oldPopulation = fishies.population;
               fishies.population = temp/2; 

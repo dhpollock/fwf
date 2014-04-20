@@ -55,6 +55,10 @@ void main() {
   resourceManager.addBitmapData("tuna50", "images/tuna50.png");
   resourceManager.addBitmapData("shark50", "images/shark50.png");
   resourceManager.addBitmapData("plankton", "images/plankton.png");
+  resourceManager.addBitmapData("netEmpty", "images/netEmpty.png");
+  resourceManager.addBitmapData("netSlight", "images/netSlight.png");
+  resourceManager.addBitmapData("netHalf", "images/netHalf.png");
+  resourceManager.addBitmapData("netFull", "images/netFull.png");
 
   // load sounds that your game will use (these are in the sounds directory)
 //  Sounds.loadSound("drum");
