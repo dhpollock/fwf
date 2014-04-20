@@ -49,9 +49,9 @@ void main() {
   resourceManager.addBitmapData("title", "images/title.png");
   resourceManager.addBitmapData("boatSardineA", "images/boatSardineA.png");
   resourceManager.addBitmapData("boatSardineB", "images/boatSardineB.png");
-  resourceManager.addBitmapData("sardine50", "images/sardine50.png");
-  resourceManager.addBitmapData("sardine50few", "images/sardine50.png");
-  resourceManager.addBitmapData("sardine50many", "images/sardine50.png");
+  resourceManager.addBitmapData("sardine50Single", "images/sardine50.png");
+  resourceManager.addBitmapData("sardine50Few", "images/sardine50few.png");
+  resourceManager.addBitmapData("sardine50Many", "images/sardine50many.png");
   resourceManager.addBitmapData("tuna50", "images/tuna50.png");
   resourceManager.addBitmapData("shark50", "images/shark50.png");
   resourceManager.addBitmapData("plankton", "images/plankton.png");

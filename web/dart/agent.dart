@@ -1,13 +1,23 @@
 part of fwf;
 
 
-class Agent extends stagexl.Bitmap implements stagexl.Animatable {
+class Agent extends stagexl.Sprite implements stagexl.Animatable {
   
   
   static const PLANKTON = 0;
   static const SARDINE = 1;
   static const TUNA = 2;
   static const SHARK = 3;
+  
+  stagexl.BitmapData bitmapDataSingle;
+  stagexl.BitmapData bitmapDataFew;
+  stagexl.BitmapData bitmapDataMany;
+
+  
+  stagexl.Sprite fishSprite;
+  stagexl.Bitmap fishBitmap;
+  
+
   
   //Position in space
   Point position ;
@@ -28,6 +38,7 @@ class Agent extends stagexl.Bitmap implements stagexl.Animatable {
   
   //Population represnted by agent
   num population;
+  num oldPopulation;
 
   
   //Current heading and max speed for animation
@@ -75,6 +86,25 @@ class Agent extends stagexl.Bitmap implements stagexl.Animatable {
   
   
   bool advanceTime(num time){
+    
+    if(population != oldPopulation){
+      if(population < split/3.0){
+        fishSprite.removeChild(fishBitmap);
+        fishBitmap = new stagexl.Bitmap(bitmapDataSingle);
+        fishSprite.addChild(fishBitmap);
+      }
+      else if(population >= split/3.0 && population < 2*split/3.0){
+        fishSprite.removeChild(fishBitmap);
+        fishBitmap = new stagexl.Bitmap(bitmapDataFew);
+        fishSprite.addChild(fishBitmap);
+      }
+      else{
+        fishSprite.removeChild(fishBitmap);
+        fishBitmap = new stagexl.Bitmap(bitmapDataMany);
+        fishSprite.addChild(fishBitmap);
+      }
+    }
+    
     //Animate different behaviors based on mode
     switch (mode){
       //Find Food and go to it
@@ -164,7 +194,10 @@ class Agent extends stagexl.Bitmap implements stagexl.Animatable {
       //Increase population if above hunger, check on energy counter timer
       if(energy > hunger){
          mode = 'FOOD';
+         oldPopulation = population;
          population++;
+         
+       
       }
       //Could potentially set AVOID mode here
       if(energy > 0){
@@ -174,7 +207,9 @@ class Agent extends stagexl.Bitmap implements stagexl.Animatable {
       //might we worth putting this on a timer count as well
       else{
         mode = 'FOOD';
+        oldPopulation = population;
         population -= 1;
+        
       }
       if(population <= 0 ){
         if(nearest != null){
@@ -186,6 +221,7 @@ class Agent extends stagexl.Bitmap implements stagexl.Animatable {
         manager.toBeRemoved.add(this);
       }
       if(population > split){
+        oldPopulation = population;
         population = split/2;
         manager.toBeAdded.add(this);
       }
@@ -226,6 +262,7 @@ class Plankton extends Agent{
   
   stagexl.BitmapData bitmapData;
   
+  
   Plankton(stagexl.BitmapData bdata, AgentManager newManager, num newX, num newY):super(){
     
     bitmapData = bdata;
@@ -253,18 +290,20 @@ class Sardine extends Agent{
   static const SHARK = 3;
   
   static const scale = 0.1;
-  stagexl.BitmapData bitmapData;
   
-  Sardine(stagexl.BitmapData bdata, AgentManager newManager,num newX, num newY, num newPlaySpeed):super(){
+  stagexl.ResourceManager _resourceManager;
+  
+  Sardine(this._resourceManager, AgentManager newManager,num newX, num newY, num newPlaySpeed){
     
-    bitmapData = bdata;
+    bitmapDataSingle = _resourceManager.getBitmapData("sardine50Single");
+    bitmapDataFew = _resourceManager.getBitmapData("sardine50Few");
+    bitmapDataMany = _resourceManager.getBitmapData("sardine50Many");
     position = new Point(newX, newY);
     this.x = position.x;
     this.y = position.y;
     this.scaleX = scale;
     this.scaleY = scale;
-    this.pivotX = bitmapData.width/2;
-    this.pivotY = bitmapData.height/2;
+
     playSpeed = newPlaySpeed;
     energy = 5;
 
@@ -282,6 +321,13 @@ class Sardine extends Agent{
     energyThreshold = 160;
     energyCounter = random.nextInt(energyThreshold);
     hunger = 3;
+    fishSprite = new stagexl.Sprite();
+    addChild(fishSprite);
+    fishBitmap = new stagexl.Bitmap(bitmapDataFew);
+    fishSprite.addChild(fishBitmap);
+    
+    this.pivotX = fishBitmap.width/2;
+    this.pivotY = fishBitmap.height/2;
   }
   
 }
@@ -295,16 +341,22 @@ class Tuna extends Agent{
   static const SHARK = 3;
   
   static const scale = 0.1;
-  Tuna(stagexl.BitmapData bdata, AgentManager newManager,num newX, num newY, num newPlaySpeed):super(){
+  
+  stagexl.ResourceManager _resourceManager;
+  
+  Tuna(this._resourceManager, AgentManager newManager,num newX, num newY, num newPlaySpeed):super(){
+    
+    bitmapDataSingle = _resourceManager.getBitmapData("sardine50Single");
+    bitmapDataFew = _resourceManager.getBitmapData("sardine50Few");
+    bitmapDataMany = _resourceManager.getBitmapData("sardine50Many");
+    
     playSpeed = newPlaySpeed;
-    bitmapData = bdata;
     position = new Point(newX, newY);
     this.x = position.x;
     this.y = position.y;
     this.scaleX = scale;
     this.scaleY = scale;
-    this.pivotX = bitmapData.width/2;
-    this.pivotY = bitmapData.height/2;
+
     energy = 2;
     population = 10;
     speed = 1.1;
@@ -319,11 +371,21 @@ class Tuna extends Agent{
     energyThreshold = 180;
     energyCounter = random.nextInt(energyThreshold);
     hunger = 5;
+    fishSprite = new stagexl.Sprite();
+    addChild(fishSprite);
+    fishBitmap = new stagexl.Bitmap(bitmapDataFew);
+    fishSprite.addChild(fishBitmap);
+    
+    this.pivotX = fishBitmap.width/2;
+    this.pivotY = fishBitmap.height/2;
+    
   }
 }
 
 //Shark Agent Class... sets variables
 class Shark extends Agent{
+  
+  stagexl.BitmapData bitmapData;
   
   static const PLANKTON = 0;
   static const SARDINE = 1;
@@ -331,29 +393,47 @@ class Shark extends Agent{
   static const SHARK = 3;
   
   static const scale = 0.05;
-  Shark(stagexl.BitmapData bdata, AgentManager newManager,num newX, num newY, num newPlaySpeed):super(){
+  
+  stagexl.ResourceManager _resourceManager;
+  
+  Shark(this._resourceManager, AgentManager newManager,num newX, num newY, num newPlaySpeed){
+    
+    bitmapDataSingle = _resourceManager.getBitmapData("sardine50Single");
+    bitmapDataFew = _resourceManager.getBitmapData("sardine50Few");
+    bitmapDataMany = _resourceManager.getBitmapData("sardine50Many");
+    
     playSpeed = newPlaySpeed;
-    bitmapData = bdata;
     position = new Point(newX, newY);
+    
     this.x = position.x;
     this.y = position.y;
     this.scaleX = scale;
     this.scaleY = scale;
-    this.pivotX = bitmapData.width/2;
-    this.pivotY = bitmapData.height/2;
+
+    
     energy = 2;
     population = 10; 
     speed = 1.15;
     type = SHARK;
     foodType = TUNA;
+    
     manager = newManager;
     mode = 'FOOD';
     ate = false;
     fished = false;
+    
     split = 20;
     energyThreshold = 100;
     energyCounter = random.nextInt(energyThreshold);
     hunger = 5;
+    
+    fishSprite = new stagexl.Sprite();
+    addChild(fishSprite);
+    fishBitmap = new stagexl.Bitmap(bitmapDataFew);
+    fishSprite.addChild(fishBitmap);
+    
+    this.pivotX = fishBitmap.width/2;
+    this.pivotY = fishBitmap.height/2;
   }
 }
 
@@ -427,19 +507,19 @@ class AgentManager extends stagexl.Sprite implements stagexl.Animatable{
 //          _juggler.add(temp);
         }
         if(type == SARDINE){
-          Sardine temp = new Sardine(_resourceManager.getBitmapData("sardine50"),this, rx, ry, playSpeed);
+          Sardine temp = new Sardine(_resourceManager,this, rx, ry, playSpeed);
           fish.add(temp);
           this.addChild(temp);
           _juggler.add(temp);
         }
         if(type == TUNA){
-          Tuna temp = new Tuna(_resourceManager.getBitmapData('tuna50'),this, rx, ry, playSpeed);
+          Tuna temp = new Tuna(_resourceManager,this, rx, ry, playSpeed);
           fish.add(temp);
           this.addChild(temp);
           _juggler.add(temp);
         }
         if(type == SHARK){
-          Shark temp = new Shark(_resourceManager.getBitmapData('shark50'),this, rx, ry, playSpeed);
+          Shark temp = new Shark(_resourceManager,this, rx, ry, playSpeed);
           fish.add(temp);
           this.addChild(temp);
           _juggler.add(temp);
@@ -534,7 +614,7 @@ class AgentManager extends stagexl.Sprite implements stagexl.Animatable{
 //      _juggler.add(temp);
     }
     if(type == SARDINE){
-      Sardine temp = new Sardine(_resourceManager.getBitmapData('sardine50'),this, rx, ry, playSpeed);
+      Sardine temp = new Sardine(_resourceManager,this, rx, ry, playSpeed);
       if(location != null){
         temp.position.x = location.x;
         temp.position.y = location.y;
@@ -545,7 +625,7 @@ class AgentManager extends stagexl.Sprite implements stagexl.Animatable{
       fishCount[SARDINE]++;
     }
     if(type == TUNA){
-      Tuna temp = new Tuna(_resourceManager.getBitmapData('tuna50'),this, rx, ry, playSpeed);
+      Tuna temp = new Tuna(_resourceManager,this, rx, ry, playSpeed);
       if(location != null){
         temp.position.x = location.x;
         temp.position.y = location.y;
@@ -556,7 +636,7 @@ class AgentManager extends stagexl.Sprite implements stagexl.Animatable{
       fishCount[TUNA]++;
     }
     if(type == SHARK){
-      Shark temp = new Shark(_resourceManager.getBitmapData('shark50'),this, rx, ry, playSpeed);
+      Shark temp = new Shark(_resourceManager,this, rx, ry, playSpeed);
       if(location != null){
         temp.position.x = location.x;
         temp.position.y = location.y;
@@ -621,6 +701,7 @@ class AgentManager extends stagexl.Sprite implements stagexl.Animatable{
             //fishingBoat.soldFish = true;
             print("caught");
             if(fishies.population > 2){
+              fishies.oldPopulation = fishies.population;
               fishies.population = temp/2; 
               fishies.fished = true;
               fishies.fishedDelay();

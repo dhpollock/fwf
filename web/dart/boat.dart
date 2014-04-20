@@ -85,7 +85,7 @@ class Boat extends stagexl.Bitmap implements Touchable, stagexl.Animatable {
     _goalX = x;
     _goalY = y;
     fishCount = 0;
-    capacity = 10;
+    capacity = 1000;
   }
   
   void forward(num distance) {
