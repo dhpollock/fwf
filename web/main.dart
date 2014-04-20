@@ -17,9 +17,9 @@ part 'dart/touch.dart';
 part 'dart/button.dart';
 part 'dart/fleet.dart';
 part 'dart/phaseTitle.dart';
-//part 'dart/phaseBuy.dart';
+part 'dart/phaseBuy.dart';
 part 'dart/phaseFish.dart';
-//part 'dart/phaseRegrow.dart';
+part 'dart/phaseRegrow.dart';
 //part 'dart/phaseOver.dart';
 part 'dart/agent.dart';
 //part 'dart/instructions.dart';
@@ -67,6 +67,7 @@ void main() {
   resourceManager.addBitmapData("netSlight", "images/netSlight.png");
   resourceManager.addBitmapData("netHalf", "images/netHalf.png");
   resourceManager.addBitmapData("netFull", "images/netFull.png");
+  resourceManager.addBitmapData("buyCenterDock", "images/dock_water.png");
 
   // load sounds that your game will use (these are in the sounds directory)
 //  Sounds.loadSound("drum");

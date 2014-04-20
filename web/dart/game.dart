@@ -43,6 +43,8 @@ class Game extends stagexl.Sprite implements stagexl.Animatable{
   AgentManager ecosystem;
   
   Fish fish;
+  Regrow regrow;
+  Buy buy;
   Title title;
 
   Random random = new Random();
@@ -67,6 +69,8 @@ class Game extends stagexl.Sprite implements stagexl.Animatable{
       debugPhaseButton.showButton("phaseButton", 500, 500);
     }
     fish = new Fish(_resourceManager, _juggler, this);
+    regrow = new Regrow(_resourceManager, _juggler, this);
+    buy = new Buy(_resourceManager, _juggler, this);
 
     title = new Title(_resourceManager, tmanager);
 
@@ -136,18 +140,103 @@ class Game extends stagexl.Sprite implements stagexl.Animatable{
 
 //        //enable/disable touch manager for the phase
         removeChild(title);
-        addChild(fish);
+        tlayer.touchables.remove(title);
+        
+        
 
         fish.draw();
+        addChild(fish);
+        
+        
+        addChild(ecosystem);
+        _juggler.add(ecosystem);
+        
+        fleetA.enableFishing();
+        fleetB.enableFishing();
+
+        addChild(fleetA);
+        addChild(fleetB);
+
         addChild(planktonGraph);
         addChild(sardineGraph);
         addChild(tunaGraph);
         addChild(sharkGraph);
         
         
+        
         break;
+      case FISHING:
+        phase = REGROWTH;
+        
+        fish.unDraw();
+        removeChild(fish);
+        
+        
+        removeChild(ecosystem);
+        
+        removeChild(fleetA);
+        removeChild(fleetB);
+        
+        
+        addChild(regrow);
+        regrow.draw();
+        
+        addChild(ecosystem);
+        
+        break;
+        
+      case REGROWTH:
+        phase = BUY;
 
+        regrow.unDraw();
+        removeChild(regrow);
+        
+        
+        removeChild(ecosystem);
+        _juggler.remove(ecosystem);
+        
+        removeChild(planktonGraph);
+        removeChild(sardineGraph);
+        removeChild(tunaGraph);
+        removeChild(sharkGraph);
+        
+        buy.draw();
+        addChild(buy);
+        
+        
+        addChild(fleetA);
+        addChild(fleetB);
+        
+      break;
+      
+      case BUY:
+        phase = FISHING;
+        buy.unDraw();
+        removeChild(buy);
+        
+        
+        removeChild(fleetA);
+        removeChild(fleetB);
+        
+        fish.draw();
+        addChild(fish);
+        
+        
+        addChild(ecosystem);
+        _juggler.add(ecosystem);
+
+        addChild(fleetA);
+        addChild(fleetB);
+
+        addChild(planktonGraph);
+        addChild(sardineGraph);
+        addChild(tunaGraph);
+        addChild(sharkGraph);
+        
     }
+    
+
+    
   }
   
 

@@ -64,6 +64,39 @@ class Fleet extends stagexl.Sprite{
     }
   }
   
+  harborArrange(){
+    num dock1 = 0;
+    num dock2 = 1;
+    num dock3 = 2;
+    
+    var dockLocations;
+    
+    
+    if(teamValue == TEAMA){
+      dockLocations = {
+        dock1 : [_game.width/2 - 120,_game.height - 120],
+        dock2 : [_game.width/2 - 120,_game.height - 140],
+        dock3 : [_game.width/2 - 120,_game.height - 160],
+      };
+    }
+    else if(teamValue == TEAMB){
+      dockLocations = {
+        dock1 : [_game.width/2 + 120,_game.height - 120],
+        dock2 : [_game.width/2 + 120,_game.height - 140],
+        dock3 : [_game.width/2 + 120,_game.height - 160],
+      };
+    }
+    
+    for(int i = 0; i < _boats.length; i++){
+      _boats[i].x = dockLocations[i][0];
+      _boats[i].y = dockLocations[i][1];
+      
+      _game.tlayer.touchables.remove(_boats[i]);
+    }
+    
+    
+  }
+  
   
 
 }
