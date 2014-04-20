@@ -6,7 +6,7 @@ class Point {
   Point.zero() : x = 0, y = 0;
 }
 
-class Boat extends stagexl.Bitmap implements Touchable, stagexl.Animatable {
+class Boat extends stagexl.Sprite implements Touchable, stagexl.Animatable {
 
   static const TITLE = 0;
   static const FISHING = 1;
@@ -66,22 +66,25 @@ class Boat extends stagexl.Bitmap implements Touchable, stagexl.Animatable {
   
   stagexl.Bitmap boatImg;
   stagexl.Sprite boatSprite;
-  Game _game;
-  stagexl.BitmapData bitmapData;
-  
+  Game _game;  
   Net myNet;
 
 /**
  * Default constructor
  */
-  Boat(stagexl.BitmapData bdata,this._resourceManager, this._juggler, this._game,num inX,num inY, this.boatType, [this.fleetType]):super(bdata){
+  Boat(this._resourceManager, this._juggler, this._game,num inX,num inY, this.boatType, this.fleetType){
 
+    boatSprite = new stagexl.Sprite();
+    addChild(boatSprite);
+    boatImg = new stagexl.Bitmap(_resourceManager.getBitmapData("${boatString(boatType, fleetType)}"));
+    boatSprite.addChild(boatImg);
     
-    bitmapData = bdata;
+    
+    
     this.scaleX = scale;
     this.scaleY = scale;
-    pivotX = bitmapData.width/2;
-    pivotY = bitmapData.height/2;
+    pivotX = boatImg.width/2;
+    pivotY = boatImg.height/2;
     x = inX;
     y = inY;
     _goalX = x;
@@ -125,9 +128,9 @@ class Boat extends stagexl.Bitmap implements Touchable, stagexl.Animatable {
   bool containsTouch(Contact c) {
     num tx = c.touchX;
     num ty = c.touchY;
-    num bx = x - bitmapData.width/2*scale;
-    num by = y - bitmapData.height/2*scale;
-    bool contain = (tx >= bx && ty >= by && tx <= bx + bitmapData.width && ty <= by + bitmapData.height);
+    num bx = x - boatImg.width/2*scale;
+    num by = y - boatImg.height/2*scale;
+    bool contain = (tx >= bx && ty >= by && tx <= bx + boatImg.width && ty <= by + boatImg.height);
     return contain;
   }
   
@@ -151,6 +154,21 @@ class Boat extends stagexl.Bitmap implements Touchable, stagexl.Animatable {
   void touchDrag(Contact c) {
       _goalX = c.touchX;
       _goalY = c.touchY;
+  }
+  
+  String boatString(num boatType, num fleetType){
+    String name;
+    String fleet;
+    String type;
+    if(fleetType == TEAMA) fleet = "A";
+    if(fleetType == TEAMB) fleet = "B";
+    
+    if(boatType == SARDINE) type = "Sardine";
+    if(boatType == TUNA) type = "Tuna";
+    if(boatType == SHARK) type = "Shark";
+        
+    name = "boat${type}${fleet}";
+    return name;
   }
   
 }
@@ -213,13 +231,7 @@ class Net extends stagexl.Sprite implements stagexl.Animatable{
   
   bool advanceTime(num time){
     
-    this.rotation = boat.rotation+PI/2;
-    
-    
-//    netBitmap.pivotX = width;
-//    netBitmap.pivotY = height/2;
-
-    
+    this.rotation = boat.rotation+PI/2;  
     
     this.x = boat.x+xAdjust*cos(rotation) + yAdjust*cos(rotation+PI/2);
     this.y = boat.y+xAdjust*sin(rotation) + yAdjust*sin(rotation+PI/2);

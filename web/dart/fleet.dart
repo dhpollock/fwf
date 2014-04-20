@@ -30,13 +30,19 @@ class Fleet extends stagexl.Sprite{
     boatCount[SHARK] = SharkBoatCount;
     
     for(int i = 0; i < boatCount[SARDINE]; i++){
-      addBoat(SARDINE, this.teamValue);
+      addBoat(SARDINE, teamValue);
+    }
+    for(int i = 0; i < boatCount[SARDINE]; i++){
+      addBoat(TUNA, teamValue);
+    }
+    for(int i = 0; i < boatCount[SARDINE]; i++){
+      addBoat(SHARK, teamValue);
     }
             
   }
   
   addBoat(int boatType, int fleetType){
-    Boat newBoat = new Boat(_resourceManager.getBitmapData("${boatString(boatType, fleetType)}"),_resourceManager, _juggler, _game, _game.random.nextInt(_game.width), _game.random.nextInt(_game.height), boatType ,fleetType);
+    Boat newBoat = new Boat(_resourceManager, _juggler, _game, _game.random.nextInt(_game.width), _game.random.nextInt(_game.height), boatType ,fleetType);
     _boats.add(newBoat);
   }
   
@@ -59,18 +65,5 @@ class Fleet extends stagexl.Sprite{
   }
   
   
-  String boatString(num boatType, num fleetType){
-    String name;
-    String fleet;
-    String type;
-    if(fleetType == TEAMA) fleet = "A";
-    if(fleetType == TEAMB) fleet = "B";
-    
-    if(boatType == SARDINE) type = "Sardine";
-    if(boatType == TUNA) type = "Tuna";
-    if(boatType == SHARK) type = "Shark";
-        
-    name = "boat${type}${fleet}";
-    return name;
-  }
+
 }

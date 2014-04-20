@@ -55,10 +55,10 @@ class Game extends stagexl.Sprite implements stagexl.Animatable{
   
   Game(this._resourceManager,this._juggler, this.width, this.height) {
 
-    fleetA = new Fleet(_resourceManager, _juggler, this, 1, 0, 0,1000, TEAMA);
-    fleetB = new Fleet(_resourceManager, _juggler, this, 1, 0, 0,1000, TEAMB);
+    fleetA = new Fleet(_resourceManager, _juggler, this, 1, 1, 1,1000, TEAMA);
+    fleetB = new Fleet(_resourceManager, _juggler, this, 1, 1, 1,1000, TEAMB);
     
-    ecosystem = new AgentManager(_resourceManager, _juggler, 400, 200, 0, 0, width, height);
+    ecosystem = new AgentManager(_resourceManager, _juggler, 400, 200, 50, 5, width, height);
     
     phase = TITLE; // PHASES CAN BE 'BUY', 'FISH', 'SELL', 'GROWTH'
     

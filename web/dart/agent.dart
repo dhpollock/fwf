@@ -308,8 +308,8 @@ class Sardine extends Agent{
     energy = 5;
 
     heading = 0;
-    speed = 1.000000;
-    population = 5;
+    speed = 1.0 + .25* random.nextDouble();
+    population = random.nextInt(10);;
     type = SARDINE;
     foodType = PLANKTON;
     predType = TUNA;
@@ -340,15 +340,15 @@ class Tuna extends Agent{
   static const TUNA = 2;
   static const SHARK = 3;
   
-  static const scale = 0.1;
+  static const scale = 0.075;
   
   stagexl.ResourceManager _resourceManager;
   
   Tuna(this._resourceManager, AgentManager newManager,num newX, num newY, num newPlaySpeed):super(){
     
-    bitmapDataSingle = _resourceManager.getBitmapData("sardine50Single");
-    bitmapDataFew = _resourceManager.getBitmapData("sardine50Few");
-    bitmapDataMany = _resourceManager.getBitmapData("sardine50Many");
+    bitmapDataSingle = _resourceManager.getBitmapData("tuna50Single");
+    bitmapDataFew = _resourceManager.getBitmapData("tuna50Few");
+    bitmapDataMany = _resourceManager.getBitmapData("tuna50Many");
     
     playSpeed = newPlaySpeed;
     position = new Point(newX, newY);
@@ -358,8 +358,8 @@ class Tuna extends Agent{
     this.scaleY = scale;
 
     energy = 2;
-    population = 10;
-    speed = 1.1;
+    population = random.nextInt(20);
+    speed = 1.1+ .25* random.nextDouble();
     type = TUNA;
     foodType = SARDINE;
     predType = SHARK;
@@ -392,15 +392,15 @@ class Shark extends Agent{
   static const TUNA = 2;
   static const SHARK = 3;
   
-  static const scale = 0.05;
+  static const scale = 0.1;
   
   stagexl.ResourceManager _resourceManager;
   
   Shark(this._resourceManager, AgentManager newManager,num newX, num newY, num newPlaySpeed){
     
-    bitmapDataSingle = _resourceManager.getBitmapData("sardine50Single");
-    bitmapDataFew = _resourceManager.getBitmapData("sardine50Few");
-    bitmapDataMany = _resourceManager.getBitmapData("sardine50Many");
+    bitmapDataSingle = _resourceManager.getBitmapData("shark50Single");
+    bitmapDataFew = _resourceManager.getBitmapData("shark50Few");
+    bitmapDataMany = _resourceManager.getBitmapData("shark50Many");
     
     playSpeed = newPlaySpeed;
     position = new Point(newX, newY);
@@ -412,8 +412,8 @@ class Shark extends Agent{
 
     
     energy = 2;
-    population = 10; 
-    speed = 1.15;
+    population = random.nextInt(20); 
+    speed = 1.15+ .25* random.nextDouble();
     type = SHARK;
     foodType = TUNA;
     

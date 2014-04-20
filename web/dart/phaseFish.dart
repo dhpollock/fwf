@@ -23,7 +23,7 @@ class Fish extends stagexl.Sprite{
     
     fleetA.enableFishing();
     fleetB.enableFishing();
-    _game.ecosystem.updateSpeed(2);
+    _game.ecosystem.updateSpeed(.75);
  
     addChild(background);
     addChild(_game.ecosystem);
