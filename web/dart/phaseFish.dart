@@ -1,6 +1,6 @@
 part of fwf;
 
-class Fish extends stagexl.Sprite{
+class Fish extends stagexl.Sprite implements stagexl.Animatable{
   
   TouchManager tmanager;
   stagexl.ResourceManager _resourceManager;
@@ -18,6 +18,11 @@ class Fish extends stagexl.Sprite{
     fleetA = _game.fleetA;
     fleetB = _game.fleetB;
   }
+  
+  bool advanceTime(num time){
+    
+    return true;
+  }
 
   void draw(){
     
@@ -31,4 +36,6 @@ class Fish extends stagexl.Sprite{
     addChild(fleetA);
     addChild(fleetB);
   }
+  
+  
 }

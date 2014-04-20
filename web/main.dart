@@ -47,12 +47,12 @@ void main() {
   var resourceManager = new stagexl.ResourceManager();
   resourceManager.addBitmapData("background", "images/background.png");
   resourceManager.addBitmapData("title", "images/title.png");
-  resourceManager.addBitmapData("boatSardineA", "images/boatSardineA.png");
-  resourceManager.addBitmapData("boatSardineB", "images/boatSardineB.png");
-  resourceManager.addBitmapData("boatTunaA", "images/boatTunaA.png");
-  resourceManager.addBitmapData("boatTunaB", "images/boatTunaB.png");
-  resourceManager.addBitmapData("boatSharkA", "images/boatSharkA.png");
-  resourceManager.addBitmapData("boatSharkB", "images/boatSharkB.png");
+  resourceManager.addBitmapData("boatSardineA", "images/boatSardineA.15.png");
+  resourceManager.addBitmapData("boatSardineB", "images/boatSardineB.15.png");
+  resourceManager.addBitmapData("boatTunaA", "images/boatTunaA.15.png");
+  resourceManager.addBitmapData("boatTunaB", "images/boatTunaB.15.png");
+  resourceManager.addBitmapData("boatSharkA", "images/boatSharkA.15.png");
+  resourceManager.addBitmapData("boatSharkB", "images/boatSharkB.15.png");
   resourceManager.addBitmapData("sardine50Single", "images/sardine50.png");
   resourceManager.addBitmapData("sardine50Few", "images/sardine50few.png");
   resourceManager.addBitmapData("sardine50Many", "images/sardine50many.png");

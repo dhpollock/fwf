@@ -62,12 +62,14 @@ class Boat extends stagexl.Sprite implements Touchable, stagexl.Animatable {
   num fishCount;
   num oldfishCount;
   num capacity;
-  static const scale = 0.15;
+  static const scale =1;
   
   stagexl.Bitmap boatImg;
   stagexl.Sprite boatSprite;
   Game _game;  
   Net myNet;
+  
+  bool hitRecovery;
 
 /**
  * Default constructor
@@ -92,6 +94,8 @@ class Boat extends stagexl.Sprite implements Touchable, stagexl.Animatable {
     fishCount = 0;
     capacity = 1000;
     
+    hitRecovery = false;
+    
     myNet = new Net(_resourceManager, this);
     
   }
@@ -101,9 +105,37 @@ class Boat extends stagexl.Sprite implements Touchable, stagexl.Animatable {
     y += sin(rotation) * distance;
   }
   
+  void backward(num distance) {
+    x -= cos(rotation) * distance;
+    y -= sin(rotation) * distance;
+  }
+  
   bool advanceTime(num time){
+    
+    if(_dragging && !hitRecovery){
+      for(Boat boat in _game.fleetA._boats){
+        if(boat != this && collided(boat)){
+          _dragging = false;
+          rotation = -atan2((boat.y - y) , (boat.x - x));
+          hitRecovery = true;
+          backward(2*SPEED);
+        }
+      }
+      for(Boat boat in _game.fleetB._boats){
+        if(boat != this && collided(boat)){
+          _dragging = false;
+          backward(2*SPEED);
+          hitRecovery = true;
+        }
+      }
+    }
+    
+    if(_dragging && hitRecovery){
+      new Timer(const Duration(seconds : 1), recoverFunc);
+    }
+    
     num oldRotation = rotation;
-    if(_goalX != x || _goalY !=y){
+    if(_dragging && (_goalX != x || _goalY !=y)){
       rotation = atan2(_goalY - y, _goalX - x);
       num curSpeed;
       num dist = sqrt(pow((_goalX - x), 2) + pow((_goalY - y), 2)); 
@@ -115,14 +147,32 @@ class Boat extends stagexl.Sprite implements Touchable, stagexl.Animatable {
       }
     forward(curSpeed);
     }
-    
+
     myNet.skewX = 5*(oldRotation - rotation);
      
     
     if(fishCount < capacity){
       _game.ecosystem.catchCheck(this);
     }
+    
+
+    
     return true;
+  }
+  
+  void recoverFunc(){
+    hitRecovery = false;
+  }
+  
+  bool collided(Boat boat){
+    var dist = pow((boat.x - x), 2) + pow((boat.y - y), 2);
+    var rad = boat.boatImg.height;
+    if(dist < pow(rad, 2)){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
   
   bool containsTouch(Contact c) {
@@ -169,6 +219,12 @@ class Boat extends stagexl.Sprite implements Touchable, stagexl.Animatable {
         
     name = "boat${type}${fleet}";
     return name;
+  }
+  
+  void collide(Boat boatHit){
+    _dragging = false;
+    rotation = -atan2((boatHit.y - y) , (boatHit.x - x));
+    forward(SPEED/2);
   }
   
 }
