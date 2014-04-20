@@ -6,8 +6,7 @@ class Point {
   Point.zero() : x = 0, y = 0;
 }
 
-
-class Boat extends stagexl.Sprite implements Touchable, stagexl.Animatable {
+class Boat extends stagexl.Bitmap implements Touchable, stagexl.Animatable {
 
   static const TITLE = 0;
   static const FISHING = 1;
@@ -16,21 +15,22 @@ class Boat extends stagexl.Sprite implements Touchable, stagexl.Animatable {
   static const GAMEOVER = 4;
   static const TRANSITION = 5;
   
-  static const SARDINE = 0;
-  static const TUNA = 1;
-  static const SHARK = 2;
+  static const SARDINE = 1;
+  static const TUNA = 2;
+  static const SHARK = 3;
   
   static const TEAMA = 0;
   static const TEAMB = 1;
-    
+  
+  static const SPEED = 5.0;
   
   stagexl.ResourceManager _resourceManager;
   stagexl.Juggler _juggler;
-  stagexl.Tween _boatMove;
+  stagexl.Tween boatMovement;
   stagexl.Tween _boatRotate;
   
   /* coordinates in world space */
-  num x = 0.0, y = 0.0;
+  num _goalX,_goalY = 0.0;
   
   /* heading in radians */
   num heading = 0.0;
@@ -56,75 +56,92 @@ class Boat extends stagexl.Sprite implements Touchable, stagexl.Animatable {
   num error = .1;
   
   //speed of path follow 
-  var speed = 5.0;
   
   var boatType;
   var fleetType;
   num fishCount;
   num oldfishCount;
   num capacity;
-  
-  var initPos;
-  
-  List<Point> boatPath;
+  static const scale = 0.15;
   
   stagexl.Bitmap boatImg;
   stagexl.Sprite boatSprite;
+  Game _game;
+  stagexl.BitmapData bitmapData;
 
 /**
  * Default constructor
  */
-  Boat(this._resourceManager, this._juggler, this.x, this.y, this.boatType, [this.fleetType]){
-    //intializes the menu for net selection
-//    boatmenu.initPopovers();
+  Boat(stagexl.BitmapData bdata,this._resourceManager, this._juggler, this._game,num inX,num inY, this.boatType, [this.fleetType]):super(bdata){
+
     
-    boatSprite = new stagexl.Sprite();
-    addChild(boatSprite);
-    boatImg = new stagexl.Bitmap(_resourceManager.getBitmapData("boatsardineA"));
-    boatSprite.addChild(boatImg);
-//    tmanager.add(boatImg);
+    bitmapData = bdata;
+    this.scaleX = scale;
+    this.scaleY = scale;
+    pivotX = bitmapData.width/2;
+    pivotY = bitmapData.height/2;
+    x = inX;
+    y = inY;
+    _goalX = x;
+    _goalY = y;
+    fishCount = 0;
+    capacity = 10;
   }
   
+  void forward(num distance) {
+    x += cos(rotation) * distance;
+    y += sin(rotation) * distance;
+  }
   
   bool advanceTime(num time){
+    if(_goalX != x || _goalY !=y){
+      rotation = atan2(_goalY - y, _goalX - x);
+      num curSpeed;
+      num dist = sqrt(pow((_goalX - x), 2) + pow((_goalY - y), 2)); 
+      if(dist.abs() < SPEED){
+        curSpeed = dist;
+      }
+      else{
+        curSpeed = SPEED;
+      }
+    forward(curSpeed);
+    }
+    
+    if(fishCount < capacity){
+      _game.ecosystem.catchCheck(this);
+    }
     return true;
   }
   
   bool containsTouch(Contact c) {
     num tx = c.touchX;
     num ty = c.touchY;
-    num bx = x - boatImg.width/2;
-    num by = y - boatImg.height/2;
-    return (tx >= bx && ty >= by && tx <= bx + boatImg.width && ty <= by + boatImg.height);
+    num bx = x - bitmapData.width/2*scale;
+    num by = y - bitmapData.height/2*scale;
+    bool contain = (tx >= bx && ty >= by && tx <= bx + bitmapData.width && ty <= by + bitmapData.height);
+    return contain;
   }
   
   
   bool touchDown(Contact c) {
-    _targetX = c.touchX;
-    _targetY = c.touchY;
+    _goalX = c.touchX;
+    _goalY = c.touchY;
     _dragging = true;
-    print("touched");
     return true;
   }
 
   
   void touchUp(Contact c) {
+    _goalX = x;
+    _goalY = y;
     _dragging = false;
-    print("touch up");
   }
   void touchSlide(Contact c) {  }
   
   
   void touchDrag(Contact c) {
-    if((fleetType == TEAMA || fleetType ==TEAMB) && game.phase == FISHING){
-//     Movement.boatGoTo(c.touchX, c.touchY, _juggler, _boatMove, _boatRotation);
-    }
-    else if((fleetType == TEAMA || fleetType ==TEAMB) && game.phase == FISHING){
-      x = c.touchX;
-      y = c.touchY;
-    }
-    _targetX = c.touchX;
-    _targetY = c.touchY;
+      _goalX = c.touchX;
+      _goalY = c.touchY;
   }
   
 }

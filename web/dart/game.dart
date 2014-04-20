@@ -24,6 +24,9 @@ class Game extends stagexl.Sprite implements stagexl.Animatable{
   static const GAMEOVER = 4;
   static const TRANSITION = 5;
   
+  static const TEAMA = 0;
+  static const TEAMB = 1;
+  
   var debugPhaseButton = new Button();
   
   TouchManager tmanager = new TouchManager();
@@ -32,14 +35,30 @@ class Game extends stagexl.Sprite implements stagexl.Animatable{
   stagexl.ResourceManager _resourceManager; 
   stagexl.Juggler _juggler;
   
+  Fleet fleetA;
+  Fleet fleetB;
+  
   num roundNum = 0;
 
+  AgentManager ecosystem;
+  
   Fish fish;
   Title title;
 
+  Random random = new Random();
   
-  Game(stagexl.ResourceManager this._resourceManager, this.width, this.height) {
+  stagexl.Shape planktonGraph = new stagexl.Shape();
+  stagexl.Shape sardineGraph = new stagexl.Shape();
+  stagexl.Shape tunaGraph = new stagexl.Shape();
+  stagexl.Shape sharkGraph = new stagexl.Shape();
+  
+  
+  Game(this._resourceManager,this._juggler, this.width, this.height) {
 
+    fleetA = new Fleet(_resourceManager, _juggler, this, 1, 0, 0,1000, TEAMA);
+    fleetB = new Fleet(_resourceManager, _juggler, this, 1, 0, 0,1000, TEAMB);
+    
+    ecosystem = new AgentManager(_resourceManager, _juggler, 400, 200, 0, 0, width, height);
     
     phase = TITLE; // PHASES CAN BE 'BUY', 'FISH', 'SELL', 'GROWTH'
     
@@ -51,6 +70,7 @@ class Game extends stagexl.Sprite implements stagexl.Animatable{
 
     title = new Title(_resourceManager, tmanager);
 
+
     
     tmanager.registerEvents(document.documentElement);
     tmanager.addTouchLayer(tlayer);
@@ -58,6 +78,32 @@ class Game extends stagexl.Sprite implements stagexl.Animatable{
     addChild(title);
     tlayer.touchables.add(title);
     title.draw();
+    
+    
+    planktonGraph.graphics.rect(0, 0, 100, 10);
+    planktonGraph.x = width/2;
+    planktonGraph.y = height-110;
+    planktonGraph.graphics.fillColor(stagexl.Color.Black);
+    addChild(planktonGraph);
+    
+    sardineGraph.graphics.rect(0, 0, 100, 10);
+    sardineGraph.x = width/2;
+    sardineGraph.y = height-100;
+    sardineGraph.graphics.fillColor(stagexl.Color.Green);
+    addChild(sardineGraph);
+    
+    tunaGraph.graphics.rect(0, 0, 100, 10);
+    tunaGraph.x = width/2;
+    tunaGraph.y = height-90;
+    tunaGraph.graphics.fillColor(stagexl.Color.Red);
+    addChild(tunaGraph);
+    
+    sharkGraph.graphics.rect(0, 0, 100, 10);
+    sharkGraph.x = width/2;
+    sharkGraph.y = height-80;
+    sharkGraph.graphics.fillColor(stagexl.Color.Blue);
+    addChild(sharkGraph);
+    
   }
   
   void timer(var input) {
@@ -66,6 +112,10 @@ class Game extends stagexl.Sprite implements stagexl.Animatable{
   
   
   bool advanceTime(num time) {
+    planktonGraph.width = ecosystem.fishCount[0];
+    sardineGraph.width = ecosystem.fishCount[1]; 
+    tunaGraph.width = ecosystem.fishCount[2]; 
+    sharkGraph.width = ecosystem.fishCount[3]; 
     return true;
   }
 
@@ -87,7 +137,13 @@ class Game extends stagexl.Sprite implements stagexl.Animatable{
 //        //enable/disable touch manager for the phase
         removeChild(title);
         addChild(fish);
+
         fish.draw();
+        addChild(planktonGraph);
+        addChild(sardineGraph);
+        addChild(tunaGraph);
+        addChild(sharkGraph);
+        
         
         break;
 

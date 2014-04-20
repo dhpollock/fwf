@@ -5,7 +5,7 @@ library fwf;   // change the library name if you want
 
 import 'dart:html';
 import 'dart:math';
-//import 'dart:async';
+import 'dart:async';
 //import 'dart:web_audio';
 import 'packages/stagexl/stagexl.dart' as stagexl;
 
@@ -15,13 +15,13 @@ part 'dart/game.dart';
 //part 'dart/sounds.dart';
 part 'dart/touch.dart';
 part 'dart/button.dart';
-//part 'dart/fleet.dart';
+part 'dart/fleet.dart';
 part 'dart/phaseTitle.dart';
 //part 'dart/phaseBuy.dart';
 part 'dart/phaseFish.dart';
 //part 'dart/phaseRegrow.dart';
 //part 'dart/phaseOver.dart';
-//part 'dart/agent.dart';
+part 'dart/agent.dart';
 //part 'dart/instructions.dart';
 //part 'dart/finishButton.dart';
 
@@ -47,7 +47,14 @@ void main() {
   var resourceManager = new stagexl.ResourceManager();
   resourceManager.addBitmapData("background", "images/background.png");
   resourceManager.addBitmapData("title", "images/title.png");
-  resourceManager.addBitmapData("boatsardineA", "images/boatsardineA.png");
+  resourceManager.addBitmapData("boatSardineA", "images/boatSardineA.png");
+  resourceManager.addBitmapData("boatSardineB", "images/boatSardineB.png");
+  resourceManager.addBitmapData("sardine50", "images/sardine50.png");
+  resourceManager.addBitmapData("sardine50few", "images/sardine50.png");
+  resourceManager.addBitmapData("sardine50many", "images/sardine50.png");
+  resourceManager.addBitmapData("tuna50", "images/tuna50.png");
+  resourceManager.addBitmapData("shark50", "images/shark50.png");
+  resourceManager.addBitmapData("plankton", "images/plankton.png");
 
   // load sounds that your game will use (these are in the sounds directory)
 //  Sounds.loadSound("drum");
@@ -57,7 +64,7 @@ void main() {
   
   // create game object
   resourceManager.load().then((res) {
-    game = new Game(resourceManager, width, height);
+    game = new Game(resourceManager, stage.juggler, width, height);
     stage.addChild(game);
     stage.juggler.add(game);
   });
