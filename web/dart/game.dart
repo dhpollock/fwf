@@ -173,7 +173,8 @@ class Game extends stagexl.Sprite implements stagexl.Animatable{
         
         
         removeChild(ecosystem);
-        
+        fleetA.disableFishing();
+        fleetB.disableFishing();
         removeChild(fleetA);
         removeChild(fleetB);
         

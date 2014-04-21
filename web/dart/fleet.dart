@@ -58,9 +58,9 @@ class Fleet extends stagexl.Sprite{
   
   disableFishing(){
     for(Boat boat in _boats){
-      removeChild(boat);
+      //removeChild(boat);
       _game.tlayer.touchables.remove(boat);
-      _juggler.remove(boat);
+      //_juggler.remove(boat);
     }
   }
   
@@ -74,22 +74,23 @@ class Fleet extends stagexl.Sprite{
     
     if(teamValue == TEAMA){
       dockLocations = {
-        dock1 : [_game.width/2 - 120,_game.height - 120],
-        dock2 : [_game.width/2 - 120,_game.height - 140],
-        dock3 : [_game.width/2 - 120,_game.height - 160],
+        dock1 : [_game.width/2 - 125,_game.height/2 - 200, -1.90],
+        dock2 : [_game.width/2 - 230,_game.height/2 - 10, -2.65],
+        dock3 : [_game.width/2 - 210,_game.height/2 + 175, -3.6],
       };
     }
     else if(teamValue == TEAMB){
       dockLocations = {
-        dock1 : [_game.width/2 + 120,_game.height - 120],
-        dock2 : [_game.width/2 + 120,_game.height - 140],
-        dock3 : [_game.width/2 + 120,_game.height - 160],
+        dock1 : [_game.width/2 + 145,_game.height/2-100, -PI/6],
+        dock2 : [_game.width/2 + 165,_game.height/2 + 75, PI/7],
+        dock3 : [_game.width/2 + 60,_game.height/2 + 235, 1.4],
       };
     }
     
     for(int i = 0; i < _boats.length; i++){
       _boats[i].x = dockLocations[i][0];
       _boats[i].y = dockLocations[i][1];
+      _boats[i].rotation = dockLocations[i][2];
       
       _game.tlayer.touchables.remove(_boats[i]);
     }

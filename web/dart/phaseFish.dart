@@ -31,11 +31,14 @@ class Fish extends stagexl.Sprite implements stagexl.Animatable{
     _game.ecosystem.updateSpeed(.75);
  
     addChild(background);
-    addChild(_game.ecosystem);
-    _juggler.add(_game.ecosystem);
-    addChild(fleetA);
-    addChild(fleetB);
+
   }
   
+  
+  void unDraw(){
+    removeChild(background);
+    fleetA.disableFishing();
+    fleetB.disableFishing();
+  }
   
 }
