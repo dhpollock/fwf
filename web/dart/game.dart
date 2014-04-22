@@ -66,7 +66,7 @@ class Game extends stagexl.Sprite implements stagexl.Animatable{
     
     if(debugTransition){
       debugPhaseButton.initButton(transition);
-      debugPhaseButton.showButton("phaseButton", 500, 500);
+      debugPhaseButton.showButton("phaseButton", 1000, 500);
     }
     fish = new Fish(_resourceManager, _juggler, this);
     regrow = new Regrow(_resourceManager, _juggler, this);
@@ -147,9 +147,9 @@ class Game extends stagexl.Sprite implements stagexl.Animatable{
         fish.draw();
         addChild(fish);
         
-        
-        addChild(ecosystem);
         _juggler.add(ecosystem);
+        addChild(ecosystem);
+        
         
         fleetA.enableFishing();
         fleetB.enableFishing();
@@ -171,7 +171,7 @@ class Game extends stagexl.Sprite implements stagexl.Animatable{
         fish.unDraw();
         removeChild(fish);
         
-        
+        _juggler.remove(ecosystem);
         removeChild(ecosystem);
         fleetA.disableFishing();
         fleetB.disableFishing();
@@ -182,6 +182,7 @@ class Game extends stagexl.Sprite implements stagexl.Animatable{
         addChild(regrow);
         regrow.draw();
         
+        _juggler.add(ecosystem);
         addChild(ecosystem);
         
         break;
@@ -192,9 +193,9 @@ class Game extends stagexl.Sprite implements stagexl.Animatable{
         regrow.unDraw();
         removeChild(regrow);
         
-        
-        removeChild(ecosystem);
         _juggler.remove(ecosystem);
+        removeChild(ecosystem);
+        
         
         removeChild(planktonGraph);
         removeChild(sardineGraph);

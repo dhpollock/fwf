@@ -68,7 +68,16 @@ void main() {
   resourceManager.addBitmapData("netHalf", "images/netHalf.png");
   resourceManager.addBitmapData("netFull", "images/netFull.png");
   resourceManager.addBitmapData("buyCenterDock", "images/dock_water.png");
-
+  resourceManager.addBitmapData("teamACircle", "images/teamACircle.png");
+  resourceManager.addBitmapData("teamBCircle", "images/teamBCircle.png");
+  resourceManager.addBitmapData("circleUIButton", "images/circleUIButton.png");
+  resourceManager.addBitmapData("circleUIButtonDown", "images/circleUIButtonDown.png");
+  resourceManager.addBitmapData("sardineBoatIcon", "images/sardineBoatIcon.png");
+  resourceManager.addBitmapData("tunaBoatIcon", "images/tunaBoatIcon.png");
+  resourceManager.addBitmapData("sharkBoatIcon", "images/sharkBoatIcon.png");
+  resourceManager.addBitmapData("speedUpgradeIcon", "images/speedUpgradeIcon.png");
+  resourceManager.addBitmapData("capUpgradeIcon", "images/capUpgradeIcon.png");
+  
   // load sounds that your game will use (these are in the sounds directory)
 //  Sounds.loadSound("drum");
 //  Sounds.loadSound("tick");
