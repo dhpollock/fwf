@@ -131,8 +131,8 @@ class CornerBuyUI extends stagexl.Sprite implements stagexl.Animatable, Touchabl
     tunaBoat = new BuyItem(_resourceManager, this, TUNA_BOAT);
     sharkBoat = new BuyItem(_resourceManager, this, SHARK_BOAT);
     
-    uiSprite.addChild(teamCircle);
-    uiSprite.addChild(circleButton);
+//    uiSprite.addChild(teamCircle);
+//    uiSprite.addChild(circleButton);
     
     uiSprite.addChild(speedUpgrade);
     uiSprite.addChild(capUpgrade);
@@ -149,12 +149,17 @@ class CornerBuyUI extends stagexl.Sprite implements stagexl.Animatable, Touchabl
   }
   
   void draw(){
-
+    uiSprite.addChild(teamCircle);
+    uiSprite.addChild(circleButton);
   }
   
   void unDraw(){
-    removeChild(teamCircle);
-    removeChild(circleButton);
+    if(teamCircle.parent != null){
+    teamCircle.parent.removeChild(teamCircle);
+    }
+    if(circleButton.parent != null){
+      circleButton.parent.removeChild(circleButton);
+    }
   }
   
   bool advanceTime(num time){
@@ -177,11 +182,10 @@ class CornerBuyUI extends stagexl.Sprite implements stagexl.Animatable, Touchabl
   
   void touchUp(Contact c) {
     circleButton.bitmapData = (_resourceManager.getBitmapData("circleUIButton"));
-    
     stagexl.Tween rotateCircle = new stagexl.Tween(uiSprite, .5, stagexl.TransitionFunction.easeInOutElastic);
     rotateCircle.animate.rotation.by(PI);
+
     _game._juggler.add(rotateCircle);
-    
   }
   void touchSlide(Contact c) {  }
   void touchDrag(Contact c) {  }
@@ -205,6 +209,7 @@ class BuyItem extends stagexl.Sprite implements Touchable{
   int itemType;
   
   num angle;
+  num sign;
   
   BuyItem(this._resourceManager, this.myCorner, this.itemType){
     
@@ -216,31 +221,36 @@ class BuyItem extends stagexl.Sprite implements Touchable{
         itemBitmap = new stagexl.Bitmap(_resourceManager.getBitmapData("speedUpgradeIcon"));
         
         angle = PI/6 + PI;
+        sign = -1;
 
         break;
       case CAP_UPGRADE:
         itemBitmap = new stagexl.Bitmap(_resourceManager.getBitmapData("capUpgradeIcon"));
         
         angle = 2*PI/6 + PI;
+        sign = -1;
         
         break;
       case SARDINE_BOAT:
         itemBitmap = new stagexl.Bitmap(_resourceManager.getBitmapData("sardineBoatIcon"));
         
         angle = PI/8;
+        sign = 1;
         
         break;
       case TUNA_BOAT:
         itemBitmap = new stagexl.Bitmap(_resourceManager.getBitmapData("tunaBoatIcon"));
         
         angle = 2*PI/8;
+        sign = 1;
         
         break;
       case SHARK_BOAT:
         itemBitmap = new stagexl.Bitmap(_resourceManager.getBitmapData("sharkBoatIcon"));
         
         angle = 3*PI/8;
-
+        sign = 1;
+        
         break;
       default:
         break;
@@ -263,9 +273,12 @@ class BuyItem extends stagexl.Sprite implements Touchable{
   
   bool containsTouch(Contact c) {
     
-    num curX = itemBitmap.pivotX + itemBitmap.x+ itemBitmap.width/2;
-    num curY = itemBitmap.pivotY + itemBitmap.y+ itemBitmap.height/2;
+    
+    num curX = (itemBitmap.x) * cos(myCorner.uiSprite.rotation + PI/4) + (itemBitmap.y) * cos(myCorner.uiSprite.rotation + PI/4);
+    num curY = (itemBitmap.x) * sin(myCorner.uiSprite.rotation + PI/4) + (itemBitmap.y) * sin(myCorner.uiSprite.rotation + PI/4);
     num dist = sqrt(pow((c.touchX - curX), 2) + pow((c.touchY - curY), 2));
+//    
+//    num dist = sqrt(pow((c.touchX - itemBitmap.parent.x), 2) + pow((c.touchY - itemBitmap.parent.y), 2));
     if(dist < itemBitmap.width/2){
       return true;
     }
@@ -280,7 +293,7 @@ class BuyItem extends stagexl.Sprite implements Touchable{
   }
   
   bool touchDown(Contact c) {
-    print("touched buy object");
+    print("touched buy object ${itemType}");
     return true;
   }
   

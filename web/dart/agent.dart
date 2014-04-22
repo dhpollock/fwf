@@ -593,8 +593,10 @@ class AgentManager extends stagexl.Sprite implements stagexl.Animatable{
         if(agent.type == SHARK) fishCount[SHARK]--;
         
         if(agent.type != PLANKTON){
-          this.removeChild(agent);
+          if(agent.parent != null){
+          agent.parent.removeChild(agent);
           _juggler.remove(agent);
+          }
         }
       }
     }
