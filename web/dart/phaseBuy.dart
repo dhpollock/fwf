@@ -273,13 +273,7 @@ class BuyItem extends stagexl.Sprite implements Touchable{
   
   bool containsTouch(Contact c) {
     
-    
-    num curX = (itemBitmap.x) * cos(myCorner.uiSprite.rotation + PI/4) + (itemBitmap.y) * cos(myCorner.uiSprite.rotation + PI/4);
-    num curY = (itemBitmap.x) * sin(myCorner.uiSprite.rotation + PI/4) + (itemBitmap.y) * sin(myCorner.uiSprite.rotation + PI/4);
-    num dist = sqrt(pow((c.touchX - curX), 2) + pow((c.touchY - curY), 2));
-//    
-//    num dist = sqrt(pow((c.touchX - itemBitmap.parent.x), 2) + pow((c.touchY - itemBitmap.parent.y), 2));
-    if(dist < itemBitmap.width/2){
+    if(itemBitmap.mouseX < itemBitmap.width && itemBitmap.mouseX > 0 && itemBitmap.mouseY < itemBitmap.height && itemBitmap.mouseY > 0){
       return true;
     }
     return false;
