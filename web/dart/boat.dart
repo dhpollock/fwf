@@ -227,6 +227,14 @@ class Boat extends stagexl.Sprite implements Touchable, stagexl.Animatable {
     forward(SPEED/2);
   }
   
+  void removeNet(){
+    myNet.removeChild(myNet.netSprite);
+  }
+  
+  void addNet(){
+    myNet.addChild(myNet.netSprite);
+  }
+  
 }
 
 
@@ -335,7 +343,6 @@ class Net extends stagexl.Sprite implements stagexl.Animatable{
       }
       
     }
-
         
     return true;
   }
